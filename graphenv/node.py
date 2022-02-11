@@ -44,7 +44,7 @@ class Node(Generic[N]):
         pass
 
     @property
-    def action_space(self) -> gym.Space:
+    def action_space(self) -> gym.spaces.Discrete:
         return gym.spaces.Discrete(self.max_num_actions)
 
     @property
