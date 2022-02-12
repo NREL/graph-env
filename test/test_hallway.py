@@ -28,9 +28,9 @@ def test_next_actions(hallway: Hallway):
 
 
 def test_terminal(hallway: Hallway):
-    assert hallway.new(0, 0).terminal == False
-    assert hallway.new(5, 8).terminal == True
-    assert hallway.new(3, 10).terminal == True
+    assert hallway.new(0, 0).terminal is False
+    assert hallway.new(5, 8).terminal is True
+    assert hallway.new(3, 10).terminal is True
 
 
 def test_reward(hallway: Hallway):
