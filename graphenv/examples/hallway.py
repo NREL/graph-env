@@ -26,10 +26,10 @@ class Hallway(Node):
         return gym.spaces.Dict(
             {
                 "position": gym.spaces.Box(
-                    low=np.array([0]), high=np.array([self.size]), dtype=np.int
+                    low=np.array([0]), high=np.array([self.size]), dtype=int
                 ),
                 "steps": gym.spaces.Box(
-                    low=np.array([0]), high=np.array([self.max_steps]), dtype=np.int
+                    low=np.array([0]), high=np.array([self.max_steps]), dtype=int
                 ),
             }
         )
@@ -48,8 +48,15 @@ class Hallway(Node):
         return self.new(0, 0)
 
     def reward(self) -> float:
-        return float(self.position - self.size) if self.is_terminal() else -1.0
+        return float(self.position - self.size) if self.terminal else -1.0
 
     def new(self, position: int, episode_steps: int):
         """Convenience function for duplicating the existing node"""
         return Hallway(self.size, self.max_steps, position, episode_steps)
+
+    @property
+    def info(self) -> Dict:
+        info = super().info
+        info["position"] = self.position
+        info["episode_steps"] = self.episode_steps
+        return info

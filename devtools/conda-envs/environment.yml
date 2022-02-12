@@ -1,0 +1,12 @@
+name: graphenv
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - gym
+  - pytest
+  - tensorflow
+  - pip
+  - pip:
+    - "ray[default]"

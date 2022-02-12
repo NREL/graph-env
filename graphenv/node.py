@@ -16,6 +16,7 @@ class Node(Generic[N]):
         super().__init__()
         self.max_num_actions: int = max_num_actions
         self._next_actions: Optional[List] = None
+        self._observation: Optional[Dict[str, np.ndarray]] = None
 
     @abstractmethod
     def get_next_actions(self) -> Sequence[N]:
@@ -55,6 +56,18 @@ class Node(Generic[N]):
         return self._next_actions
 
     @property
+    def observation(self) -> Dict[str, np.ndarray]:
+        """Cache the observation construction"""
+        if self._observation is None:
+            self._observation = self.make_observation()
+        return self._observation
+
+    @property
     def terminal(self):
         """Whether there are any valid actions from the given node"""
         return len(self.next_actions) == 0
+
+    @property
+    def info(self) -> Dict:
+        """An optional dictionary with additional information about the state"""
+        return dict()
