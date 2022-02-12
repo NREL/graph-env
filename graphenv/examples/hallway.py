@@ -2,12 +2,14 @@ from typing import Dict, Sequence
 
 import gym
 import numpy as np
+import tensorflow as tf
 from graphenv.node import Node
+from tensorflow.keras import layers
 
 
 class Hallway(Node):
     def __init__(
-        self, size: int, max_steps: int, position: int, episode_steps: int
+        self, size: int, max_steps: int, position: int = 0, episode_steps: int = 0
     ) -> None:
         super().__init__(max_num_actions=2)
         self.size = size
@@ -60,3 +62,26 @@ class Hallway(Node):
         info["position"] = self.position
         info["episode_steps"] = self.episode_steps
         return info
+
+
+class HallwayModelMixin(object):
+    def __init__(
+        self,
+        *args,
+        embedding_dim: int = 16,
+        size: int = 5,
+        max_steps: int = 10,
+        **kwargs
+    ) -> None:
+
+        self.pos_embedding = layers.Embedding(size + 1, embedding_dim, mask_zero=True)
+        self.steps_embedding = layers.Embedding(
+            max_steps + 1, embedding_dim, mask_zero=True
+        )
+        self.output_dense = layers.Dense(1)
+
+    def forward_per_action(self, input_dict: Dict[str, tf.Tensor]) -> tf.Tensor:
+        # Add one to the inputs to shift the -1 mask to zero
+        out = self.pos_embedding(input_dict["position"] + 1)
+        out += self.steps_embedding(input_dict["steps"] + 1)
+        return self.output_dense(out)
