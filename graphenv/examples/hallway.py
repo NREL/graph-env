@@ -3,6 +3,7 @@ from typing import Dict, Sequence
 import gym
 import numpy as np
 import tensorflow as tf
+from graphenv.models.graph_model import GraphGymModel
 from graphenv.node import Node
 from tensorflow.keras import layers
 
@@ -38,7 +39,7 @@ class Hallway(Node):
 
     @property
     def null_observation(self) -> Dict[str, np.ndarray]:
-        return {"position": np.array([-1]), "steps": np.array([-1])}
+        return {"position": np.array([0]), "steps": np.array([0])}
 
     def make_observation(self) -> Dict[str, np.ndarray]:
         return {
@@ -64,7 +65,7 @@ class Hallway(Node):
         return info
 
 
-class HallwayModelMixin(object):
+class HallwayModel(GraphGymModel):
     def __init__(
         self,
         *args,
@@ -74,14 +75,12 @@ class HallwayModelMixin(object):
         **kwargs
     ) -> None:
 
-        self.pos_embedding = layers.Embedding(size + 1, embedding_dim, mask_zero=True)
-        self.steps_embedding = layers.Embedding(
-            max_steps + 1, embedding_dim, mask_zero=True
-        )
+        super().__init__(*args, **kwargs)
+        self.pos_embedding = layers.Embedding(size, embedding_dim)
+        self.steps_embedding = layers.Embedding(max_steps, embedding_dim)
         self.output_dense = layers.Dense(1)
 
     def forward_per_action(self, input_dict: Dict[str, tf.Tensor]) -> tf.Tensor:
-        # Add one to the inputs to shift the -1 mask to zero
-        out = self.pos_embedding(input_dict["position"] + 1)
-        out += self.steps_embedding(input_dict["steps"] + 1)
+        out = self.pos_embedding(input_dict["position"])
+        out += self.steps_embedding(input_dict["steps"])
         return self.output_dense(out)

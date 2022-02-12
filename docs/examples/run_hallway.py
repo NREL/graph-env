@@ -2,9 +2,8 @@ import argparse
 import os
 
 import ray
-from graphenv.examples.hallway import Hallway, HallwayModelMixin
+from graphenv.examples.hallway import Hallway, HallwayModel
 from graphenv.graphenv import GraphEnv
-from graphenv.models.graph_model import GraphGymModel
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.env.env_context import EnvContext
@@ -53,10 +52,6 @@ class HallwayEnv(GraphEnv):
         super().__init__(Hallway(config["size"], config["max_steps"]))
 
 
-class HallwayModel(GraphGymModel, HallwayModelMixin):
-    pass
-
-
 if __name__ == "__main__":
     args = parser.parse_args()
     print(f"Running with following CLI options: {args}")
@@ -82,6 +77,8 @@ if __name__ == "__main__":
         },
         "num_workers": 1,  # parallelism
         "framework": "tf2",
+        "eager_tracing": False,
+        "eager_max_retraces": 20,
     }
 
     stop = {

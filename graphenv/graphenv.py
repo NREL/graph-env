@@ -1,4 +1,5 @@
 import logging
+import random
 from typing import Dict, Tuple
 
 import gym
@@ -69,3 +70,6 @@ class GraphEnv(gym.Env):
             "action_observations": tuple(action_observations),
             "state_observation": self.state.observation,
         }
+
+    def seed(self, seed=None):
+        random.seed(seed)
