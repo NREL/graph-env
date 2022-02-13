@@ -1,3 +1,4 @@
+import random
 from typing import Dict, Sequence, Tuple
 
 import gym
@@ -53,7 +54,8 @@ class Hallway(Node):
         return self.new(0, 0)
 
     def reward(self) -> float:
-        return float(self.position - self.size) if self.terminal else -1.0
+        return random.random() * 2 if self.position >= self.size else -0.1
+        # return float(self.position - self.size) if self.terminal else -1.0
 
     def new(self, position: int, episode_steps: int):
         """Convenience function for duplicating the existing node"""

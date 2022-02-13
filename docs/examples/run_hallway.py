@@ -67,14 +67,13 @@ if __name__ == "__main__":
         "env": "hallway",  # or "corridor" if registered above
         "env_config": {
             "size": 5,
-            "max_steps": 20,
+            "max_steps": 100,
         },
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
             "custom_model": "my_model",
-            "custom_model_config": {"embedding_dim": 16, "size": 5, "max_steps": 20},
-            "vf_share_layers": True,
+            "custom_model_config": {"embedding_dim": 16, "size": 5, "max_steps": 100},
         },
         "num_workers": 1,  # parallelism
         "framework": "tf2",
