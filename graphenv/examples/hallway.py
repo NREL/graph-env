@@ -1,11 +1,13 @@
-from typing import Dict, Sequence
+from typing import Dict, Sequence, Tuple
 
 import gym
 import numpy as np
-import tensorflow as tf
 from graphenv.models.graph_model import GraphGymModel
 from graphenv.node import Node
-from tensorflow.keras import layers
+from ray.rllib.utils.framework import try_import_tf
+
+tf1, tf, tfv = try_import_tf()
+layers = tf.keras.layers
 
 
 class Hallway(Node):
@@ -76,11 +78,30 @@ class HallwayModel(GraphGymModel):
     ) -> None:
 
         super().__init__(*args, **kwargs)
-        self.pos_embedding = layers.Embedding(size, embedding_dim)
-        self.steps_embedding = layers.Embedding(max_steps, embedding_dim)
-        self.output_dense = layers.Dense(1)
 
-    def forward_per_action(self, input_dict: Dict[str, tf.Tensor]) -> tf.Tensor:
-        out = self.pos_embedding(input_dict["position"])
-        out += self.steps_embedding(input_dict["steps"])
-        return self.output_dense(out)
+        position = layers.Input(shape=(1,), name="position", dtype=tf.int32)
+        steps = layers.Input(shape=(1,), name="steps", dtype=tf.int32)
+
+        pos_embedding_layer = layers.Embedding(
+            size + 1, embedding_dim, name="position_embedding"
+        )
+        steps_embedding_layer = layers.Embedding(
+            max_steps + 1, embedding_dim, name="size_embedding"
+        )
+        action_value_output = layers.Dense(1, name="action_value_output")
+        action_weight_output = layers.Dense(1, name="action_weight_output")
+
+        pos_embedding = pos_embedding_layer(position)
+        steps_embedding = steps_embedding_layer(steps)
+
+        summed_embedding = layers.Add()([pos_embedding, steps_embedding])
+        action_values = action_value_output(summed_embedding)
+        action_weights = action_weight_output(summed_embedding)
+        self.base_model = tf.keras.Model(
+            [position, steps], [action_values, action_weights]
+        )
+
+    def forward_per_action(
+        self, input_dict: Dict[str, tf.Tensor]
+    ) -> Tuple[tf.Tensor, tf.Tensor]:
+        return self.base_model(input_dict)

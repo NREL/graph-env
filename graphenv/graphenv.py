@@ -17,6 +17,7 @@ class GraphEnv(gym.Env):
         self.state = state
         self.max_num_actions = state.max_num_actions
 
+        self.action_space = gym.spaces.Discrete(self.max_num_actions)
         self.observation_space: gym.Space = gym.spaces.Dict(
             {
                 "action_mask": Box(

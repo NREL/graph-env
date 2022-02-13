@@ -11,6 +11,7 @@ from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.utils.test_utils import check_learning_achieved
 from ray.tune.logger import pretty_print
+from ray.tune.registry import register_env
 
 tf1, tf, tfv = try_import_tf()
 
@@ -59,11 +60,11 @@ if __name__ == "__main__":
     ray.init(local_mode=args.local_mode)
 
     # Can also register the env creator function explicitly with:
-    # register_env("corridor", lambda config: SimpleCorridor(config))
+    register_env("hallway", lambda config: HallwayEnv(config))
     ModelCatalog.register_custom_model("my_model", HallwayModel)
 
     config = {
-        "env": HallwayEnv,  # or "corridor" if registered above
+        "env": "hallway",  # or "corridor" if registered above
         "env_config": {
             "size": 5,
             "max_steps": 20,

@@ -2,8 +2,10 @@ from abc import abstractmethod
 from typing import Dict, List, Tuple
 
 import gym
-import tensorflow as tf
 from ray.rllib.models.tf import TFModelV2
+from ray.rllib.utils.framework import try_import_tf
+
+tf1, tf, tfv = try_import_tf()
 
 
 class GraphGymModel(TFModelV2):
