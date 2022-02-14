@@ -16,9 +16,11 @@ class GraphEnv(gym.Env):
         super().__init__()
         self.state = state
         self.max_num_actions = state.max_num_actions
-
         self.action_space = gym.spaces.Discrete(self.max_num_actions)
-        self.observation_space: gym.Space = gym.spaces.Dict(
+
+    @property
+    def observation_space(self) -> gym.spaces.Dict:
+        return gym.spaces.Dict(
             {
                 "action_mask": Box(
                     False, True, shape=(self.max_num_actions,), dtype=bool
@@ -55,7 +57,7 @@ class GraphEnv(gym.Env):
         )
         return result
 
-    def make_observation(self) -> Dict[str, np.ndarray]:
+    def make_observation(self) -> Dict[str, any]:
         action_mask = [False] * self.max_num_actions
         action_observations = [self.state.null_observation] * self.max_num_actions
 

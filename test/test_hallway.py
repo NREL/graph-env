@@ -1,5 +1,6 @@
 import pytest
 from graphenv.examples.hallway import Hallway, HallwayModelMixin
+from graphenv.flatgraphenv import FlatGraphEnv
 from graphenv.graphenv import GraphEnv
 from graphenv.models.graph_model import GraphEnvModel
 from ray.rllib.agents import ppo
@@ -14,6 +15,11 @@ def hallway() -> Hallway:
 @pytest.fixture
 def hallway_env(hallway) -> GraphEnv:
     return GraphEnv(hallway)
+
+
+@pytest.fixture
+def hallway_flatenv(hallway) -> FlatGraphEnv:
+    return FlatGraphEnv(hallway)
 
 
 def test_observation_space(hallway: Hallway):
@@ -48,7 +54,9 @@ def test_graphenv_reset(hallway_env: GraphEnv, hallway: Hallway):
     assert obs["action_observations"][1] == hallway.null_observation
 
 
-def test_graphenv_step(hallway_env: GraphEnv):
+@pytest.mark.parametrize("envtype", ("hallway_env", "hallway_flatenv"))
+def test_graphenv_step(request, envtype):
+    hallway_env: GraphEnv = request.getfixturevalue(envtype)
     obs, reward, terminal, info = hallway_env.step(0)
 
     for _ in range(4):
@@ -62,6 +70,7 @@ def test_graphenv_step(hallway_env: GraphEnv):
     assert reward > 0
 
 
+# @pytest.mark.skip
 @pytest.mark.parametrize("backend_model", [GraphEnvModel])
 def test_ppo(ray_init, ppo_config, backend_model):
     class HallwayEnv(GraphEnv):
