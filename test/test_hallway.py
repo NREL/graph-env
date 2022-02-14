@@ -1,6 +1,9 @@
 import pytest
-from graphenv.examples.hallway import Hallway
+from graphenv.examples.hallway import Hallway, HallwayModelMixin
 from graphenv.graphenv import GraphEnv
+from graphenv.models.graph_model import GraphEnvModel
+from ray.rllib.agents import ppo
+from ray.rllib.env.env_context import EnvContext
 
 
 @pytest.fixture
@@ -34,8 +37,8 @@ def test_terminal(hallway: Hallway):
 
 
 def test_reward(hallway: Hallway):
-    assert hallway.new(5, 5).reward() == 0
-    assert hallway.new(3, 5).reward() == -1
+    assert hallway.new(5, 5).reward() > 0
+    assert hallway.new(3, 5).reward() == -0.1
 
 
 def test_graphenv_reset(hallway_env: GraphEnv, hallway: Hallway):
@@ -50,10 +53,35 @@ def test_graphenv_step(hallway_env: GraphEnv):
 
     for _ in range(4):
         assert terminal is False
-        assert reward == -1.0
+        assert reward == -0.1
         assert hallway_env.observation_space.contains(obs)
         assert hallway_env.action_space.contains(1)
         obs, reward, terminal, info = hallway_env.step(1)
 
     assert terminal is True
-    assert reward == 0.0
+    assert reward > 0
+
+
+@pytest.mark.parametrize("backend_model", [GraphEnvModel])
+def test_ppo(ray_init, ppo_config, backend_model):
+    class HallwayEnv(GraphEnv):
+        def __init__(self, config: EnvContext):
+            super().__init__(Hallway(config["size"], config["max_steps"]))
+
+    class HallwayModel(HallwayModelMixin, backend_model):
+        pass
+
+    config = {
+        "env": HallwayEnv,  # or "corridor" if registered above
+        "env_config": {
+            "size": 5,
+            "max_steps": 100,
+        },
+        "model": {
+            "custom_model": HallwayModel,
+            "custom_model_config": {"hidden_dim": 8},
+        },
+    }
+    ppo_config.update(config)
+    trainer = ppo.PPOTrainer(config=ppo_config, env=HallwayEnv)
+    trainer.train()

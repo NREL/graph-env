@@ -95,8 +95,12 @@ class HallwayModelMixin(TFModelV2):
         # )
 
         hidden_layer = layers.Dense(hidden_dim, name="hidden_layer")
-        action_value_output = layers.Dense(1, name="action_value_output")
-        action_weight_output = layers.Dense(1, name="action_weight_output")
+        action_value_output = layers.Dense(
+            1, name="action_value_output", bias_initializer="ones"
+        )
+        action_weight_output = layers.Dense(
+            1, name="action_weight_output", bias_initializer="ones"
+        )
 
         # out = layers.Concatenate()([position, steps])
         out = hidden_layer(position)

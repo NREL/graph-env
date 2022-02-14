@@ -4,7 +4,7 @@ import os
 import ray
 from graphenv.examples.hallway import Hallway, HallwayModelMixin
 from graphenv.graphenv import GraphEnv
-from graphenv.models.graph_model import GraphGymModel
+from graphenv.models.graph_model import GraphEnvModel
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.env.env_context import EnvContext
@@ -54,7 +54,7 @@ class HallwayEnv(GraphEnv):
         super().__init__(Hallway(config["size"], config["max_steps"]))
 
 
-class HallwayModel(GraphGymModel, HallwayModelMixin):
+class HallwayModel(HallwayModelMixin, GraphEnvModel):
     pass
 
 

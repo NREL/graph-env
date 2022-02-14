@@ -8,7 +8,7 @@ from ray.rllib.utils.framework import try_import_tf
 tf1, tf, tfv = try_import_tf()
 
 
-class GraphGymModel(TFModelV2):
+class GraphEnvModel(TFModelV2):
     def __init__(
         self,
         obs_space: gym.spaces.Space,
@@ -20,11 +20,15 @@ class GraphGymModel(TFModelV2):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
         self.action_values = None
 
-    # @abstractmethod
-    # def forward_per_action(self, input_dict: Dict[str, tf.Tensor]) -> tf.Tensor:
-    #     raise NotImplementedError(
-    #         "You must implement a value function for a single action in a derived class"
-    #     )
+    @abstractmethod
+    def forward_per_action(
+        self, input_dict: Dict[str, tf.Tensor]
+    ) -> Tuple[tf.Tensor, tf.Tensor]:
+        """This makes the MRO important, but also makes the requirement for this model
+        more obvious"""
+        raise NotImplementedError(
+            "You must implement a value function for a single action in a derived class"
+        )
 
     def forward(
         self,
