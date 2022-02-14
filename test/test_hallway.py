@@ -2,6 +2,7 @@ import pytest
 from graphenv.examples.hallway import Hallway, HallwayModelMixin
 from graphenv.flatgraphenv import FlatGraphEnv
 from graphenv.graphenv import GraphEnv
+from graphenv.models.flat_graph_model import FlatGraphEnvModel
 from graphenv.models.graph_model import GraphEnvModel
 from ray.rllib.agents import ppo
 from ray.rllib.env.env_context import EnvContext
@@ -71,13 +72,15 @@ def test_graphenv_step(request, envtype):
 
 
 # @pytest.mark.skip
-@pytest.mark.parametrize("backend_model", [GraphEnvModel])
-def test_ppo(ray_init, ppo_config, backend_model):
-    class HallwayEnv(GraphEnv):
+@pytest.mark.parametrize(
+    "env,model", [(GraphEnv, GraphEnvModel), (FlatGraphEnv, FlatGraphEnvModel)]
+)
+def test_ppo(ray_init, ppo_config, env, model):
+    class HallwayEnv(env):
         def __init__(self, config: EnvContext):
             super().__init__(Hallway(config["size"], config["max_steps"]))
 
-    class HallwayModel(HallwayModelMixin, backend_model):
+    class HallwayModel(HallwayModelMixin, model):
         pass
 
     config = {
