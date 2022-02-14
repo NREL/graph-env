@@ -45,10 +45,6 @@ class Node(Generic[N]):
         pass
 
     @property
-    def action_space(self) -> gym.spaces.Discrete:
-        return gym.spaces.Discrete(self.max_num_actions)
-
-    @property
     def next_actions(self) -> List[N]:
         """Cache the actions from the given node"""
         if self._next_actions is None:
