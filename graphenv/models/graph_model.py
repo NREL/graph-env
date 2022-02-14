@@ -20,11 +20,11 @@ class GraphGymModel(TFModelV2):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
         self.action_values = None
 
-    @abstractmethod
-    def forward_per_action(self, input_dict: Dict[str, tf.Tensor]) -> tf.Tensor:
-        raise NotImplementedError(
-            "You must implement a value function for a single action in a derived class"
-        )
+    # @abstractmethod
+    # def forward_per_action(self, input_dict: Dict[str, tf.Tensor]) -> tf.Tensor:
+    #     raise NotImplementedError(
+    #         "You must implement a value function for a single action in a derived class"
+    #     )
 
     def forward(
         self,
