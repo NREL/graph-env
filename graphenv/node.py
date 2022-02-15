@@ -29,6 +29,7 @@ class Node(Generic[N]):
     @property
     @abstractmethod
     def null_observation(self) -> Dict[str, np.ndarray]:
+        # can this default to the observation of the root node?
         pass
 
     @property
