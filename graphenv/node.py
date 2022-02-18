@@ -12,7 +12,6 @@ class Node(Generic[N]):
         self,
         max_num_actions: int,
     ) -> None:
-
         super().__init__()
         self.max_num_actions: int = max_num_actions
         self._next_actions: Optional[List] = None
@@ -24,12 +23,6 @@ class Node(Generic[N]):
 
     @abstractmethod
     def make_observation(self) -> Dict[str, np.ndarray]:
-        pass
-
-    @property
-    @abstractmethod
-    def null_observation(self) -> Dict[str, np.ndarray]:
-        # can this default to the observation of the root node?
         pass
 
     @property

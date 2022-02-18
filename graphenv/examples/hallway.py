@@ -3,6 +3,7 @@ from typing import Dict, Optional, Sequence, Tuple
 
 import gym
 import numpy as np
+from graphenv.graph_model import GraphModel
 from graphenv.node import Node
 from ray.rllib.models.tf import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
@@ -44,13 +45,6 @@ class Hallway(Node):
             }
         )
 
-    @property
-    def null_observation(self) -> Dict[str, np.ndarray]:
-        return {
-            "position": np.array([0]),
-            # "steps": np.array([0])
-        }
-
     def make_observation(self) -> Dict[str, np.ndarray]:
         return {
             "position": np.array([self.position]),
@@ -76,7 +70,7 @@ class Hallway(Node):
         return info
 
 
-class HallwayModelMixin(TFModelV2):
+class HallwayModel(GraphModel):
     def __init__(
         self,
         *args,

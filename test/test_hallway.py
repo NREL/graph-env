@@ -1,11 +1,13 @@
+import os
 import pytest
-from graphenv.examples.hallway import Hallway, HallwayModelMixin
-from graphenv.flatgraphenv import FlatGraphEnv
-from graphenv.graphenv import GraphEnv
-from graphenv.models.flat_graph_model import FlatGraphEnvModel
-from graphenv.models.graph_model import GraphEnvModel
+from docs.examples.run_hallway import HallwayEnv
+from graphenv.examples.hallway import Hallway, HallwayModel
+from graphenv.graph_env import GraphEnv
+from graphenv.graph_model import GraphModel
 from ray.rllib.agents import ppo
 from ray.rllib.env.env_context import EnvContext
+from ray.tune.registry import register_env
+from ray.rllib.models import ModelCatalog
 
 
 @pytest.fixture
@@ -16,11 +18,6 @@ def hallway() -> Hallway:
 @pytest.fixture
 def hallway_env(hallway) -> GraphEnv:
     return GraphEnv(hallway)
-
-
-@pytest.fixture
-def hallway_flatenv(hallway) -> FlatGraphEnv:
-    return FlatGraphEnv(hallway)
 
 
 def test_observation_space(hallway: Hallway):
@@ -50,12 +47,11 @@ def test_reward(hallway: Hallway):
 
 def test_graphenv_reset(hallway_env: GraphEnv, hallway: Hallway):
     obs = hallway_env.reset()
-    assert len(obs["action_mask"]) == 2
+    assert len(obs["action_mask"]) == 3
     assert obs["action_mask"].sum() == 1
-    assert obs["action_observations"][1] == hallway.null_observation
 
 
-@pytest.mark.parametrize("envtype", ("hallway_env", "hallway_flatenv"))
+@pytest.mark.parametrize("envtype", [("hallway_env")])
 def test_graphenv_step(request, envtype):
     hallway_env: GraphEnv = request.getfixturevalue(envtype)
     obs, reward, terminal, info = hallway_env.step(0)
@@ -72,28 +68,29 @@ def test_graphenv_step(request, envtype):
 
 
 # @pytest.mark.skip
-@pytest.mark.parametrize(
-    "env,model", [(GraphEnv, GraphEnvModel), (FlatGraphEnv, FlatGraphEnvModel)]
-)
+@pytest.mark.parametrize("env,model", [(GraphEnv, GraphModel)])
 def test_ppo(ray_init, ppo_config, env, model):
-    class HallwayEnv(env):
-        def __init__(self, config: EnvContext):
-            super().__init__(Hallway(config["size"], config["max_steps"]))
-
-    class HallwayModel(HallwayModelMixin, model):
-        pass
-
+    
+    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+    ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
     config = {
-        "env": HallwayEnv,  # or "corridor" if registered above
+        "env": "HallwayEnv",  # or "corridor" if registered above
         "env_config": {
             "size": 5,
             "max_steps": 100,
         },
+        # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
+        "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
-            "custom_model": HallwayModel,
-            "custom_model_config": {"hidden_dim": 8},
+            "custom_model": "HallwayModel",
+            "custom_model_config": {"hidden_dim": 32},
         },
+        "num_workers": 1,  # parallelism
+        "framework": "tf2",
+        "eager_tracing": False,
+        "eager_max_retraces": 20,
     }
+    ppo_config = ppo.DEFAULT_CONFIG.copy()
     ppo_config.update(config)
-    trainer = ppo.PPOTrainer(config=ppo_config, env=HallwayEnv)
+    trainer = ppo.PPOTrainer(config=ppo_config)
     trainer.train()
