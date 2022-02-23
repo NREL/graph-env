@@ -2,9 +2,9 @@ import argparse
 import os
 
 import ray
-from graphenv.examples.hallway.hallway import Hallway, HallwayModel
+from graphenv.examples.hallway.hallway_env import HallwayEnv
+from graphenv.examples.hallway.hallway_model import HallwayModel
 from graphenv.graph_env import GraphEnv
-from graphenv.graph_model import GraphModel
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.env.env_context import EnvContext
@@ -47,12 +47,6 @@ parser.add_argument(
     action="store_true",
     help="Init Ray in local mode for easier debugging.",
 )
-
-
-class HallwayEnv(GraphEnv):
-    def __init__(self, config: EnvContext):
-        super().__init__(Hallway(config["size"], config["max_steps"]))
-
 
 
 if __name__ == "__main__":
