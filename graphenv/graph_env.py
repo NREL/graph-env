@@ -6,24 +6,42 @@ import gym
 import numpy as np
 from gym.spaces import Box
 
-from graphenv.node import N
+from graphenv.vertex import N
 
 logger = logging.getLogger(__name__)
 
 
 class GraphEnv(gym.Env):
-    """Version of the GraphEnv environment that flattens observations to a single vector
-    per dictionary key, rather than a tuple of dictionaries. This makes the model
-    training and inference faster"""
+    '''
+    Defines an OpenAI Gym Env for traversing a graph using the current vertex
+    as the state, and the successor verticies as actions.
+
+    GraphEnv uses composition to supply the per-vertex model of type Vertex,
+    which defines the graph via it's get_next_actions() method.
+    '''
 
     def __init__(self, state: N) -> None:
         super().__init__()
+        logger.debug('GraphEnv init')
         self.state = state
         self.max_num_actions = state.max_num_actions
+        num_actions = 1 + self.max_num_actions
+        self.observation_space = gym.spaces.Dict({
+            'action_mask': gym.spaces.Box(
+                False, True, shape=(num_actions,), dtype=bool),
+            'action_observations': gym.spaces.Dict({
+                key: gym.spaces.Box(
+                    low=np.repeat(value.low, num_actions, axis=0),
+                    high=np.repeat(value.high, num_actions, axis=0),
+                    shape=(num_actions * value.shape[0], *value.shape[1:]),
+                    dtype=value.dtype)
+                for key, value in self.state.observation_space.spaces.items()
+            })})
+
         self.action_space = gym.spaces.Discrete(self.max_num_actions)
 
     def reset(self) -> Dict[str, np.ndarray]:
-        self.state = self.state.get_root()
+        self.state = self.state.root
         return self.make_observation()
 
     def step(self, action: int) \
@@ -37,7 +55,7 @@ class GraphEnv(gym.Env):
 
         result = (
             self.make_observation(),
-            self.state.reward(),
+            self.state.reward,
             self.state.terminal,
             self.state.info,
         )
@@ -46,34 +64,6 @@ class GraphEnv(gym.Env):
             f" {len(self.state.next_actions)}"
         )
         return result
-
-    @property
-    def observation_space(self) -> gym.spaces.Dict:
-        num_actions = 1 + self.max_num_actions
-        # return gym.spaces.Dict({
-        #     'action_mask': gym.spaces.Box(
-        #         False, True, shape=(num_actions,), dtype=bool),
-        #     'action_observations': gym.spaces.Dict({
-        #         key: gym.spaces.Box(
-        #             low=np.repeat(value.low, num_actions, axis=0),
-        #             high=np.repeat(value.high, num_actions, axis=0),
-        #             shape=(num_actions * value.shape[0], *value.shape[1:]),
-        #             dtype=value.dtype)
-        #         for key, value in self.state.observation_space.spaces.items()
-        #     })})
-        x = gym.spaces.Dict({
-            'action_mask': gym.spaces.Box(
-                False, True, shape=(num_actions,), dtype=bool),
-            'action_observations': gym.spaces.Dict({
-                key: gym.spaces.Box(
-                    low=np.repeat(value.low, num_actions, axis=0),
-                    high=np.repeat(value.high, num_actions, axis=0),
-                    shape=(num_actions * value.shape[0], *value.shape[1:]),
-                    dtype=value.dtype)
-                for key, value in self.state.observation_space.spaces.items()
-            })})
-        print(f'observation_space {x}')
-        return x
 
     def make_observation(self) -> Dict[str, any]:
         """
@@ -101,13 +91,7 @@ class GraphEnv(gym.Env):
             [o[k] for o in action_observations], axis=0)
             for k in action_observations[0].keys()}
 
-        x = {
+        return {
             'action_mask': action_mask,
             'action_observations': flat_action_observations,
         }
-        print(f'make_observation {x}')
-        return x
-        # return {
-        #     'action_mask': action_mask,
-        #     'action_observations': flat_action_observations,
-        # }

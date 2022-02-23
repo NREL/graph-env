@@ -1,31 +1,34 @@
 import os
 import pytest
-from docs.examples.run_hallway import HallwayEnv
-from graphenv.examples.hallway import Hallway, HallwayModel
-from graphenv.graph_env import GraphEnv
-from graphenv.graph_model import GraphModel
+from graphenv.examples.hallway.hallway_env import HallwayEnv
+from graphenv.examples.hallway.hallway_state import HallwayState
+from graphenv.examples.hallway.hallway_model import HallwayModel
 from ray.rllib.agents import ppo
 from ray.rllib.env.env_context import EnvContext
 from ray.tune.registry import register_env
 from ray.rllib.models import ModelCatalog
 
-
-@pytest.fixture
-def hallway() -> Hallway:
-    return Hallway(5, 10, 0, 0)
+from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
 
 
 @pytest.fixture
-def hallway_env(hallway) -> GraphEnv:
-    return GraphEnv(hallway)
+def hallway_state() -> HallwayState:
+    return HallwayState(5, 10, 0, 0)
+
+@pytest.fixture
+def hallway_env() -> HallwayEnv:
+    return HallwayEnv({
+        'size' : 5,
+        'max_steps' : 10,
+        'position' : 0,
+    })
+
+def test_observation_space(hallway_state: HallwayState):
+    assert hallway_state.observation_space
 
 
-def test_observation_space(hallway: Hallway):
-    assert hallway.observation_space
-
-
-def test_next_actions(hallway: Hallway):
-    actions_list = hallway.next_actions
+def test_next_actions(hallway_state: HallwayState):
+    actions_list = hallway_state.next_actions
     assert len(actions_list) == 1
     assert actions_list[0].episode_steps == 1
 
@@ -34,26 +37,24 @@ def test_next_actions(hallway: Hallway):
     assert actions_list[0].episode_steps == 2
 
 
-def test_terminal(hallway: Hallway):
-    assert hallway.new(0, 0).terminal is False
-    assert hallway.new(5, 8).terminal is True
-    assert hallway.new(3, 10).terminal is True
+def test_terminal(hallway_state: HallwayState):
+    assert hallway_state.new(0, 0).terminal is False
+    assert hallway_state.new(5, 8).terminal is True
+    assert hallway_state.new(3, 10).terminal is True
 
 
-def test_reward(hallway: Hallway):
-    assert hallway.new(5, 5).reward() > 0
-    assert hallway.new(3, 5).reward() == -0.1
+def test_reward(hallway_state: HallwayState):
+    assert hallway_state.new(5, 5).reward > 0
+    assert hallway_state.new(3, 5).reward == -0.1
 
 
-def test_graphenv_reset(hallway_env: GraphEnv, hallway: Hallway):
+def test_graphenv_reset(hallway_env: HallwayEnv):
     obs = hallway_env.reset()
     assert len(obs["action_mask"]) == 3
     assert obs["action_mask"].sum() == 1
 
 
-@pytest.mark.parametrize("envtype", [("hallway_env")])
-def test_graphenv_step(request, envtype):
-    hallway_env: GraphEnv = request.getfixturevalue(envtype)
+def test_graphenv_step(hallway_env: HallwayEnv):
     obs, reward, terminal, info = hallway_env.step(0)
 
     for _ in range(4):
@@ -67,14 +68,21 @@ def test_graphenv_step(request, envtype):
     assert reward > 0
 
 
-# @pytest.mark.skip
-@pytest.mark.parametrize("env,model", [(GraphEnv, GraphModel)])
-def test_ppo(ray_init, ppo_config, env, model):
-    
+@pytest.mark.parametrize("model_classes", [
+    [HallwayModel],
+    # (GraphModelBellmanMixin, HallwayModel),
+])
+def test_ppo(ray_init, model_classes):
+
+    class ThisModel(*model_classes):
+        pass
+
+    ModelCatalog.register_custom_model("ThisModel", ThisModel)
+
     register_env("HallwayEnv", lambda config: HallwayEnv(config))
-    ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
+
     config = {
-        "env": "HallwayEnv",  # or "corridor" if registered above
+        "env": "HallwayEnv",
         "env_config": {
             "size": 5,
             "max_steps": 100,
@@ -82,7 +90,7 @@ def test_ppo(ray_init, ppo_config, env, model):
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
-            "custom_model": "HallwayModel",
+            "custom_model": "ThisModel",
             "custom_model_config": {"hidden_dim": 32},
         },
         "num_workers": 1,  # parallelism

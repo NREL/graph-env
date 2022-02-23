@@ -7,7 +7,7 @@ import numpy as np
 N = TypeVar("N")
 
 
-class Node(Generic[N]):
+class Vertex(Generic[N]):
     def __init__(
         self,
         max_num_actions: int,
@@ -17,23 +17,19 @@ class Node(Generic[N]):
         self._next_actions: Optional[List] = None
         self._observation: Optional[Dict[str, np.ndarray]] = None
 
-    @abstractmethod
-    def get_next_actions(self) -> Sequence[N]:
-        pass
-
-    @abstractmethod
-    def make_observation(self) -> Dict[str, np.ndarray]:
-        pass
+    
 
     @property
     @abstractmethod
     def observation_space(self) -> gym.spaces.Dict:
         pass
 
+    @property
     @abstractmethod
-    def get_root(self) -> N:
+    def root(self) -> N:
         pass
 
+    @property
     @abstractmethod
     def reward(self) -> float:
         pass
@@ -42,14 +38,14 @@ class Node(Generic[N]):
     def next_actions(self) -> List[N]:
         """Cache the actions from the given node"""
         if self._next_actions is None:
-            self._next_actions = list(self.get_next_actions())
+            self._next_actions = list(self._get_next_actions())
         return self._next_actions
 
     @property
     def observation(self) -> Dict[str, np.ndarray]:
         """Cache the observation construction"""
         if self._observation is None:
-            self._observation = self.make_observation()
+            self._observation = self._make_observation()
         return self._observation
 
     @property
@@ -61,3 +57,11 @@ class Node(Generic[N]):
     def info(self) -> Dict:
         """An optional dictionary with additional information about the state"""
         return dict()
+
+    @abstractmethod
+    def _get_next_actions(self) -> Sequence[N]:
+        pass
+
+    @abstractmethod
+    def _make_observation(self) -> Dict[str, np.ndarray]:
+        pass

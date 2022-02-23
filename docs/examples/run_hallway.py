@@ -2,7 +2,7 @@ import argparse
 import os
 
 import ray
-from graphenv.examples.hallway import Hallway, HallwayModel
+from graphenv.examples.hallway.hallway import Hallway, HallwayModel
 from graphenv.graph_env import GraphEnv
 from graphenv.graph_model import GraphModel
 from ray import tune
