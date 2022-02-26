@@ -1,18 +1,18 @@
+from abc import abstractmethod
 from typing import Dict, List, Tuple
-import gym
 
+import gym
 from ray.rllib.models.tf import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
-from abc import abstractmethod
 
 tf1, tf, tfv = try_import_tf()
 
 
 class GraphModel(TFModelV2):
-    '''
+    """
     Defines a RLLib TFModelV2 compatible model for using RL algorithms on a
     GraphEnv.
-    '''
+    """
 
     def __init__(
         self,
@@ -25,9 +25,8 @@ class GraphModel(TFModelV2):
         **kwargs,
     ):
         super().__init__(
-            obs_space, action_space, num_outputs, model_config, name,
-            *args, **kwargs)
-
+            obs_space, action_space, num_outputs, model_config, name, *args, **kwargs
+        )
 
         self.state_value = None
         self.action_values = None
@@ -74,12 +73,14 @@ class GraphModel(TFModelV2):
         action_values = tf.reshape(flat_action_values, action_values_shape)
         self.state_value = action_values[:, 0]
         action_values = tf.where(
-            action_mask, action_values[:, 1:], action_values.dtype.min)
+            action_mask, action_values[:, 1:], action_values.dtype.min
+        )
         self.action_values = action_values
 
         action_weights = tf.reshape(flat_action_weights, action_values_shape)
         action_weights = tf.where(
-            action_mask, action_weights[:, 1:], action_weights.dtype.min)
+            action_mask, action_weights[:, 1:], action_weights.dtype.min
+        )
         self.action_weights = action_weights
 
         self.total_value = self._forward_total_value()
@@ -91,24 +92,24 @@ class GraphModel(TFModelV2):
         return self.total_value
 
     def _forward_total_value(self):
-        '''
+        """
         Forward method computing the value assesment of the current state,
         as returned by the value_function() method.
 
         The default implementation return the action value of the current state.
 
-        Breaking this into a separate method allows subclasses to override the 
+        Breaking this into a separate method allows subclasses to override the
         state value assesment, for example with a Bellman backup returning
         the max over all successor states's values.
-        '''
+        """
         return self.state_value
 
     @abstractmethod
     def forward_vertex(
         self, input_dict: Dict[str, tf.Tensor]
     ) -> Tuple[tf.Tensor, tf.Tensor]:
-        '''
-        Forward function returning a value and weight tensor for the verticies 
+        """
+        Forward function returning a value and weight tensor for the verticies
         observed via input_dict (a dict of tensors for each vertex property)
-        '''
+        """
         pass

@@ -1,27 +1,28 @@
-import os
 import pytest
 from graphenv.examples.hallway.hallway_env import HallwayEnv
-from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.examples.hallway.hallway_model import HallwayModel
-from ray.rllib.agents import ppo
-from ray.rllib.env.env_context import EnvContext
-from ray.tune.registry import register_env
-from ray.rllib.models import ModelCatalog
-
+from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
+from ray.rllib.agents import ppo
+from ray.rllib.models import ModelCatalog
+from ray.tune.registry import register_env
 
 
 @pytest.fixture
 def hallway_state() -> HallwayState:
     return HallwayState(5, 10, 0, 0)
 
+
 @pytest.fixture
 def hallway_env() -> HallwayEnv:
-    return HallwayEnv({
-        'size' : 5,
-        'max_steps' : 10,
-        'position' : 0,
-    })
+    return HallwayEnv(
+        {
+            "size": 5,
+            "max_steps": 10,
+            "position": 0,
+        }
+    )
+
 
 def test_observation_space(hallway_state: HallwayState):
     assert hallway_state.observation_space
@@ -68,12 +69,14 @@ def test_graphenv_step(hallway_env: HallwayEnv):
     assert reward > 0
 
 
-@pytest.mark.parametrize("model_classes", [
-    [HallwayModel],
-    # (GraphModelBellmanMixin, HallwayModel),
-])
-def test_ppo(ray_init, model_classes):
-
+@pytest.mark.parametrize(
+    "model_classes",
+    [
+        [HallwayModel],
+        (GraphModelBellmanMixin, HallwayModel),
+    ],
+)
+def test_ppo(ray_init, ppo_config, model_classes):
     class ThisModel(*model_classes):
         pass
 
@@ -87,18 +90,11 @@ def test_ppo(ray_init, model_classes):
             "size": 5,
             "max_steps": 100,
         },
-        # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
-        "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
             "custom_model": "ThisModel",
             "custom_model_config": {"hidden_dim": 32},
         },
-        "num_workers": 1,  # parallelism
-        "framework": "tf2",
-        "eager_tracing": False,
-        "eager_max_retraces": 20,
     }
-    ppo_config = ppo.DEFAULT_CONFIG.copy()
     ppo_config.update(config)
     trainer = ppo.PPOTrainer(config=ppo_config)
     trainer.train()
