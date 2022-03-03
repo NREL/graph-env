@@ -53,6 +53,9 @@ class GraphModel(TFModelV2):
         action_values_shape = tf.shape(action_mask)  # batch, num actions
         action_mask = action_mask[:, 1:]  # trim off current state
 
+
+        
+
         # flatten action observations into a single dict with tensors like:
         # [(batch 0, action 0), (b0,a1), ..., (b1,a0), ...])
         flat_batch_size = action_values_shape[0] * action_values_shape[1]
