@@ -1,14 +1,10 @@
-
 import random
-from typing import Dict, Optional, Sequence, Tuple
+from typing import Dict, Optional, Sequence
 
 import gym
 import numpy as np
-from graphenv.graph_model import GraphModel
 from graphenv.vertex import Vertex
-from ray.rllib.models.tf import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
-
 
 tf1, tf, tfv = try_import_tf()
 layers = tf.keras.layers
@@ -28,8 +24,6 @@ class HallwayState(Vertex):
         self.position = position
         self.episode_steps = episode_steps
 
-    
-
     @property
     def observation_space(self) -> gym.spaces.Dict:
         return gym.spaces.Dict(
@@ -37,9 +31,6 @@ class HallwayState(Vertex):
                 "position": gym.spaces.Box(
                     low=np.array([0]), high=np.array([self.size]), dtype=int
                 ),
-                # "steps": gym.spaces.Box(
-                #     low=np.array([0]), high=np.array([self.max_steps]), dtype=int
-                # ),
             }
         )
 
@@ -50,7 +41,6 @@ class HallwayState(Vertex):
     @property
     def reward(self) -> float:
         return random.random() * 2 if self.position >= self.size else -0.1
-        # return float(self.position - self.size) if self.terminal else -1.0
 
     def new(self, position: int, episode_steps: int):
         """Convenience function for duplicating the existing node"""
@@ -60,7 +50,6 @@ class HallwayState(Vertex):
     def info(self) -> Dict:
         info = super().info
         info["position"] = self.position
-        # info["episode_steps"] = self.episode_steps
         return info
 
     def _get_next_actions(self) -> Sequence["HallwayState"]:
@@ -72,7 +61,4 @@ class HallwayState(Vertex):
     def _make_observation(self) -> Dict[str, np.ndarray]:
         return {
             "position": np.array([self.position]),
-            # "steps": np.array([self.episode_steps]),
         }
-
-

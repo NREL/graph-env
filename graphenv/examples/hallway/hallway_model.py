@@ -1,13 +1,7 @@
-import random
-from typing import Dict, Optional, Sequence, Tuple
+from typing import Dict, Tuple
 
-import gym
-import numpy as np
 from graphenv.graph_model import GraphModel
-from graphenv.vertex import Vertex
-from ray.rllib.models.tf import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
-
 
 tf1, tf, tfv = try_import_tf()
 layers = tf.keras.layers
@@ -36,8 +30,7 @@ class HallwayModel(GraphModel):
         action_values = action_value_output(out)
         action_weights = action_weight_output(out)
 
-        self.base_model = tf.keras.Model(
-            [position], [action_values, action_weights])
+        self.base_model = tf.keras.Model([position], [action_values, action_weights])
 
     def forward_vertex(
         self, input_dict: Dict[str, tf.Tensor]

@@ -4,10 +4,8 @@ import os
 import ray
 from graphenv.examples.hallway.hallway_env import HallwayEnv
 from graphenv.examples.hallway.hallway_model import HallwayModel
-from graphenv.graph_env import GraphEnv
 from ray import tune
 from ray.rllib.agents import ppo
-from ray.rllib.env.env_context import EnvContext
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.utils.test_utils import check_learning_achieved

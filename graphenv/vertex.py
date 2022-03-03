@@ -17,22 +17,28 @@ class Vertex(Generic[N]):
         self._next_actions: Optional[List] = None
         self._observation: Optional[Dict[str, np.ndarray]] = None
 
-    
-
     @property
     @abstractmethod
     def observation_space(self) -> gym.spaces.Dict:
-        pass
+        raise NotImplementedError
 
     @property
     @abstractmethod
     def root(self) -> N:
-        pass
+        raise NotImplementedError
 
     @property
     @abstractmethod
     def reward(self) -> float:
-        pass
+        raise NotImplementedError
+
+    @abstractmethod
+    def _get_next_actions(self) -> Sequence[N]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def _make_observation(self) -> Dict[str, np.ndarray]:
+        raise NotImplementedError
 
     @property
     def next_actions(self) -> List[N]:
@@ -57,11 +63,3 @@ class Vertex(Generic[N]):
     def info(self) -> Dict:
         """An optional dictionary with additional information about the state"""
         return dict()
-
-    @abstractmethod
-    def _get_next_actions(self) -> Sequence[N]:
-        pass
-
-    @abstractmethod
-    def _make_observation(self) -> Dict[str, np.ndarray]:
-        pass
