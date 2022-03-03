@@ -35,4 +35,4 @@ class HallwayModel(GraphModel):
     def forward_vertex(
         self, input_dict: Dict[str, tf.Tensor]
     ) -> Tuple[tf.Tensor, tf.Tensor]:
-        return self.base_model(input_dict)
+        return tuple(self.base_model(input_dict))

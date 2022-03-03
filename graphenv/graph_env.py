@@ -26,34 +26,26 @@ class GraphEnv(gym.Env):
     state: N
     max_num_actions: int
     _action_mask_key: str
-    _action_observation_key: str
+    _vertex_observation_key: str
 
     def __init__(
         self,
         state: N,
         action_mask_key: str = 'action_mask',
-        action_observation_key: str = 'action_observations',
+        vertex_observation_key: str = 'vertex_observations',
     ) -> None:
         super().__init__()
         logger.debug("GraphEnv init")
         self.state = state
         self._action_mask_key = action_mask_key
-        self._action_observation_key = action_observation_key
+        self._vertex_observation_key = vertex_observation_key
         self.max_num_actions = state.max_num_actions
         num_vertex_observations = 1 + self.max_num_actions
         self.observation_space = gym.spaces.Dict({
             self._action_mask_key: gym.spaces.Box(
                 False, True, shape=(num_vertex_observations,), dtype=bool),
-            self._action_observation_key: space_util.broadcast_space(
-                self.state.observation_space, num_vertex_observations)
-            # 'action_observations': gym.spaces.Dict({
-            #     key: gym.spaces.Box(
-            #         low=np.repeat(value.low, num_actions, axis=0),
-            #         high=np.repeat(value.high, num_actions, axis=0),
-            #         shape=(num_actions, value.shape[0], *value.shape[1:]),
-            #         dtype=value.dtype)
-            #     for key, value in self.state.observation_space.spaces.items()
-            # })
+            self._vertex_observation_key: space_util.broadcast_space(
+                self.state.observation_space, (num_vertex_observations,))
         })
         self.action_space = gym.spaces.Discrete(self.max_num_actions)
 
@@ -104,15 +96,10 @@ class GraphEnv(gym.Env):
             action_observations[i + 1] = successor.observation
             action_mask[i + 1] = True
 
-        # flat_action_observations = {k: np.concatenate(
-        #     [o[k] for o in action_observations], axis=0)
-        #     for k in action_observations[0].keys()}
-
         return {
             self._action_mask_key: action_mask,
-            self._action_observations: space_util.stack_observations(
-                self.observation_space['action_observations'],
+            self._vertex_observation_key: space_util.stack_observations(
+                self.observation_space[self._vertex_observation_key],
                 action_observations,
             ),
-            # 'action_observations': flat_action_observations,
         }

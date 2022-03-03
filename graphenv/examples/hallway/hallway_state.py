@@ -60,5 +60,5 @@ class HallwayState(Vertex):
 
     def _make_observation(self) -> Dict[str, np.ndarray]:
         return {
-            "position": np.array([self.position]),
+            "position": np.array([self.position], dtype=int),
         }
