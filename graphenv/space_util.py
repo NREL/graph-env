@@ -10,12 +10,6 @@ from ray.rllib.utils.framework import try_import_tf
 
 tf1, tf, tfv = try_import_tf()
 
-def get_space_shape_as_tuple(target:spaces.Space):
-    shape = target.shape
-    if isinstance(shape, int):
-        shape = (shape,)
-    return shape
-
 
 @singledispatch
 def broadcast_space(target: spaces.Space, prefix_shape: Tuple[int]):
@@ -24,8 +18,7 @@ def broadcast_space(target: spaces.Space, prefix_shape: Tuple[int]):
 
 @broadcast_space.register(spaces.Box)
 def _(target: spaces.Box, prefix_shape: Tuple[int]):
-    source_shape = get_space_shape_as_tuple(target)
-    shape = (*prefix_shape, *source_shape)
+    shape = (*prefix_shape, *target.shape)
     return spaces.Box(
         low=np.broadcast_to(target.low, shape),
         high=np.broadcast_to(target.high, shape),
@@ -50,9 +43,8 @@ def _(target: spaces.Discrete, prefix_shape: Tuple[int]):
 
 @broadcast_space.register(spaces.MultiDiscrete)
 def _(target: spaces.MultiDiscrete, prefix_shape: Tuple[int]):
-    source_shape = get_space_shape_as_tuple(target)
     return spaces.MultiDiscrete(
-        np.broadcast_to(target.nvec, (*prefix_shape, *source_shape)))
+        np.broadcast_to(target.nvec, (*prefix_shape, *target.shape)))
 
 
 @broadcast_space.register(spaces.Tuple)
@@ -118,14 +110,6 @@ def _(target: collections.abc.Mapping):
 
 @flatten_first_dim.register(tf.Tensor)
 def _(target: tf.Tensor):
-    warnings.warn(f'target: {type(target)}, {target.dtype}, {target.shape}')
     shape = tf.shape(target)
-    num_dims = len(shape)
-
-    dest_shape = shape
-    if num_dims > 2:
-        dest_shape = (shape[0] * shape[1], *shape[2:])
-    elif num_dims == 2:
-        dest_shape = (shape[0] * shape[1],)
-
+    dest_shape = (shape[0] * shape[1], *shape[2:])
     return tf.reshape(target, dest_shape)

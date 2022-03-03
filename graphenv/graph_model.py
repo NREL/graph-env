@@ -75,7 +75,6 @@ class GraphModel(TFModelV2):
                 action_mask, flat_action_weights)
 
         self.total_value = self._forward_total_value()
-        # tf.reduce_max(action_values, axis=1)
 
         return self.action_weights, state
 
