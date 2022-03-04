@@ -1,6 +1,6 @@
 from typing import Dict, Tuple
 
-from graphenv.graph_model import GraphModel
+from graphenv.graph_model import GraphModel, GraphModelObservation
 from ray.rllib.utils.framework import try_import_tf
 
 tf1, tf, tfv = try_import_tf()
@@ -33,6 +33,7 @@ class HallwayModel(GraphModel):
         self.base_model = tf.keras.Model([position], [action_values, action_weights])
 
     def forward_vertex(
-        self, input_dict: Dict[str, tf.Tensor]
+        self, 
+        input_dict: GraphModelObservation,
     ) -> Tuple[tf.Tensor, tf.Tensor]:
-        return self.base_model(input_dict)
+        return tuple(self.base_model(input_dict))

@@ -144,3 +144,4 @@ Untitled*.ipynb
 .vscode
 *.sw[op]
 *.out
+*.code-workspace

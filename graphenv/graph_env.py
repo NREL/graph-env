@@ -1,10 +1,15 @@
+from collections import OrderedDict
+from functools import singledispatch
 import logging
 from typing import Dict, Tuple
 
 import gym
 import numpy as np
+import gym.spaces as spaces
 
 from graphenv.vertex import N
+
+import graphenv.space_util as space_util
 
 logger = logging.getLogger(__name__)
 
@@ -18,31 +23,30 @@ class GraphEnv(gym.Env):
     which defines the graph via it's get_next_actions() method.
     """
 
-    def __init__(self, state: N) -> None:
+    state: N
+    max_num_actions: int
+    _action_mask_key: str
+    _vertex_observation_key: str
+
+    def __init__(
+        self,
+        state: N,
+        action_mask_key: str = 'action_mask',
+        vertex_observation_key: str = 'vertex_observations',
+    ) -> None:
         super().__init__()
         logger.debug("GraphEnv init")
         self.state = state
+        self._action_mask_key = action_mask_key
+        self._vertex_observation_key = vertex_observation_key
         self.max_num_actions = state.max_num_actions
-        num_actions = 1 + self.max_num_actions
-        self.observation_space = gym.spaces.Dict(
-            {
-                "action_mask": gym.spaces.Box(
-                    False, True, shape=(num_actions,), dtype=bool
-                ),
-                "action_observations": gym.spaces.Dict(
-                    {
-                        key: gym.spaces.Box(
-                            low=np.repeat(value.low, num_actions, axis=0),
-                            high=np.repeat(value.high, num_actions, axis=0),
-                            shape=(num_actions * value.shape[0], *value.shape[1:]),
-                            dtype=value.dtype,
-                        )
-                        for key, value in self.state.observation_space.spaces.items()
-                    }
-                ),
-            }
-        )
-
+        num_vertex_observations = 1 + self.max_num_actions
+        self.observation_space = gym.spaces.Dict({
+            self._action_mask_key: gym.spaces.Box(
+                False, True, shape=(num_vertex_observations,), dtype=bool),
+            self._vertex_observation_key: space_util.broadcast_space(
+                self.state.observation_space, (num_vertex_observations,))
+        })
         self.action_space = gym.spaces.Discrete(self.max_num_actions)
 
     def reset(self) -> Dict[str, np.ndarray]:
@@ -92,12 +96,10 @@ class GraphEnv(gym.Env):
             action_observations[i + 1] = successor.observation
             action_mask[i + 1] = True
 
-        flat_action_observations = {
-            k: np.concatenate([o[k] for o in action_observations], axis=0)
-            for k in action_observations[0].keys()
-        }
-
         return {
-            "action_mask": action_mask,
-            "action_observations": flat_action_observations,
+            self._action_mask_key: action_mask,
+            self._vertex_observation_key: space_util.stack_observations(
+                self.observation_space[self._vertex_observation_key],
+                action_observations,
+            ),
         }
