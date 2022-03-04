@@ -58,10 +58,9 @@ if __name__ == "__main__":
     ModelCatalog.register_custom_model("my_model", HallwayModel)
 
     config = {
-        "env": "hallway",  # or "corridor" if registered above
+        "env": HallwayEnv,  # or "corridor" if registered above
         "env_config": {
-            "size": 5,
-            "max_steps": 100,
+            "corridor_length": 5,
         },
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
@@ -71,8 +70,6 @@ if __name__ == "__main__":
         },
         "num_workers": 1,  # parallelism
         "framework": "tf2",
-        "eager_tracing": False,
-        "eager_max_retraces": 20,
     }
 
     stop = {

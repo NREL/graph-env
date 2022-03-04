@@ -15,7 +15,7 @@ class HallwayEnv(GraphEnv):
 
     def __init__(self, config: EnvContext, *args, **kwargs):
         super().__init__(
-            HallwayState(config["size"], config["max_steps"]),
+            HallwayState(config["corridor_length"]),
             *args,
             **kwargs,
         )

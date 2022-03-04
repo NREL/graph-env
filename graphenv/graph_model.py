@@ -1,12 +1,11 @@
 from abc import abstractmethod
 from typing import Dict, Iterable, List, Mapping, Tuple, Union
 
-import graphenv.space_util as space_util
-
 import gym
 from ray.rllib.models.tf import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
 
+import graphenv.space_util as space_util
 
 tf1, tf, tfv = try_import_tf()
 
@@ -32,8 +31,8 @@ class GraphModel(TFModelV2):
         model_config: Dict,
         name: str,
         *args,
-        action_mask_key: str = 'action_mask',
-        vertex_observation_key: str = 'vertex_observations',
+        action_mask_key: str = "action_mask",
+        vertex_observation_key: str = "vertex_observations",
         **kwargs,
     ):
         super().__init__(
@@ -66,11 +65,10 @@ class GraphModel(TFModelV2):
     ) -> Tuple[tf.Tensor, List[tf.Tensor]]:
 
         # Extract the available actions tensor from the observation.
-        observation = input_dict['obs']
+        observation = input_dict["obs"]
 
         vertex_observations = observation[self._vertex_observation_key]
-        flattened_observations = \
-            space_util.flatten_first_dim(vertex_observations)
+        flattened_observations = space_util.flatten_first_dim(vertex_observations)
 
         # flat_values is structured like this: (vertex values, vertex weights)
         flat_values = self.forward_vertex(flattened_observations)
@@ -89,13 +87,15 @@ class GraphModel(TFModelV2):
             """
             values = tf.reshape(values, tf.shape(action_mask))
             current_value = values[:, 0]
-            masked_action_values = \
-                tf.where(action_mask[:, 1:], values[:, 1:], values.dtype.min)
+            masked_action_values = tf.where(
+                action_mask[:, 1:], values[:, 1:], values.dtype.min
+            )
             return current_value, masked_action_values
 
-        (self.current_vertex_value, self.action_values), \
-            (self.current_vertex_weight, self.action_weights) =\
-            tuple((mask_values(v) for v in flat_values))
+        (self.current_vertex_value, self.action_values), (
+            self.current_vertex_weight,
+            self.action_weights,
+        ) = tuple((mask_values(v) for v in flat_values))
 
         self.total_value = self._forward_total_value()
         return self.action_weights, state

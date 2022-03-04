@@ -10,18 +10,12 @@ from ray.tune.registry import register_env
 
 @pytest.fixture
 def hallway_state() -> HallwayState:
-    return HallwayState(5, 10, 0, 0)
+    return HallwayState(5)
 
 
 @pytest.fixture
 def hallway_env() -> HallwayEnv:
-    return HallwayEnv(
-        {
-            "size": 5,
-            "max_steps": 10,
-            "position": 0,
-        }
-    )
+    return HallwayEnv({"corridor_length": 5})
 
 
 def test_observation_space(hallway_state: HallwayState):
@@ -31,22 +25,20 @@ def test_observation_space(hallway_state: HallwayState):
 def test_next_actions(hallway_state: HallwayState):
     actions_list = hallway_state.next_actions
     assert len(actions_list) == 1
-    assert actions_list[0].episode_steps == 1
 
     actions_list = actions_list[0].next_actions
     assert len(actions_list) == 2
-    assert actions_list[0].episode_steps == 2
 
 
 def test_terminal(hallway_state: HallwayState):
-    assert hallway_state.new(0, 0).terminal is False
-    assert hallway_state.new(5, 8).terminal is True
-    assert hallway_state.new(3, 10).terminal is True
+    assert hallway_state.new(0).terminal is False
+    assert hallway_state.new(5).terminal is True
+    # assert hallway_state.new(3, 10).terminal is True
 
 
 def test_reward(hallway_state: HallwayState):
-    assert hallway_state.new(5, 5).reward > 0
-    assert hallway_state.new(3, 5).reward == -0.1
+    assert hallway_state.new(5).reward > 0
+    assert hallway_state.new(3).reward == -0.1
 
 
 def test_graphenv_reset(hallway_env: HallwayEnv):
@@ -86,10 +78,7 @@ def test_ppo(ray_init, ppo_config, model_classes):
 
     config = {
         "env": "HallwayEnv",
-        "env_config": {
-            "size": 5,
-            "max_steps": 100,
-        },
+        "env_config": {"corridor_length": 5},
         "model": {
             "custom_model": "ThisModel",
             "custom_model_config": {"hidden_dim": 32},
