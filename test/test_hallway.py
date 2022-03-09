@@ -2,6 +2,7 @@ import pytest
 from graphenv.examples.hallway.hallway_env import HallwayEnv
 from graphenv.examples.hallway.hallway_model import HallwayModel
 from graphenv.examples.hallway.hallway_state import HallwayState
+from graphenv.graph_env import GraphEnv
 from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
 from ray.rllib.agents import ppo
 from ray.rllib.models import ModelCatalog
@@ -34,6 +35,16 @@ def test_terminal(hallway_state: HallwayState):
     assert hallway_state.new(0).terminal is False
     assert hallway_state.new(5).terminal is True
     # assert hallway_state.new(3, 10).terminal is True
+
+
+def test_max_num_actions(hallway_state: HallwayState):
+    hallway_env = GraphEnv(hallway_state.new(2), max_num_actions=1)
+    with pytest.raises(RuntimeError):
+        hallway_env.step(0)
+
+    hallway_env = GraphEnv(hallway_state.new(2), max_num_actions=1)
+    with pytest.raises(RuntimeError):
+        hallway_env.step(1)
 
 
 def test_reward(hallway_state: HallwayState):

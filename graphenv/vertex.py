@@ -8,12 +8,7 @@ N = TypeVar("N")
 
 
 class Vertex(Generic[N]):
-    def __init__(
-        self,
-        max_num_actions: int,
-    ) -> None:
-        super().__init__()
-        self.max_num_actions: int = max_num_actions
+    def __init__(self) -> None:
         self._next_actions: Optional[List] = None
         self._observation: Optional[Dict[str, np.ndarray]] = None
 

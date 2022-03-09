@@ -27,6 +27,7 @@ class GraphEnv(gym.Env):
     def __init__(
         self,
         state: N,
+        max_num_actions: int,
         action_mask_key: str = "action_mask",
         vertex_observation_key: str = "vertex_observations",
     ) -> None:
@@ -35,8 +36,8 @@ class GraphEnv(gym.Env):
         self.state = state
         self._action_mask_key = action_mask_key
         self._vertex_observation_key = vertex_observation_key
-        self.max_num_actions = state.max_num_actions
-        num_vertex_observations = 1 + self.max_num_actions
+        self.max_num_actions = max_num_actions
+        num_vertex_observations = 1 + max_num_actions
         self.observation_space = gym.spaces.Dict(
             {
                 self._action_mask_key: gym.spaces.MultiBinary(num_vertex_observations),
@@ -52,10 +53,18 @@ class GraphEnv(gym.Env):
         return self.make_observation()
 
     def step(self, action: int) -> Tuple[Dict[str, np.ndarray], float, bool, dict]:
-        assert action < len(
-            self.state.next_actions
-        ), f"Action {action} outside the action space of state {self.state}: "
-        "{len(self.state.next_actions)} max actions"
+
+        if len(self.state.next_actions) > self.max_num_actions:
+            raise RuntimeError(
+                f"State {self.state} has {len(self.state.next_actions)} actions "
+                f"(> {self.max_num_actions})"
+            )
+
+        if action not in self.action_space:
+            raise RuntimeError(
+                f"Action {action} outside the action space of state {self.state}: "
+                f"{len(self.state.next_actions)} max actions"
+            )
 
         # Move the state to the next action
         self.state = self.state.next_actions[action]
@@ -90,6 +99,7 @@ class GraphEnv(gym.Env):
         num_actions = 1 + self.max_num_actions
         action_mask = np.zeros(num_actions, dtype=bool)
         action_observations = [self.state.observation] * num_actions
+
         for i, successor in enumerate(self.state.next_actions):
             action_observations[i + 1] = successor.observation
             action_mask[i + 1] = True

@@ -15,7 +15,7 @@ class HallwayState(Vertex):
         corridor_length: int,
         cur_pos: int = 0,
     ) -> None:
-        super().__init__(max_num_actions=2)
+        super().__init__()
         self.end_pos = corridor_length
         self.cur_pos = cur_pos
 
