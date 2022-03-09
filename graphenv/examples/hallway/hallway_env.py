@@ -1,10 +1,9 @@
+from graphenv import tf
 from graphenv.graph_env import GraphEnv
 from ray.rllib.env.env_context import EnvContext
-from ray.rllib.utils.framework import try_import_tf
 
 from .hallway_state import HallwayState
 
-tf1, tf, tfv = try_import_tf()
 layers = tf.keras.layers
 
 

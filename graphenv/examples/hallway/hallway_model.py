@@ -1,9 +1,8 @@
 from typing import Tuple
 
+from graphenv import tf
 from graphenv.graph_model import GraphModel, GraphModelObservation
-from ray.rllib.utils.framework import try_import_tf
 
-tf1, tf, tfv = try_import_tf()
 layers = tf.keras.layers
 
 

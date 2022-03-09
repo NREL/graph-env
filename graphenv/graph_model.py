@@ -3,11 +3,9 @@ from typing import Dict, Iterable, List, Mapping, Tuple, Union
 
 import gym
 from ray.rllib.models.tf import TFModelV2
-from ray.rllib.utils.framework import try_import_tf
 
 import graphenv.space_util as space_util
-
-tf1, tf, tfv = try_import_tf()
+from graphenv import tf
 
 # Type defining the contents of vertex observations as passed to forward()
 GraphModelObservation = Union[

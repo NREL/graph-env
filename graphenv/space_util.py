@@ -4,9 +4,8 @@ from typing import OrderedDict, Tuple
 
 import gym.spaces as spaces
 import numpy as np
-from ray.rllib.utils.framework import try_import_tf
 
-tf1, tf, tfv = try_import_tf()
+from graphenv import tf
 
 
 @singledispatch

@@ -3,10 +3,9 @@ from typing import Dict, Sequence
 
 import gym
 import numpy as np
+from graphenv import tf
 from graphenv.vertex import Vertex
-from ray.rllib.utils.framework import try_import_tf
 
-tf1, tf, tfv = try_import_tf()
 layers = tf.keras.layers
 
 
