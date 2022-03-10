@@ -207,4 +207,7 @@ if __name__ == "__main__":
             print("Checking if learning goals were achieved")
             check_learning_achieved(results, args.stop_reward)
 
+        results.results_df.to_csv('custom_env_results.csv')
+
+
     ray.shutdown()
