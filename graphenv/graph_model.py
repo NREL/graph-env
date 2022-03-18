@@ -33,6 +33,18 @@ class GraphModel(TFModelV2):
         vertex_observation_key: str = "vertex_observations",
         **kwargs,
     ):
+        """_summary_
+
+        Args:
+            obs_space: _description_
+            action_space: _description_
+            num_outputs: _description_
+            model_config: _description_
+            name: _description_
+            action_mask_key: _description_. Defaults to "action_mask".
+            vertex_observation_key: _description_. Defaults to "vertex_observations".
+        """    
+
         super().__init__(
             obs_space,
             action_space,
@@ -61,7 +73,16 @@ class GraphModel(TFModelV2):
         state: List[tf.Tensor],
         seq_lens: tf.Tensor,
     ) -> Tuple[tf.Tensor, List[tf.Tensor]]:
+        """_summary_
 
+        Args:
+            input_dict: _description_
+            state: _description_
+            seq_lens: _description_
+
+        Returns:
+            _description_
+        """
         # Extract the available actions tensor from the observation.
         observation = input_dict["obs"]
 
@@ -79,10 +100,16 @@ class GraphModel(TFModelV2):
 
         # mask out invalid actions and get current vertex value
         def mask_values(values):
-            """
-            Returns the value for the current vertex (index 0 of values),
+            """Returns the value for the current vertex (index 0 of values),
             and the masked values of the action verticies.
-            """
+
+            Args:
+                values: _description_
+
+            Returns:
+                _description_
+            """            
+
             values = tf.reshape(values, tf.shape(action_mask))
             current_value = values[:, 0]
             masked_action_values = tf.where(
@@ -99,6 +126,11 @@ class GraphModel(TFModelV2):
         return self.action_weights, state
 
     def value_function(self):
+        """_summary_
+
+        Returns:
+            _description_
+        """        
         return self.total_value
 
     @abstractmethod
@@ -106,15 +138,19 @@ class GraphModel(TFModelV2):
         self,
         input_dict: GraphModelObservation,
     ) -> Tuple[tf.Tensor, tf.Tensor]:
-        """
-        Forward function returning a value and weight tensor for the verticies
+        """Forward function returning a value and weight tensor for the verticies
         observed via input_dict (a dict of tensors for each vertex property)
-        """
+
+        Args:
+            input_dict: _description_
+
+        Returns:
+            _description_
+        """    
         pass
 
     def _forward_total_value(self):
-        """
-        Forward method computing the value assesment of the current state,
+        """Forward method computing the value assesment of the current state,
         as returned by the value_function() method.
 
         The default implementation return the action value of the current state.
@@ -122,5 +158,8 @@ class GraphModel(TFModelV2):
         Breaking this into a separate method allows subclasses to override the
         state value assesment, for example with a Bellman backup returning
         the max over all successor states's values.
-        """
+
+        Returns:
+            _description_
+        """        
         return self.current_vertex_value
