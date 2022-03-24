@@ -133,10 +133,8 @@ class GraphEnv(gym.Env):
         are offset by one index to accomodate that.
 
         Returns:
-            Dict[str, any] : Dictionary consisting of {
-                self._action_mask_key : bool action mask Numpy array,
-                self._vertex_observation_key : stacked vertex observations
-            }
+            Dict[str, any] : Dictionary consisting of {self._action_mask_key : bool action mask Numpy array, self._vertex_observation_key : stacked vertex observations}
+            
         """
 
         num_actions = 1 + self.max_num_actions
