@@ -19,6 +19,15 @@ class GraphModel(TFModelV2):
     """
     Defines a RLLib TFModelV2 compatible model for using RL algorithms on a
     GraphEnv.
+
+    Attributes:
+        _action_mask_key observation : space key for the action mask
+        _vertex_observation_key : observation space key for the vertex observations
+        action_mask : bool tensor of valid next actions
+        current_vertex_value : value of current vertex
+        action_values : values of each action vertex
+        current_vertex_weight : weight of current vertex
+        action_weights : action weights of each action vertex
     """
 
     def __init__(
@@ -33,17 +42,17 @@ class GraphModel(TFModelV2):
         vertex_observation_key: str = "vertex_observations",
         **kwargs,
     ):
-        """_summary_
+        """Initializes a GraphModel instance.
 
         Args:
-            obs_space: _description_
-            action_space: _description_
-            num_outputs: _description_
-            model_config: _description_
-            name: _description_
-            action_mask_key: _description_. Defaults to "action_mask".
-            vertex_observation_key: _description_. Defaults to "vertex_observations".
-        """    
+            obs_space: The observation space to use.
+            action_space: The action space to use.
+            num_outputs: The number of scalar outputs per state to produce.
+            model_config: Config forwarded to TFModelV2.__init()__.
+            name: Config forwarded to TFModelV2.__init()__.
+            action_mask_key: Key used to retrieve the action mask from the observation space dictionary. Defaults to "action_mask".
+            vertex_observation_key: Key used to retrieve the per-action vertex observations from the observation space dictionary. Defaults to "vertex_observations".
+        """
 
         super().__init__(
             obs_space,
@@ -54,18 +63,13 @@ class GraphModel(TFModelV2):
             *args,
             **kwargs,
         )
-
-        # observation space key for the action mask
         self._action_mask_key = action_mask_key
-
-        # observation space key for the vertex observations
         self._vertex_observation_key = vertex_observation_key
-
-        self.action_mask = None  # bool tensor of valid next actions
-        self.current_vertex_value = None  # value of current vertex
-        self.action_values = None  # values of each action vertex
-        self.current_vertex_weight = None  # weight of current vertex
-        self.action_weights = None  # action weights of each action vertex
+        self.action_mask = None
+        self.current_vertex_value = None
+        self.action_values = None
+        self.current_vertex_weight = None
+        self.action_weights = None
 
     def forward(
         self,
@@ -73,15 +77,16 @@ class GraphModel(TFModelV2):
         state: List[tf.Tensor],
         seq_lens: tf.Tensor,
     ) -> Tuple[tf.Tensor, List[tf.Tensor]]:
-        """_summary_
+        """
+        Tensorflow/Keras style forward method. Sets up the computation graph used by this model.
 
         Args:
-            input_dict: _description_
-            state: _description_
-            seq_lens: _description_
+            input_dict: Observation input to the model. Consists of a dictionary including key 'obs' which stores the raw observation from the process.
+            state: Tensor of current states. Passes through this function untouched.
+            seq_lens: Unused. Required by API.
 
         Returns:
-            _description_
+            (action weights tensor, state) 
         """
         # Extract the available actions tensor from the observation.
         observation = input_dict["obs"]
@@ -94,7 +99,7 @@ class GraphModel(TFModelV2):
 
         action_mask = observation[self._action_mask_key]
 
-        # Ray likes to make bool arrays into floats, so we undo it here
+        # Ray likes to make bool arrays into floats, so we undo it here.
         if action_mask.dtype != tf.dtypes.bool:
             action_mask = tf.equal(action_mask, 1.0)
 
@@ -104,11 +109,11 @@ class GraphModel(TFModelV2):
             and the masked values of the action verticies.
 
             Args:
-                values: _description_
+                values: Tensor to apply the action mask to.
 
             Returns:
-                _description_
-            """            
+                (a current state value tensor, a masked action values tensor)
+            """
 
             values = tf.reshape(values, tf.shape(action_mask))
             current_value = values[:, 0]
@@ -126,11 +131,11 @@ class GraphModel(TFModelV2):
         return self.action_weights, state
 
     def value_function(self):
-        """_summary_
+        """
 
         Returns:
-            _description_
-        """        
+            A tensor of current state values.
+        """
         return self.total_value
 
     @abstractmethod
@@ -142,11 +147,11 @@ class GraphModel(TFModelV2):
         observed via input_dict (a dict of tensors for each vertex property)
 
         Args:
-            input_dict: _description_
+            input_dict: per-vertex observations
 
         Returns:
-            _description_
-        """    
+            (value tensor, weight tensor) for the given observations
+        """
         pass
 
     def _forward_total_value(self):
@@ -160,6 +165,6 @@ class GraphModel(TFModelV2):
         the max over all successor states's values.
 
         Returns:
-            _description_
-        """        
+            current value tensor
+        """
         return self.current_vertex_value

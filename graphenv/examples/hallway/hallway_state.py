@@ -47,7 +47,7 @@ class HallwayState(Vertex):
         info["cur_pos"] = self.cur_pos
         return info
 
-    def _get_next_actions(self) -> Sequence["HallwayState"]:
+    def _get_children(self) -> Sequence["HallwayState"]:
         if self.cur_pos < self.end_pos:
             if self.cur_pos > 0:  # Stop the hallway from going negative
                 yield self.new(self.cur_pos - 1)
