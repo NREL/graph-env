@@ -3,8 +3,8 @@ name: Create Docs
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events
-  #push:
-  #  branches: [ sphinx-docs ]
+  push:
+    branches: [ sphinx-docs ]
   #pull_request:
   #  branches: [ main ]
 
