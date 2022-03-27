@@ -1,0 +1,35 @@
+name: Create Docs
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events
+  #push:
+  #  branches: [ sphinx-docs ]
+  #pull_request:
+  #  branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  builddocs:
+    name: Build docs using conda and sphinx
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: graphenv
+          environment-file: devtools/conda-envs/environment.yml
+          python-version: 3.9
+      - run: |
+          conda info
+          conda list
+          pip install sphinx
+          cd docs
+          sphinx-apidoc -f -o source/ ../graphenv/
+          make html
