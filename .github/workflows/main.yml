@@ -4,7 +4,9 @@ name: Create Docs
 on:
   # Triggers the workflow on push or pull request events
   push:
-    branches: [ sphinx-docs ]
+    branches:
+      - main
+      - sphinx-docs
   #pull_request:
   #  branches: [ main ]
 
