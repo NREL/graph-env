@@ -7,7 +7,7 @@ from graphenv.examples.tsp.tsp_state import TSPState
 
 class TSPEnv(GraphEnv):
     """
-    Convience class of a GraphEnv using a TSPState as the vertex state.
+    Convenience class of a GraphEnv using a TSPState as the vertex state.
     """
 
     def __init__(self, config: EnvContext, *args, **kwargs):

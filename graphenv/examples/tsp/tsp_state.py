@@ -111,7 +111,7 @@ class TSPState(Vertex):
         if len(nbrs) == 0 and len(self.tour) == self.num_nodes:
             nbrs = [self.tour[0]]
 
-        # Conditions for completing the ciruit.
+        # Conditions for completing the circuit.
         if len(nbrs) == 0 and len(self.tour) == self.num_nodes + 1:
             nbrs = []
 
