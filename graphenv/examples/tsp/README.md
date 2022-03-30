@@ -22,7 +22,7 @@ The `tsp-env.ipynb` notebook is effectively the same as this demo
 but with network viz.
 
 A script for solving the TSPEnv with RLLib is available in 
-`graph-env/docs/examples/run_tsp.env`.
+`graph-env/docs/examples/run_tsp.py`.
 
 
 
