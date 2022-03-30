@@ -34,10 +34,11 @@ jobs:
       
       - name: Build docs with Sphinx
         run: |
-          pip install sphinx
+          pip install sphinx sphinx-rtd-theme
           cd docs
           sphinx-apidoc -f -o source/ ../graphenv/
           make html
+          touch build/html/.nojekyll
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
