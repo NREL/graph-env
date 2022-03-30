@@ -1,6 +1,6 @@
 
 ```
-pip install sphinx
+pip install sphinx sphinx-rtd-theme
 sphinx-quickstart docs
 # separate source and build = yes
 
