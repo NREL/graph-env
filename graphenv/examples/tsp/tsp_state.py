@@ -14,14 +14,17 @@ class TSPState(Vertex):
     def __init__(
         self,
         G: nx.Graph,
-        tour: List[int] = [],
+        tour: List[int] = [0],
+        reward_baseline: float = 1.
     ) -> None:
         """Create a TSP vertex that defines the graph search problem.
 
         Args:
             G: A fully connected networkx graph.
             tour: A list of nodes in visitation order that led to this 
-                state. Defaults to [].
+                state. Defaults to [0] which begins the tour at node 0.
+            reward_baseline: A baseline reward used to normalize the 
+                env reward, e.g., coming from nx heuristics.
         """    
 
         super().__init__()
@@ -29,7 +32,7 @@ class TSPState(Vertex):
         self.G = G
         self.num_nodes = self.G.number_of_nodes()
         self.tour = tour
-
+        self.reward_baseline = reward_baseline
 
     @property
     def observation_space(self) -> gym.spaces.Dict:
@@ -40,8 +43,10 @@ class TSPState(Vertex):
         """        
         return gym.spaces.Dict(
             {
-                "node_obs": gym.spaces.Box(low=0., high=self.num_nodes - 1, 
-                    shape=(1,), dtype=np.float),
+                "node_obs": gym.spaces.Box(
+                    low=np.zeros(2), high=np.ones(2), dtype=float),
+                "node_idx": gym.spaces.Box(
+                    low=np.array([0]), high=np.array([self.num_nodes]), dtype=int),
             }
         )
 
@@ -71,6 +76,9 @@ class TSPState(Vertex):
             # Otherwise, reward is negative distance between last two nodes.
             src, dst = self.tour[-2:]
             rew = -self.G[src][dst]["weight"]
+
+        # Normalize the reward by the baseline value (1 by default).
+        rew /= self.reward_baseline
 
         return rew
 
@@ -134,6 +142,11 @@ class TSPState(Vertex):
             Observation dict.  We define the node_obs to be the degree of the 
             current node.  This is a placeholder for a more meaningful feature!
         """        
+
+        cur_node = self.tour[-1]
+        cur_pos = np.array(self.G.nodes[cur_node]["pos"], dtype=np.float).squeeze()
+
         return {
-            "node_obs": np.array([self.G.degree[self.tour[-1]]], dtype=np.float)
+            "node_obs": cur_pos,
+            "node_idx": np.array([cur_node], dtype=np.int)
         }

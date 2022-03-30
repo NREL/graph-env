@@ -4,7 +4,7 @@ import os
 import ray
 from graphenv.examples.tsp.tsp_env import TSPEnv
 from graphenv.examples.tsp.tsp_model import TSPModel
-from graphenv.examples.tsp.tsp_gym_env import TSPGymEnv, make_complete_planar_graph
+from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.models import ModelCatalog
@@ -19,12 +19,20 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--run", type=str, default="PPO", help="The RLlib-registered algorithm to use."
 )
-
+parser.add_argument(
+    "--N", type=int, default=5, help="Number of nodes in TSP network"
+)
+parser.add_argument(
+    "--seed", type=int, default=0, help="Random seed used to generate networkx graph"
+)
 parser.add_argument(
     "--as-test",
     action="store_true",
     help="Whether this script should be run as a test: --stop-reward must "
     "be achieved within --stop-timesteps AND --stop-iters.",
+)
+parser.add_argument(
+    "--num-workers", type=int, default=1, help="Number of rllib workers"
 )
 parser.add_argument(
     "--stop-iters", type=int, default=50, help="Number of iterations to train."
@@ -33,7 +41,7 @@ parser.add_argument(
     "--stop-timesteps", type=int, default=100000, help="Number of timesteps to train."
 )
 parser.add_argument(
-    "--stop-reward", type=float, default=0.1, help="Reward at which we stop training."
+    "--stop-reward", type=float, default=1., help="Reward at which we stop training."
 )
 parser.add_argument(
     "--no-tune",
@@ -58,21 +66,31 @@ if __name__ == "__main__":
     register_env("tsp", lambda config: TSPEnv(config))
     ModelCatalog.register_custom_model("my_model", TSPModel)
 
-    G = make_complete_planar_graph(5)
+    # Create a baseline solution using networkx heuristics
+    import networkx as nx
+
+    N = args.N
+    G = make_complete_planar_graph(N=N, seed=args.seed)
+    
+    tsp = nx.approximation.traveling_salesman_problem
+    path = tsp(G, cycle=True)
+    baseline_reward = -sum([G[path[i]][path[i+1]]["weight"] for i in range(0, N-1)])
+    print(f"Networkx heuristic reward: {baseline_reward:1.3f}")
 
     config = {
         "env": TSPEnv,  # or "corridor" if registered above
         "env_config": {
-            "G": G
+            "G": G,
+            "baseline_reward": baseline_reward
         },
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
-        "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
+        "num_gpus": 0, #int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
             "custom_model": "my_model",
-            "custom_model_config": {"hidden_dim": 32},
+            "custom_model_config": {"hidden_dim": 32, "num_nodes": N},
         },
-        "num_workers": 1,  # parallelism
-        "framework": "tf2",
+        "num_workers": args.num_workers,  # parallelism
+        "framework": "tf2"
     }
 
     stop = {

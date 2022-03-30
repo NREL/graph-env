@@ -11,11 +11,17 @@ class TSPEnv(GraphEnv):
     """
 
     def __init__(self, config: EnvContext, *args, **kwargs):
+
         G = config["G"]
+        max_num_actions = G.number_of_nodes()
+        reward_baseline = 1.
+        if "reward_baseline" in config:
+            reward_baseline = config["reward_baseline"]
+        
         super().__init__(
-            TSPState(G),
+            TSPState(G, reward_baseline=reward_baseline),
             *args,
-            max_num_actions=G.number_of_nodes(),
+            max_num_actions=max_num_actions,
             **kwargs,
         )
 
