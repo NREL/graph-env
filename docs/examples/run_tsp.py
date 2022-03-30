@@ -41,7 +41,7 @@ parser.add_argument(
     "--stop-timesteps", type=int, default=100000, help="Number of timesteps to train."
 )
 parser.add_argument(
-    "--stop-reward", type=float, default=1., help="Reward at which we stop training."
+    "--stop-reward", type=float, default=0., help="Reward at which we stop training."
 )
 parser.add_argument(
     "--no-tune",
@@ -74,14 +74,13 @@ if __name__ == "__main__":
     
     tsp = nx.approximation.traveling_salesman_problem
     path = tsp(G, cycle=True)
-    baseline_reward = -sum([G[path[i]][path[i+1]]["weight"] for i in range(0, N-1)])
-    print(f"Networkx heuristic reward: {baseline_reward:1.3f}")
+    reward_baseline = -sum([G[path[i]][path[i+1]]["weight"] for i in range(0, N-1)])
+    print(f"Networkx heuristic reward: {reward_baseline:1.3f}")
 
     config = {
         "env": TSPEnv,  # or "corridor" if registered above
         "env_config": {
-            "G": G,
-            "baseline_reward": baseline_reward
+            "G": G
         },
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": 0, #int(os.environ.get("RLLIB_NUM_GPUS", "0")),
@@ -90,13 +89,16 @@ if __name__ == "__main__":
             "custom_model_config": {"hidden_dim": 32, "num_nodes": N},
         },
         "num_workers": args.num_workers,  # parallelism
-        "framework": "tf2"
+        "framework": "tf2",
+        "rollout_fragment_length": N,     # a multiple of tour length
+        "train_batch_size": N * args.num_workers,  # a multiple of num workers
+        #"entropy_coeff": 0.01
     }
 
     stop = {
         "training_iteration": args.stop_iters,
         "timesteps_total": args.stop_timesteps,
-        "episode_reward_mean": args.stop_reward,
+        "episode_reward_mean": min(reward_baseline, args.stop_reward),
     }
 
     if args.no_tune:

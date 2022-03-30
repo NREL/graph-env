@@ -14,12 +14,9 @@ class TSPEnv(GraphEnv):
 
         G = config["G"]
         max_num_actions = G.number_of_nodes()
-        reward_baseline = 1.
-        if "reward_baseline" in config:
-            reward_baseline = config["reward_baseline"]
-        
+
         super().__init__(
-            TSPState(G, reward_baseline=reward_baseline),
+            TSPState(G),
             *args,
             max_num_actions=max_num_actions,
             **kwargs,

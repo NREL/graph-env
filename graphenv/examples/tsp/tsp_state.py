@@ -14,8 +14,7 @@ class TSPState(Vertex):
     def __init__(
         self,
         G: nx.Graph,
-        tour: List[int] = [0],
-        reward_baseline: float = 1.
+        tour: List[int] = [0]
     ) -> None:
         """Create a TSP vertex that defines the graph search problem.
 
@@ -23,8 +22,6 @@ class TSPState(Vertex):
             G: A fully connected networkx graph.
             tour: A list of nodes in visitation order that led to this 
                 state. Defaults to [0] which begins the tour at node 0.
-            reward_baseline: A baseline reward used to normalize the 
-                env reward, e.g., coming from nx heuristics.
         """    
 
         super().__init__()
@@ -32,7 +29,6 @@ class TSPState(Vertex):
         self.G = G
         self.num_nodes = self.G.number_of_nodes()
         self.tour = tour
-        self.reward_baseline = reward_baseline
 
     @property
     def observation_space(self) -> gym.spaces.Dict:
@@ -77,14 +73,11 @@ class TSPState(Vertex):
             src, dst = self.tour[-2:]
             rew = -self.G[src][dst]["weight"]
 
-        # Normalize the reward by the baseline value (1 by default).
-        rew /= self.reward_baseline
-
         return rew
 
 
     def new(self, G: nx.Graph, tour: List[int]):
-        """Convenience function for duplicating the existing node
+        """Convenience function for duplicating the existing node.
 
         Args:
             G:  Networkx graph.
