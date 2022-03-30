@@ -1,47 +1,93 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>graphenv package &#8212; graph-env 0.0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphenv package &mdash; graph-env 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="graphenv" href="modules.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="graphenv" href="modules.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> graph-env
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">graphenv</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">graphenv package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-graphenv.graph_env">graphenv.graph_env module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-graphenv.graph_model">graphenv.graph_model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-graphenv.graph_model_bellman_mixin">graphenv.graph_model_bellman_mixin module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-graphenv.space_util">graphenv.space_util module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-graphenv.vertex">graphenv.vertex module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-graphenv">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">graph-env</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">graphenv</a> &raquo;</li>
+      <li>graphenv package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/graphenv.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="graphenv-package">
-<h1>graphenv package<a class="headerlink" href="#graphenv-package" title="Permalink to this headline">¶</a></h1>
+<h1>graphenv package<a class="headerlink" href="#graphenv-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
 <section id="module-graphenv.graph_env">
-<span id="graphenv-graph-env-module"></span><h2>graphenv.graph_env module<a class="headerlink" href="#module-graphenv.graph_env" title="Permalink to this headline">¶</a></h2>
+<span id="graphenv-graph-env-module"></span><h2>graphenv.graph_env module<a class="headerlink" href="#module-graphenv.graph_env" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_env.</span></span><span class="sig-name descname"><span class="pre">GraphEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">graphenv.vertex.V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_env.GraphEnv" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_env.</span></span><span class="sig-name descname"><span class="pre">GraphEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">graphenv.vertex.V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_env.GraphEnv" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gym.core.Env</span></code></p>
 <p>Defines an OpenAI Gym Env for traversing a graph using the current vertex
 as the state, and the successor verticies as actions.</p>
@@ -49,7 +95,7 @@ as the state, and the successor verticies as actions.</p>
 which defines the graph via it’s get_next_actions() method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.state">
-<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.state" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.state" title="Permalink to this definition"></a></dt>
 <dd><p>current vertex</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -60,7 +106,7 @@ which defines the graph via it’s get_next_actions() method.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.max_num_actions">
-<span class="sig-name descname"><span class="pre">max_num_actions</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.max_num_actions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">max_num_actions</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.max_num_actions" title="Permalink to this definition"></a></dt>
 <dd><p>maximum number of actions considered at a time</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -71,7 +117,7 @@ which defines the graph via it’s get_next_actions() method.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv._action_mask_key">
-<span class="sig-name descname"><span class="pre">_action_mask_key</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv._action_mask_key" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_action_mask_key</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv._action_mask_key" title="Permalink to this definition"></a></dt>
 <dd><p>key under which the action mask is stored in the root observation space dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -82,7 +128,7 @@ which defines the graph via it’s get_next_actions() method.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv._vertex_observation_key">
-<span class="sig-name descname"><span class="pre">_vertex_observation_key</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv._vertex_observation_key" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_vertex_observation_key</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv._vertex_observation_key" title="Permalink to this definition"></a></dt>
 <dd><p>key under which the per-action vertex observations are stored in the root observation space dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -93,7 +139,7 @@ which defines the graph via it’s get_next_actions() method.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.make_observation">
-<span class="sig-name descname"><span class="pre">make_observation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.make_observation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">make_observation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.make_observation" title="Permalink to this definition"></a></dt>
 <dd><p>Makes an observation for this state which includes observations of
 each possible action, and the current state.</p>
 <p>Expects the action observations to all be Dicts with the same keys.</p>
@@ -114,12 +160,12 @@ are offset by one index to accomodate that.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">max_num_actions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">max_num_actions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.reset" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset this state to the root vertex. It is possible for state.root to
 return different root verticies on each call.</p>
 <dl class="field-list simple">
@@ -134,12 +180,12 @@ return different root verticies on each call.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">graphenv.vertex.V</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">graphenv.vertex.V</span></em><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.step" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.step" title="Permalink to this definition"></a></dt>
 <dd><p>Steps the envirionment to a new state by taking an action. In the
 case of GraphEnv, the action specifies which next vertex to move to and
 this method advances the environment to that vertex.</p>
@@ -170,10 +216,10 @@ a dictionary of debugging information related to this call</p>
 
 </section>
 <section id="module-graphenv.graph_model">
-<span id="graphenv-graph-model-module"></span><h2>graphenv.graph_model module<a class="headerlink" href="#module-graphenv.graph_model" title="Permalink to this headline">¶</a></h2>
+<span id="graphenv-graph-model-module"></span><h2>graphenv.graph_model module<a class="headerlink" href="#module-graphenv.graph_model" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_model.</span></span><span class="sig-name descname"><span class="pre">GraphModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_model.GraphModel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_model.</span></span><span class="sig-name descname"><span class="pre">GraphModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_model.GraphModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ray.rllib.models.tf.tf_modelv2.TFModelV2</span></code></p>
 <p>Defines a RLLib TFModelV2 compatible model for using RL algorithms on a
 GraphEnv.</p>
@@ -185,43 +231,43 @@ GraphEnv.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel._vertex_observation_key">
-<span class="sig-name descname"><span class="pre">_vertex_observation_key</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel._vertex_observation_key" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_vertex_observation_key</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel._vertex_observation_key" title="Permalink to this definition"></a></dt>
 <dd><p>observation space key for the vertex observations</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_mask">
-<span class="sig-name descname"><span class="pre">action_mask</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_mask" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">action_mask</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_mask" title="Permalink to this definition"></a></dt>
 <dd><p>bool tensor of valid next actions</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.current_vertex_value">
-<span class="sig-name descname"><span class="pre">current_vertex_value</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.current_vertex_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">current_vertex_value</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.current_vertex_value" title="Permalink to this definition"></a></dt>
 <dd><p>value of current vertex</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_values">
-<span class="sig-name descname"><span class="pre">action_values</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">action_values</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_values" title="Permalink to this definition"></a></dt>
 <dd><p>values of each action vertex</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.current_vertex_weight">
-<span class="sig-name descname"><span class="pre">current_vertex_weight</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.current_vertex_weight" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">current_vertex_weight</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.current_vertex_weight" title="Permalink to this definition"></a></dt>
 <dd><p>weight of current vertex</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_weights">
-<span class="sig-name descname"><span class="pre">action_weights</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">action_weights</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_weights" title="Permalink to this definition"></a></dt>
 <dd><p>action weights of each action vertex</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.forward" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.forward" title="Permalink to this definition"></a></dt>
 <dd><p>Tensorflow/Keras style forward method. Sets up the computation graph used by this model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -239,7 +285,7 @@ GraphEnv.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.forward_vertex">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.forward_vertex" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">GraphModelObservation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.forward_vertex" title="Permalink to this definition"></a></dt>
 <dd><p>Forward function returning a value and weight tensor for the verticies
 observed via input_dict (a dict of tensors for each vertex property)</p>
 <dl class="field-list simple">
@@ -254,7 +300,7 @@ observed via input_dict (a dict of tensors for each vertex property)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.value_function">
-<span class="sig-name descname"><span class="pre">value_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_model.GraphModel.value_function" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">value_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_model.GraphModel.value_function" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A tensor of current state values.</p>
@@ -266,10 +312,10 @@ observed via input_dict (a dict of tensors for each vertex property)</p>
 
 </section>
 <section id="module-graphenv.graph_model_bellman_mixin">
-<span id="graphenv-graph-model-bellman-mixin-module"></span><h2>graphenv.graph_model_bellman_mixin module<a class="headerlink" href="#module-graphenv.graph_model_bellman_mixin" title="Permalink to this headline">¶</a></h2>
+<span id="graphenv-graph-model-bellman-mixin-module"></span><h2>graphenv.graph_model_bellman_mixin module<a class="headerlink" href="#module-graphenv.graph_model_bellman_mixin" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_model_bellman_mixin.</span></span><span class="sig-name descname"><span class="pre">GraphModelBellmanMixin</span></span><a class="headerlink" href="#graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_model_bellman_mixin.</span></span><span class="sig-name descname"><span class="pre">GraphModelBellmanMixin</span></span><a class="headerlink" href="#graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Mixin for use with GraphModel that evaluates the current state as the
 max of the successor state value assesments.</p>
@@ -277,10 +323,10 @@ max of the successor state value assesments.</p>
 
 </section>
 <section id="module-graphenv.space_util">
-<span id="graphenv-space-util-module"></span><h2>graphenv.space_util module<a class="headerlink" href="#module-graphenv.space_util" title="Permalink to this headline">¶</a></h2>
+<span id="graphenv-space-util-module"></span><h2>graphenv.space_util module<a class="headerlink" href="#module-graphenv.space_util" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="graphenv.space_util.broadcast_space">
-<span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">broadcast_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.space_util.broadcast_space" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">broadcast_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.space_util.broadcast_space" title="Permalink to this definition"></a></dt>
 <dd><p>Broadcasts this space into the given shape.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -300,7 +346,7 @@ max of the successor state value assesments.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphenv.space_util.flatten_first_dim">
-<span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">flatten_first_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.space_util.flatten_first_dim" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">flatten_first_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.space_util.flatten_first_dim" title="Permalink to this definition"></a></dt>
 <dd><p>Merges the first and second dimensions of the tensor(s) in the target
 data structure. Valid targets include tensors, Iterables (including list),
 and Mappings (including dict). A single tensor with shape (x, y, *z) becomes
@@ -323,7 +369,7 @@ in OrderedDict’s in the order returned by the mappings items() iteration.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphenv.space_util.stack_observations">
-<span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">stack_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.space_util.stack_observations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">stack_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.space.Space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.space_util.stack_observations" title="Permalink to this definition"></a></dt>
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">stack_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.multi_discrete.MultiDiscrete</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_values</span></span></em><span class="sig-paren">)</span></dt>
 <dt class="sig sig-object py">
@@ -355,10 +401,10 @@ Dict space values.</p>
 
 </section>
 <section id="module-graphenv.vertex">
-<span id="graphenv-vertex-module"></span><h2>graphenv.vertex module<a class="headerlink" href="#module-graphenv.vertex" title="Permalink to this headline">¶</a></h2>
+<span id="graphenv-vertex-module"></span><h2>graphenv.vertex module<a class="headerlink" href="#module-graphenv.vertex" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.vertex.</span></span><span class="sig-name descname"><span class="pre">Vertex</span></span><a class="headerlink" href="#graphenv.vertex.Vertex" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.vertex.</span></span><span class="sig-name descname"><span class="pre">Vertex</span></span><a class="headerlink" href="#graphenv.vertex.Vertex" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">graphenv.vertex.V</span></code>]</p>
 <p>Abstract class defining a vertex in a graph. To implement a graph using
 this class, subclass Vertex and implement the abstract methods below.</p>
@@ -369,7 +415,7 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex._children">
-<span class="sig-name descname"><span class="pre">_children</span></span><a class="headerlink" href="#graphenv.vertex.Vertex._children" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_children</span></span><a class="headerlink" href="#graphenv.vertex.Vertex._children" title="Permalink to this definition"></a></dt>
 <dd><p>memoized list of child vertices</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -380,7 +426,7 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex._observation">
-<span class="sig-name descname"><span class="pre">_observation</span></span><a class="headerlink" href="#graphenv.vertex.Vertex._observation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_observation</span></span><a class="headerlink" href="#graphenv.vertex.Vertex._observation" title="Permalink to this definition"></a></dt>
 <dd><p>memoized observation of this vertex</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -391,7 +437,7 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.children">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.vertex.Vertex.children" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.vertex.Vertex.children" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the child verticies of this vertex.
 Acts as a wrapper that memoizes calls to _get_children() and
 ensures that it is a list. If you would like a different behavior,
@@ -408,14 +454,14 @@ such as stochastic child verticies, override this property.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.info">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.info" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.info" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 An optional dictionary with additional information about the state</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.observation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.observation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.observation" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the observation of this vertex.
 Acts as a wrapper that memoizes calls to _make_observation().
 If you would like a different behavior,
@@ -429,7 +475,7 @@ such as stochastic observations, override this property.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.observation_space">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.observation_space" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.observation_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the vertex observation space, used to define the structure of
 the data returned when observing a vertex.</p>
 <dl class="field-list simple">
@@ -444,7 +490,7 @@ the data returned when observing a vertex.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.reward">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.reward" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.reward" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the reward for this vertex.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -458,7 +504,7 @@ the data returned when observing a vertex.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.root">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">graphenv.vertex.V</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.root" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">graphenv.vertex.V</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.root" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the root vertex of the graph. Not required to always return the
 same vertex.</p>
 <dl class="field-list simple">
@@ -473,7 +519,7 @@ same vertex.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.terminal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">terminal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.terminal" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">terminal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.terminal" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 True if this is a terminal vertex in the graph.</p>
 </dd></dl>
@@ -482,81 +528,38 @@ True if this is a terminal vertex in the graph.</p>
 
 </section>
 <section id="module-graphenv">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-graphenv" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-graphenv" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="graphenv" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, TODO.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">graph-env</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">graphenv</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">graphenv package</a></li>
-</ul>
-</li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">graphenv</a><ul>
-      <li>Previous: <a href="modules.html" title="previous chapter">graphenv</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, TODO.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/graphenv.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>
