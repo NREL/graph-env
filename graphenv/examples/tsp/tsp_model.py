@@ -21,7 +21,7 @@ class TSPModel(GraphModel):
         node_idx = layers.Input(shape=(1,), name="node_idx", dtype=tf.int32)
 
         embed_layer = layers.Embedding(
-            num_nodes, hidden_dim, name="embed_layer", input_length=0)
+            num_nodes, hidden_dim, name="embed_layer", input_length=1)
         hidden_layer_1 = layers.Dense(
             hidden_dim, name="hidden_layer_1", activation="relu")
         hidden_layer_2 = layers.Dense(
