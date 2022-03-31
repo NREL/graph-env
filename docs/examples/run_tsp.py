@@ -1,10 +1,6 @@
 import argparse
-import os
 
 import ray
-from graphenv.examples.tsp.tsp_env import TSPEnv
-from graphenv.examples.tsp.tsp_model import TSPModel
-from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.models import ModelCatalog
@@ -12,6 +8,10 @@ from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.utils.test_utils import check_learning_achieved
 from ray.tune.logger import pretty_print
 from ray.tune.registry import register_env
+
+from graphenv.examples.tsp.tsp_env import TSPEnv
+from graphenv.examples.tsp.tsp_model import TSPModel
+from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 
 tf1, tf, tfv = try_import_tf()
 
@@ -86,13 +86,16 @@ if __name__ == "__main__":
         "num_gpus": 0, #int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
             "custom_model": "my_model",
-            "custom_model_config": {"hidden_dim": 32, "num_nodes": N},
+            "custom_model_config": {
+                "hidden_dim": 256,
+                "embed_dim": 256,
+                "num_nodes": N
+            },
         },
         "num_workers": args.num_workers,  # parallelism
         "framework": "tf2",
         "rollout_fragment_length": N,     # a multiple of tour length
-        "train_batch_size": N * args.num_workers,  # a multiple of num workers
-        #"entropy_coeff": 0.01
+        "train_batch_size": 4 * N * args.num_workers,  # a multiple of num workers
     }
 
     stop = {
@@ -109,7 +112,7 @@ if __name__ == "__main__":
         ppo_config = ppo.DEFAULT_CONFIG.copy()
         ppo_config.update(config)
         # use fixed learning rate instead of grid search (needs tune)
-        ppo_config["lr"] = 1e-3
+        ppo_config["lr"] = 5e-4
         trainer = ppo.PPOTrainer(config=ppo_config, env=TSPEnv)
         # run manual training loop and print results after each iteration
         for _ in range(args.stop_iters):
