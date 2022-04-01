@@ -23,11 +23,11 @@ def test_observation_space(hallway_state: HallwayState):
     assert hallway_state.observation_space
 
 
-def test_next_actions(hallway_state: HallwayState):
+def test_children(hallway_state: HallwayState):
     actions_list = hallway_state.children
     assert len(actions_list) == 1
 
-    actions_list = actions_list[0].next_actions
+    actions_list = actions_list[0].children
     assert len(actions_list) == 2
 
 
