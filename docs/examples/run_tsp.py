@@ -1,6 +1,9 @@
 import argparse
 
 import ray
+from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
+from graphenv.examples.tsp.tsp_env import TSPEnv
+from graphenv.examples.tsp.tsp_model import TSPModel
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.models import ModelCatalog
@@ -9,19 +12,13 @@ from ray.rllib.utils.test_utils import check_learning_achieved
 from ray.tune.logger import pretty_print
 from ray.tune.registry import register_env
 
-from graphenv.examples.tsp.tsp_env import TSPEnv
-from graphenv.examples.tsp.tsp_model import TSPModel
-from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
-
 tf1, tf, tfv = try_import_tf()
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "--run", type=str, default="PPO", help="The RLlib-registered algorithm to use."
 )
-parser.add_argument(
-    "--N", type=int, default=5, help="Number of nodes in TSP network"
-)
+parser.add_argument("--N", type=int, default=5, help="Number of nodes in TSP network")
 parser.add_argument(
     "--seed", type=int, default=0, help="Random seed used to generate networkx graph"
 )
@@ -41,7 +38,7 @@ parser.add_argument(
     "--stop-timesteps", type=int, default=100000, help="Number of timesteps to train."
 )
 parser.add_argument(
-    "--stop-reward", type=float, default=0., help="Reward at which we stop training."
+    "--stop-reward", type=float, default=0.0, help="Reward at which we stop training."
 )
 parser.add_argument(
     "--no-tune",
@@ -71,30 +68,28 @@ if __name__ == "__main__":
 
     N = args.N
     G = make_complete_planar_graph(N=N, seed=args.seed)
-    
+
     tsp = nx.approximation.traveling_salesman_problem
     path = tsp(G, cycle=True)
-    reward_baseline = -sum([G[path[i]][path[i+1]]["weight"] for i in range(0, N-1)])
+    reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N - 1)])
     print(f"Networkx heuristic reward: {reward_baseline:1.3f}")
 
     config = {
         "env": TSPEnv,  # or "corridor" if registered above
-        "env_config": {
-            "G": G
-        },
+        "env_config": {"G": G},
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
-        "num_gpus": 0, #int(os.environ.get("RLLIB_NUM_GPUS", "0")),
+        "num_gpus": 0,  # int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
             "custom_model": "my_model",
             "custom_model_config": {
                 "hidden_dim": 256,
                 "embed_dim": 256,
-                "num_nodes": N
+                "num_nodes": N,
             },
         },
         "num_workers": args.num_workers,  # parallelism
         "framework": "tf2",
-        "rollout_fragment_length": N,     # a multiple of tour length
+        "rollout_fragment_length": N,  # a multiple of tour length
         "train_batch_size": 4 * N * args.num_workers,  # a multiple of num workers
     }
 
@@ -133,6 +128,6 @@ if __name__ == "__main__":
             print("Checking if learning goals were achieved")
             check_learning_achieved(results, args.stop_reward)
 
-        results.results_df.to_csv('tsp_results.csv')
+        results.results_df.to_csv("tsp_results.csv")
 
     ray.shutdown()

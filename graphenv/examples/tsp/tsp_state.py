@@ -1,9 +1,8 @@
-from typing import Dict, Sequence, List, Tuple
+from typing import Dict, List, Sequence
 
 import gym
-import numpy as np
 import networkx as nx
-
+import numpy as np
 from graphenv import tf
 from graphenv.vertex import Vertex
 
@@ -11,21 +10,17 @@ layers = tf.keras.layers
 
 
 class TSPState(Vertex):
-    def __init__(
-        self,
-        G: nx.Graph,
-        tour: List[int] = [0]
-    ) -> None:
+    def __init__(self, G: nx.Graph, tour: List[int] = [0]) -> None:
         """Create a TSP vertex that defines the graph search problem.
 
         Args:
             G: A fully connected networkx graph.
-            tour: A list of nodes in visitation order that led to this 
+            tour: A list of nodes in visitation order that led to this
                 state. Defaults to [0] which begins the tour at node 0.
-        """    
+        """
 
         super().__init__()
-        
+
         self.G = G
         self.num_nodes = self.G.number_of_nodes()
         self.tour = tour
@@ -36,16 +31,17 @@ class TSPState(Vertex):
 
         Returns:
             Dict observation space.
-        """        
+        """
         return gym.spaces.Dict(
             {
                 "node_obs": gym.spaces.Box(
-                    low=np.zeros(2), high=np.ones(2), dtype=float),
+                    low=np.zeros(2), high=np.ones(2), dtype=float
+                ),
                 "node_idx": gym.spaces.Box(
-                    low=np.array([0]), high=np.array([self.num_nodes]), dtype=int),
+                    low=np.array([0]), high=np.array([self.num_nodes]), dtype=int
+                ),
             }
         )
-
 
     @property
     def root(self) -> "TSPState":
@@ -53,9 +49,8 @@ class TSPState(Vertex):
 
         Returns:
             Node with node 0 as the starting point of the tour.
-        """        
+        """
         return self.new(self.G, [0])
-
 
     @property
     def reward(self) -> float:
@@ -63,18 +58,17 @@ class TSPState(Vertex):
 
         Returns:
             Negative distance between last two nodes in the tour.
-        """        
-        
+        """
+
         if len(self.tour) < 2:
             # First node in the tour does not have a reward associatd with it.
-            rew = 0.
-        else:        
+            rew = 0.0
+        else:
             # Otherwise, reward is negative distance between last two nodes.
             src, dst = self.tour[-2:]
             rew = -self.G[src][dst]["weight"]
 
         return rew
-
 
     def new(self, G: nx.Graph, tour: List[int]):
         """Convenience function for duplicating the existing node.
@@ -85,26 +79,24 @@ class TSPState(Vertex):
 
         Returns:
             New TSP state.
-        """        
+        """
         return TSPState(G, tour)
-
 
     @property
     def info(self) -> Dict:
         return {}
-
 
     def _get_next_actions(self) -> Sequence["TSPState"]:
         """Yields a sequence of TSPState instances associated with the next
         accessible nodes.
 
         Yields:
-            New instance of the TSPState with the next node added to 
+            New instance of the TSPState with the next node added to
             the tour.
         """
         G = self.G
         cur_node = self.tour[-1]
-        
+
         # Look at neighbors not already on the path.
         nbrs = [n for n in G.neighbors(cur_node) if n not in self.tour]
 
@@ -125,21 +117,17 @@ class TSPState(Vertex):
 
             yield self.new(self.G, tour)
 
-
     def _make_observation(self) -> Dict[str, np.ndarray]:
-        """Return an observation.  The dict returned here needs to match 
+        """Return an observation.  The dict returned here needs to match
         both the self.observation_space in this class, as well as the input
         layer in tsp_model.TSPModel
 
         Returns:
-            Observation dict.  We define the node_obs to be the degree of the 
+            Observation dict.  We define the node_obs to be the degree of the
             current node.  This is a placeholder for a more meaningful feature!
-        """        
+        """
 
         cur_node = self.tour[-1]
         cur_pos = np.array(self.G.nodes[cur_node]["pos"], dtype=np.float).squeeze()
 
-        return {
-            "node_obs": cur_pos,
-            "node_idx": np.array([cur_node], dtype=np.int)
-        }
+        return {"node_obs": cur_pos, "node_idx": np.array([cur_node], dtype=np.int)}

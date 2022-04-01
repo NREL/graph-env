@@ -21,11 +21,14 @@ class TSPModel(GraphModel):
         node_idx = layers.Input(shape=(1,), name="node_idx", dtype=tf.int32)
 
         embed_layer = layers.Embedding(
-            num_nodes, hidden_dim, name="embed_layer", input_length=1)
+            num_nodes, hidden_dim, name="embed_layer", input_length=1
+        )
         hidden_layer_1 = layers.Dense(
-            hidden_dim, name="hidden_layer_1", activation="relu")
+            hidden_dim, name="hidden_layer_1", activation="relu"
+        )
         hidden_layer_2 = layers.Dense(
-            hidden_dim, name="hidden_layer_2", activation="linear")
+            hidden_dim, name="hidden_layer_2", activation="linear"
+        )
         action_value_output = layers.Dense(
             1, name="action_value_output", bias_initializer="ones"
         )
@@ -33,10 +36,10 @@ class TSPModel(GraphModel):
             1, name="action_weight_output", bias_initializer="ones"
         )
 
-        # Process the positional node data.  Here we need to expand the 
+        # Process the positional node data.  Here we need to expand the
         # middle axis to match the embedding output dimension.
         hidden = layers.Reshape((1, hidden_dim))(hidden_layer_1(node_obs))
-        
+
         # Process the embedding.
         embed = embed_layer(node_idx)
 
@@ -49,7 +52,9 @@ class TSPModel(GraphModel):
         action_values = action_value_output(out)
         action_weights = action_weight_output(out)
 
-        self.base_model = tf.keras.Model([node_obs, node_idx], [action_values, action_weights])
+        self.base_model = tf.keras.Model(
+            [node_obs, node_idx], [action_values, action_weights]
+        )
 
     def forward_vertex(
         self,
