@@ -4,7 +4,7 @@ from graphenv.examples.hallway.hallway_model import HallwayModel
 from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.graph_env import GraphEnv
 from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
-from ray.rllib.agents import ppo
+from ray.rllib.agents import dqn, ppo
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
 
@@ -97,4 +97,31 @@ def test_ppo(ray_init, ppo_config, model_classes):
     }
     ppo_config.update(config)
     trainer = ppo.PPOTrainer(config=ppo_config)
+    trainer.train()
+
+
+@pytest.mark.parametrize(
+    "model_classes",
+    [
+        [HallwayModel],
+        (GraphModelBellmanMixin, HallwayModel),
+    ],
+)
+def test_dqn(ray_init, dqn_config, model_classes):
+    class ThisModel(*model_classes):
+        pass
+
+    ModelCatalog.register_custom_model("ThisModel", ThisModel)
+    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+
+    config = {
+        "env": "HallwayEnv",
+        "env_config": {"corridor_length": 5},
+        "model": {
+            "custom_model": "ThisModel",
+            "custom_model_config": {"hidden_dim": 32},
+        },
+    }
+    dqn_config.update(config)
+    trainer = dqn.DQNTrainer(config=dqn_config)
     trainer.train()
