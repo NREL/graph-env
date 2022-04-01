@@ -118,7 +118,8 @@ which defines the graph via it’s get_next_actions() method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv._action_mask_key">
 <span class="sig-name descname"><span class="pre">_action_mask_key</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv._action_mask_key" title="Permalink to this definition"></a></dt>
-<dd><p>key under which the action mask is stored in the root observation space dict</p>
+<dd><p>key under which the action mask is stored in the root
+observation space dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str</p>
@@ -129,7 +130,8 @@ which defines the graph via it’s get_next_actions() method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv._vertex_observation_key">
 <span class="sig-name descname"><span class="pre">_vertex_observation_key</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv._vertex_observation_key" title="Permalink to this definition"></a></dt>
-<dd><p>key under which the per-action vertex observations are stored in the root observation space dict</p>
+<dd><p>key under which the per-action vertex observations are
+stored in the root observation space dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str</p>
@@ -150,7 +152,12 @@ and every action’s values for that key concatenated into numpy arrays.</p>
 are offset by one index to accomodate that.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Dictionary consisting of {self._action_mask_key : bool action mask Numpy array, self._vertex_observation_key : stacked vertex observations}</p>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Dictionary consisting of {self._action_mask_key<span class="classifier">bool</span></dt><dd><p>action mask Numpy array, self._vertex_observation_key : stacked vertex
+observations}</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Dict[str, any]</p>
@@ -268,11 +275,13 @@ GraphEnv.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.ops.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Tensorflow/Keras style forward method. Sets up the computation graph used by this model.</p>
+<dd><p>Tensorflow/Keras style forward method. Sets up the computation graph used by
+this model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> – Observation input to the model. Consists of a dictionary including key ‘obs’ which stores the raw observation from the process.</p></li>
+<li><p><strong>input_dict</strong> – Observation input to the model. Consists of a dictionary
+including key ‘obs’ which stores the raw observation from the process.</p></li>
 <li><p><strong>state</strong> – Tensor of current states. Passes through this function untouched.</p></li>
 <li><p><strong>seq_lens</strong> – Unused. Required by API.</p></li>
 </ul>
@@ -376,13 +385,11 @@ in OrderedDict’s in the order returned by the mappings items() iteration.</p>
 <span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">stack_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.multi_binary.MultiBinary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_values</span></span></em><span class="sig-paren">)</span></dt>
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">graphenv.space_util.</span></span><span class="sig-name descname"><span class="pre">stack_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">gym.spaces.box.Box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_values</span></span></em><span class="sig-paren">)</span></dt>
-<dd><dl class="simple">
-<dt>Stacks multiple values together using the supplied space to define the shape of the result.</dt><dd><p>For example, stacking values on a Box space simply returns np.stack(space_values, axis=0).
-Stacking values on a Dict space returns a Dict with keys corresponding to the keys of the
-Dict space, and values equal to the result of recursively stacking the Spaces of the
-Dict space values.</p>
-</dd>
-</dl>
+<dd><p>Stacks multiple values together using the supplied space to define the shape of
+the result. For example, stacking values on a Box space simply returns
+np.stack(space_values, axis=0). Stacking values on a Dict space returns a Dict with
+keys corresponding to the keys of the Dict space, and values equal to the result of
+recursively stacking the Spaces of the Dict space values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -394,7 +401,8 @@ Dict space values.</p>
 <dd class="field-even"><p><strong>NotImplementedError</strong> – If the space (or one it contains) is unsupported.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A recursively stacked observation matching the given space’s shape, made by stacking the values in space_values.</p>
+<dd class="field-odd"><p>A recursively stacked observation matching the given space’s shape, made by
+stacking the values in space_values.</p>
 </dd>
 </dl>
 </dd></dl>
