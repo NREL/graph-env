@@ -86,7 +86,7 @@ class TSPState(Vertex):
     def info(self) -> Dict:
         return {}
 
-    def _get_next_actions(self) -> Sequence["TSPState"]:
+    def _get_children(self) -> Sequence["TSPState"]:
         """Yields a sequence of TSPState instances associated with the next
         accessible nodes.
 

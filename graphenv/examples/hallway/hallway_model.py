@@ -7,12 +7,26 @@ layers = tf.keras.layers
 
 
 class HallwayModel(GraphModel):
+    """An example GraphModel implementation for the HallwayEnv and HallwayState
+    Graph.
+
+    Attributes:
+        base_model : The Keras model used to evaluate vertex observations.
+    """
+
     def __init__(
         self,
         *args,
         hidden_dim: int = 1,
         **kwargs,
     ):
+        """Initializs this HallwayModel.
+        Uses a dense fully connected Keras network.
+
+        Args:
+            hidden_dim (int, optional): The number of hidden layers to use. Defaults to
+                1.
+        """
         super().__init__(*args, **kwargs)
 
         cur_pos = layers.Input(shape=(1,), name="cur_pos", dtype=tf.float32)
@@ -35,4 +49,13 @@ class HallwayModel(GraphModel):
         self,
         input_dict: GraphModelObservation,
     ) -> Tuple[tf.Tensor, tf.Tensor]:
+        """Forward function computing the evaluation of vertex observations.
+
+        Args:
+            input_dict (GraphModelObservation): vertex observations
+
+        Returns:
+            Tuple[tf.Tensor, tf.Tensor]: Tensor of value and weights for each
+                input observation.
+        """
         return tuple(self.base_model(input_dict))
