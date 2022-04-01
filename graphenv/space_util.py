@@ -18,7 +18,7 @@ def broadcast_space(target: spaces.Space, prefix_shape: Tuple[int]):
 
     Raises:
         NotImplementedError: If the space is or contains an unsupported type.
-    
+
     Returns:
         A space recursively expanded to match the given prefix_shape.
     """
@@ -74,11 +74,11 @@ def _(target: spaces.Dict, prefix_shape: Tuple[int]):
 
 @singledispatch
 def stack_observations(space: spaces.Space, space_values):
-    """Stacks multiple values together using the supplied space to define the shape of the result.
-        For example, stacking values on a Box space simply returns np.stack(space_values, axis=0).
-        Stacking values on a Dict space returns a Dict with keys corresponding to the keys of the
-        Dict space, and values equal to the result of recursively stacking the Spaces of the
-        Dict space values.
+    """Stacks multiple values together using the supplied space to define the shape of
+    the result. For example, stacking values on a Box space simply returns
+    np.stack(space_values, axis=0). Stacking values on a Dict space returns a Dict with
+    keys corresponding to the keys of the Dict space, and values equal to the result of
+    recursively stacking the Spaces of the Dict space values.
 
     Args:
         space (spaces.Space): Space to use to stack the values into.
@@ -88,7 +88,8 @@ def stack_observations(space: spaces.Space, space_values):
         NotImplementedError: If the space (or one it contains) is unsupported.
 
     Returns:
-        A recursively stacked observation matching the given space's shape, made by stacking the values in space_values.
+        A recursively stacked observation matching the given space's shape, made by
+        stacking the values in space_values.
     """
     raise NotImplementedError(f"Unsupported space, {space}.")
 
@@ -107,10 +108,12 @@ def _(space: spaces.Discrete, space_values):
 
 @stack_observations.register(spaces.Tuple)
 def _(space: spaces.Tuple, space_values):
-    return tuple((
-        stack_observations(s, [o[i] for o in space_values])
-        for i, s in enumerate(space.spaces)
-    ))
+    return tuple(
+        (
+            stack_observations(s, [o[i] for o in space_values])
+            for i, s in enumerate(space.spaces)
+        )
+    )
 
 
 @stack_observations.register(spaces.Dict)
@@ -123,12 +126,12 @@ def _(space: spaces.Dict, space_values):
 
 @singledispatch
 def flatten_first_dim(target: any):
-    """
+    r"""
     Merges the first and second dimensions of the tensor(s) in the target
-    data structure. Valid targets include tensors, Iterables (including list), 
+    data structure. Valid targets include tensors, Iterables (including list),
     and Mappings (including dict). A single tensor with shape (x, y, \*z) becomes
     (x+y, \*z). A list of tensors will result in a list of tensors with this
-    operation applied to each one. A dict of tensors will result in an 
+    operation applied to each one. A dict of tensors will result in an
     OrderdDict of such tensors, etc. Iterables result in lists, Mappings result
     in OrderedDict's in the order returned by the mappings items() iteration.
 
@@ -159,6 +162,7 @@ def _(target: tf.Tensor):
     shape = tf.shape(target)
     dest_shape = (shape[0] * shape[1], *shape[2:])
     return tf.reshape(target, dest_shape)
+
 
 @flatten_first_dim.register(np.ndarray)
 def _(target: np.ndarray):

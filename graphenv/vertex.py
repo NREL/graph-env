@@ -2,7 +2,6 @@ from abc import abstractmethod
 from typing import Dict, Generic, List, Optional, Sequence, TypeVar
 
 import gym
-import numpy as np
 
 V = TypeVar("V")
 
@@ -18,6 +17,7 @@ class Vertex(Generic[V]):
         _children (Optional[List]) : memoized list of child vertices
         _observation (Optional[any]) : memoized observation of this vertex
     """
+
     def __init__(self) -> None:
         self._children: Optional[List] = None
         self._observation: Optional[any] = None
@@ -77,13 +77,13 @@ class Vertex(Generic[V]):
     @property
     def children(self) -> List[V]:
         """
-            Gets the child verticies of this vertex.
-            Acts as a wrapper that memoizes calls to _get_children() and 
-            ensures that it is a list. If you would like a different behavior, 
-            such as stochastic child verticies, override this property.
+        Gets the child verticies of this vertex.
+        Acts as a wrapper that memoizes calls to _get_children() and
+        ensures that it is a list. If you would like a different behavior,
+        such as stochastic child verticies, override this property.
 
-            Returns:
-                List[N] : List of child verticies 
+        Returns:
+            List[N] : List of child verticies
         """
         if self._children is None:
             self._children = list(self._get_children())
@@ -92,13 +92,13 @@ class Vertex(Generic[V]):
     @property
     def observation(self) -> any:
         """
-            Gets the observation of this vertex.
-            Acts as a wrapper that memoizes calls to _make_observation(). 
-            If you would like a different behavior, 
-            such as stochastic observations, override this property.
+        Gets the observation of this vertex.
+        Acts as a wrapper that memoizes calls to _make_observation().
+        If you would like a different behavior,
+        such as stochastic observations, override this property.
 
-            Returns:
-                Observation of this vertex.
+        Returns:
+            Observation of this vertex.
         """
         if self._observation is None:
             self._observation = self._make_observation()
@@ -107,15 +107,15 @@ class Vertex(Generic[V]):
     @property
     def terminal(self) -> bool:
         """
-            Returns:
-                True if this is a terminal vertex in the graph.
+        Returns:
+            True if this is a terminal vertex in the graph.
         """
         return len(self.children) == 0
 
     @property
     def info(self) -> Dict:
         """
-            Returns:
-                An optional dictionary with additional information about the state
+        Returns:
+            An optional dictionary with additional information about the state
         """
         return dict()

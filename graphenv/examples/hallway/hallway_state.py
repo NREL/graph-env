@@ -11,10 +11,11 @@ layers = tf.keras.layers
 
 class HallwayState(Vertex):
     """Example Vertex implementation of a simple hallway process graph.
-    The hallway graph is a simple bidirectional chain of verticies. The root 
+    The hallway graph is a simple bidirectional chain of verticies. The root
     vertex is on one end of the chain and the terminal goal vertex is on the
     opposite end. The length is configurable.
     """
+
     def __init__(
         self,
         corridor_length: int,
@@ -60,14 +61,14 @@ class HallwayState(Vertex):
         """The reward function for the HallwayState graph.
 
         Returns:
-            float: random reward between 0 and 2 on the goal vertex, -0.1 
+            float: random reward between 0 and 2 on the goal vertex, -0.1
                 otherwise.
         """
         return random.random() * 2 if self.cur_pos >= self.end_pos else -0.1
 
     def new(self, cur_pos: int):
         """Convenience function for duplicating the existing node.
-        
+
         Returns:
             HallwayState : a copy of this HallwayState.
         """

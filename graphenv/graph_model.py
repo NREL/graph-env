@@ -50,8 +50,11 @@ class GraphModel(TFModelV2):
             num_outputs: The number of scalar outputs per state to produce.
             model_config: Config forwarded to TFModelV2.__init()__.
             name: Config forwarded to TFModelV2.__init()__.
-            action_mask_key: Key used to retrieve the action mask from the observation space dictionary. Defaults to "action_mask".
-            vertex_observation_key: Key used to retrieve the per-action vertex observations from the observation space dictionary. Defaults to "vertex_observations".
+            action_mask_key: Key used to retrieve the action mask from the observation
+                space dictionary. Defaults to "action_mask".
+            vertex_observation_key: Key used to retrieve the per-action vertex
+                observations from the observation space dictionary. Defaults to
+                "vertex_observations".
         """
 
         super().__init__(
@@ -78,15 +81,17 @@ class GraphModel(TFModelV2):
         seq_lens: tf.Tensor,
     ) -> Tuple[tf.Tensor, List[tf.Tensor]]:
         """
-        Tensorflow/Keras style forward method. Sets up the computation graph used by this model.
+        Tensorflow/Keras style forward method. Sets up the computation graph used by
+        this model.
 
         Args:
-            input_dict: Observation input to the model. Consists of a dictionary including key 'obs' which stores the raw observation from the process.
+            input_dict: Observation input to the model. Consists of a dictionary
+                including key 'obs' which stores the raw observation from the process.
             state: Tensor of current states. Passes through this function untouched.
             seq_lens: Unused. Required by API.
 
         Returns:
-            (action weights tensor, state) 
+            (action weights tensor, state)
         """
         # Extract the available actions tensor from the observation.
         observation = input_dict["obs"]

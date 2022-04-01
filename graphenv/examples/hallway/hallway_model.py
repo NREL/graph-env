@@ -13,17 +13,19 @@ class HallwayModel(GraphModel):
     Attributes:
         base_model : The Keras model used to evaluate vertex observations.
     """
+
     def __init__(
         self,
         *args,
         hidden_dim: int = 1,
         **kwargs,
     ):
-        """Initializs this HallwayModel. 
+        """Initializs this HallwayModel.
         Uses a dense fully connected Keras network.
 
         Args:
-            hidden_dim (int, optional): The number of hidden layers to use. Defaults to 1.
+            hidden_dim (int, optional): The number of hidden layers to use. Defaults to
+                1.
         """
         super().__init__(*args, **kwargs)
 

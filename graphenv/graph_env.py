@@ -21,8 +21,10 @@ class GraphEnv(gym.Env):
     Attributes:
         state: current vertex
         max_num_actions: maximum number of actions considered at a time
-        _action_mask_key: key under which the action mask is stored in the root observation space dict
-        _vertex_observation_key: key under which the per-action vertex observations are stored in the root observation space dict
+        _action_mask_key: key under which the action mask is stored in the root
+            observation space dict
+        _vertex_observation_key: key under which the per-action vertex observations are
+            stored in the root observation space dict
     """
 
     state: V
@@ -42,8 +44,11 @@ class GraphEnv(gym.Env):
         Args:
             state (N): Current vertex
             max_num_actions (int): maximum number of actions considered at a time
-            action_mask_key (str, optional): key under which the action mask is stored in the root observation space dict. Defaults to "action_mask".
-            vertex_observation_key (str, optional): key under which the per-action vertex observations are stored in the root observation space dict. Defaults to "vertex_observations".
+            action_mask_key (str, optional): key under which the action mask is stored
+                in the root observation space dict. Defaults to "action_mask".
+            vertex_observation_key (str, optional): key under which the per-action
+                vertex observations are stored in the root observation space dict.
+                Defaults to "vertex_observations".
         """
         super().__init__()
         logger.debug("GraphEnv init")
@@ -73,8 +78,8 @@ class GraphEnv(gym.Env):
         return self.make_observation()
 
     def step(self, action: int) -> Tuple[Dict[str, np.ndarray], float, bool, dict]:
-        """Steps the envirionment to a new state by taking an action. In the 
-        case of GraphEnv, the action specifies which next vertex to move to and 
+        """Steps the envirionment to a new state by taking an action. In the
+        case of GraphEnv, the action specifies which next vertex to move to and
         this method advances the environment to that vertex.
 
         Args:
@@ -84,7 +89,7 @@ class GraphEnv(gym.Env):
             RuntimeError: When action is an invalid index.
 
         Returns:
-            Tuple[Dict[str, np.ndarray], float, bool, dict]: Tuple of: 
+            Tuple[Dict[str, np.ndarray], float, bool, dict]: Tuple of:
                 a dictionary of the new state's observation,
                 the reward recieved by moving to the new state's vertex,
                 a bool which is true iff the new stae is a terminal vertex,
@@ -133,8 +138,10 @@ class GraphEnv(gym.Env):
         are offset by one index to accomodate that.
 
         Returns:
-            Dict[str, any] : Dictionary consisting of {self._action_mask_key : bool action mask Numpy array, self._vertex_observation_key : stacked vertex observations}
-            
+            Dict[str, any] : Dictionary consisting of {self._action_mask_key : bool
+                action mask Numpy array, self._vertex_observation_key : stacked vertex
+                observations}
+
         """
 
         num_actions = 1 + self.max_num_actions
