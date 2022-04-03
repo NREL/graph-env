@@ -1,12 +1,15 @@
+import logging
 from abc import abstractmethod
 from typing import Dict, Iterable, List, Mapping, Tuple, Union
 
 import gym
-from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
 from ray.rllib.models.tf import TFModelV2
 
 import graphenv.space_util as space_util
 from graphenv import tf
+
+logger = logging.getLogger(__file__)
+
 
 # Type defining the contents of vertex observations as passed to forward()
 GraphModelObservation = Union[
@@ -16,7 +19,7 @@ GraphModelObservation = Union[
 ]
 
 
-class GraphModel(DistributionalQTFModel):
+class GraphModel(TFModelV2):
     """
     Defines a RLLib TFModelV2 compatible model for using RL algorithms on a
     GraphEnv.
@@ -74,6 +77,8 @@ class GraphModel(DistributionalQTFModel):
         self.action_values = None
         self.current_vertex_weight = None
         self.action_weights = None
+        self.num_outputs = num_outputs
+        logger.debug(f"num_outputs: {num_outputs}")
 
     def forward(
         self,

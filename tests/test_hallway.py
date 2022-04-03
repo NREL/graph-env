@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from graphenv.examples.hallway.hallway_env import HallwayEnv
 from graphenv.examples.hallway.hallway_model import HallwayModel
@@ -100,23 +102,18 @@ def test_ppo(ray_init, ppo_config, model_classes):
     trainer.train()
 
 
-@pytest.mark.parametrize(
-    "model_classes",
-    [
-        [HallwayModel],
-        (GraphModelBellmanMixin, HallwayModel),
-    ],
-)
-def test_dqn(ray_init, dqn_config, model_classes):
-    class ThisModel(*model_classes):
-        pass
+def test_dqn(ray_init, dqn_config, caplog):
 
-    ModelCatalog.register_custom_model("ThisModel", ThisModel)
+    caplog.set_level(logging.DEBUG)
+
+    ModelCatalog.register_custom_model("ThisModel", HallwayModel)
     register_env("HallwayEnv", lambda config: HallwayEnv(config))
 
     config = {
         "env": "HallwayEnv",
         "env_config": {"corridor_length": 5},
+        "hiddens": False,
+        "dueling": False,
         "model": {
             "custom_model": "ThisModel",
             "custom_model_config": {"hidden_dim": 32},
