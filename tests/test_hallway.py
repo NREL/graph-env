@@ -1,10 +1,12 @@
+import logging
+
 import pytest
 from graphenv.examples.hallway.hallway_env import HallwayEnv
 from graphenv.examples.hallway.hallway_model import HallwayModel
 from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.graph_env import GraphEnv
 from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
-from ray.rllib.agents import ppo
+from ray.rllib.agents import dqn, ppo
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
 
@@ -97,4 +99,26 @@ def test_ppo(ray_init, ppo_config, model_classes):
     }
     ppo_config.update(config)
     trainer = ppo.PPOTrainer(config=ppo_config)
+    trainer.train()
+
+
+def test_dqn(ray_init, dqn_config, caplog):
+
+    caplog.set_level(logging.DEBUG)
+
+    ModelCatalog.register_custom_model("ThisModel", HallwayModel)
+    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+
+    config = {
+        "env": "HallwayEnv",
+        "env_config": {"corridor_length": 5},
+        "hiddens": False,
+        "dueling": False,
+        "model": {
+            "custom_model": "ThisModel",
+            "custom_model_config": {"hidden_dim": 32},
+        },
+    }
+    dqn_config.update(config)
+    trainer = dqn.DQNTrainer(config=dqn_config)
     trainer.train()
