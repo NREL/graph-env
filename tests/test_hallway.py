@@ -1,4 +1,5 @@
 import logging
+import secrets
 
 import pytest
 from graphenv.examples.hallway.hallway_env import HallwayEnv
@@ -82,18 +83,21 @@ def test_graphenv_step(hallway_env: HallwayEnv):
     ],
 )
 def test_ppo(ray_init, ppo_config, model_classes):
+
+    runid = secrets.token_hex(nbytes=8)
+
     class ThisModel(*model_classes):
         pass
 
-    ModelCatalog.register_custom_model("ThisModel", ThisModel)
+    ModelCatalog.register_custom_model("ThisModel" + runid, ThisModel)
 
-    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+    register_env("HallwayEnv" + runid, lambda config: HallwayEnv(config))
 
     config = {
-        "env": "HallwayEnv",
+        "env": "HallwayEnv" + runid,
         "env_config": {"corridor_length": 5},
         "model": {
-            "custom_model": "ThisModel",
+            "custom_model": "ThisModel" + runid,
             "custom_model_config": {"hidden_dim": 32},
         },
     }
@@ -102,20 +106,32 @@ def test_ppo(ray_init, ppo_config, model_classes):
     trainer.train()
 
 
-def test_dqn(ray_init, dqn_config, caplog):
+@pytest.mark.parametrize(
+    "model_classes",
+    [
+        [HallwayModel],
+        (GraphModelBellmanMixin, HallwayModel),
+    ],
+)
+def test_dqn(ray_init, dqn_config, caplog, model_classes):
+
+    runid = secrets.token_hex(nbytes=8)
+
+    class ThisModel(*model_classes):
+        pass
 
     caplog.set_level(logging.DEBUG)
 
-    ModelCatalog.register_custom_model("ThisModel", HallwayModel)
-    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+    ModelCatalog.register_custom_model("ThisModel" + runid, ThisModel)
+    register_env("HallwayEnv" + runid, lambda config: HallwayEnv(config))
 
     config = {
-        "env": "HallwayEnv",
+        "env": "HallwayEnv" + runid,
         "env_config": {"corridor_length": 5},
         "hiddens": False,
         "dueling": False,
         "model": {
-            "custom_model": "ThisModel",
+            "custom_model": "ThisModel" + runid,
             "custom_model_config": {"hidden_dim": 32},
         },
     }
