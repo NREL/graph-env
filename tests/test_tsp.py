@@ -3,7 +3,7 @@ import logging
 import pytest
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from graphenv.examples.tsp.tsp_env import TSPEnv
-from graphenv.examples.tsp.tsp_model import TSPModel
+from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel
 from ray.rllib.agents import dqn, ppo
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
@@ -22,14 +22,14 @@ def G(N):
 
 def test_ppo(ray_init, ppo_config, N, G):
 
-    ModelCatalog.register_custom_model("ThisModel", TSPModel)
-    register_env("ThisEnv", lambda config: TSPEnv(config))
+    ModelCatalog.register_custom_model("TSPModel", TSPModel)
+    register_env("TSPEnv", lambda config: TSPEnv(config))
 
     config = {
-        "env": "ThisEnv",
+        "env": "TSPEnv",
         "env_config": {"G": G},
         "model": {
-            "custom_model": "ThisModel",
+            "custom_model": "TSPModel",
             "custom_model_config": {
                 "num_nodes": N,
                 "hidden_dim": 256,
@@ -46,16 +46,16 @@ def test_dqn(ray_init, dqn_config, caplog, N, G):
 
     caplog.set_level(logging.DEBUG)
 
-    ModelCatalog.register_custom_model("ThisModel", TSPModel)
-    register_env("ThisEnv", lambda config: TSPEnv(config))
+    ModelCatalog.register_custom_model("TSPQModel", TSPQModel)
+    register_env("TSPEnv", lambda config: TSPEnv(config))
 
     config = {
-        "env": "ThisEnv",
+        "env": "TSPEnv",
         "env_config": {"G": G},
         "hiddens": False,
         "dueling": False,
         "model": {
-            "custom_model": "ThisModel",
+            "custom_model": "TSPQModel",
             "custom_model_config": {
                 "num_nodes": N,
                 "hidden_dim": 256,

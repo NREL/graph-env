@@ -1,12 +1,15 @@
 from typing import Tuple
 
+from ray.rllib.models.tf.tf_modelv2 import TFModelV2
+from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
+
 from graphenv import tf
 from graphenv.graph_model import GraphModel, GraphModelObservation
 
 layers = tf.keras.layers
 
 
-class TSPModel(GraphModel):
+class BaseTSPModel(GraphModel):
     def __init__(
         self,
         *args,
@@ -61,3 +64,13 @@ class TSPModel(GraphModel):
         input_dict: GraphModelObservation,
     ) -> Tuple[tf.Tensor, tf.Tensor]:
         return tuple(self.base_model(input_dict))
+
+
+
+class TSPQModel(BaseTSPModel, DistributionalQTFModel):
+    pass
+
+
+class TSPModel(BaseTSPModel, TFModelV2):
+    pass
+    
