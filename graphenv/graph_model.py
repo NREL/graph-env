@@ -3,7 +3,7 @@ from abc import abstractmethod
 from typing import Dict, Iterable, List, Mapping, Tuple, Union
 
 import gym
-from ray.rllib.models.tf import TFModelV2
+from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
 
 import graphenv.space_util as space_util
 from graphenv import tf
@@ -19,7 +19,7 @@ GraphModelObservation = Union[
 ]
 
 
-class GraphModel(TFModelV2):
+class GraphModel(DistributionalQTFModel):
     """
     Defines a RLLib TFModelV2 compatible model for using RL algorithms on a
     GraphEnv.
