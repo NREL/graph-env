@@ -1,10 +1,10 @@
 from typing import Tuple
 
-from ray.rllib.models.tf.tf_modelv2 import TFModelV2
-from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
-
 from graphenv import tf
 from graphenv.graph_model import GraphModel, GraphModelObservation
+from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
+from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
+from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 
 layers = tf.keras.layers
 
@@ -66,11 +66,13 @@ class BaseTSPModel(GraphModel):
         return tuple(self.base_model(input_dict))
 
 
+class TSPModel(BaseTSPModel, TFModelV2):
+    pass
+
 
 class TSPQModel(BaseTSPModel, DistributionalQTFModel):
     pass
 
 
-class TSPModel(BaseTSPModel, TFModelV2):
+class TSPQModelBellman(GraphModelBellmanMixin, BaseTSPModel, DistributionalQTFModel):
     pass
-    
