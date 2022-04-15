@@ -82,19 +82,19 @@ def test_graphenv_step(hallway_env: HallwayEnv):
 #     ],
 # )
 
-def test_ppo(ray_init, ppo_config): #, model_classes):
-    
-    #class ThisModel(*model_classes):
+
+def test_ppo(ray_init, ppo_config):  # , model_classes):
+
+    # class ThisModel(*model_classes):
     #    pass
 
     ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
-
-    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+    register_env("HallwayEnv1", lambda config: HallwayEnv(config))
 
     config = {
-        "env": "HallwayEnv",
+        "env": "HallwayEnv1",
         "env_config": {"corridor_length": 5},
-        # "log_level": "DEBUG",
+        "log_level": "DEBUG",
         "model": {
             "custom_model": "HallwayModel",
             "custom_model_config": {"hidden_dim": 32},
@@ -110,10 +110,10 @@ def test_dqn(ray_init, dqn_config, caplog):
     caplog.set_level(logging.DEBUG)
 
     ModelCatalog.register_custom_model("HallwayQModel", HallwayQModel)
-    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+    register_env("HallwayEnv2", lambda config: HallwayEnv(config))
 
     config = {
-        "env": "HallwayEnv",
+        "env": "HallwayEnv2",
         "env_config": {"corridor_length": 5},
         "hiddens": False,
         "dueling": False,

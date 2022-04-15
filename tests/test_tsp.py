@@ -23,10 +23,10 @@ def G(N):
 def test_ppo(ray_init, ppo_config, N, G):
 
     ModelCatalog.register_custom_model("TSPModel", TSPModel)
-    register_env("TSPEnv", lambda config: TSPEnv(config))
+    register_env("TSPEnv1", lambda config: TSPEnv(config))
 
     config = {
-        "env": "TSPEnv",
+        "env": "TSPEnv1",
         "env_config": {"G": G},
         "model": {
             "custom_model": "TSPModel",
@@ -47,10 +47,10 @@ def test_dqn(ray_init, dqn_config, caplog, N, G):
     caplog.set_level(logging.DEBUG)
 
     ModelCatalog.register_custom_model("TSPQModel", TSPQModel)
-    register_env("TSPEnv", lambda config: TSPEnv(config))
+    register_env("TSPEnv2", lambda config: TSPEnv(config))
 
     config = {
-        "env": "TSPEnv",
+        "env": "TSPEnv2",
         "env_config": {"G": G},
         "hiddens": False,
         "dueling": False,
