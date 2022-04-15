@@ -2,7 +2,7 @@ import logging
 
 import pytest
 from graphenv.examples.hallway.hallway_env import HallwayEnv
-from graphenv.examples.hallway.hallway_model import HallwayModel
+from graphenv.examples.hallway.hallway_model import HallwayModel, HallwayQModel
 from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.graph_env import GraphEnv
 from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
@@ -74,26 +74,29 @@ def test_graphenv_step(hallway_env: HallwayEnv):
     assert reward > 0
 
 
-@pytest.mark.parametrize(
-    "model_classes",
-    [
-        [HallwayModel],
-        (GraphModelBellmanMixin, HallwayModel),
-    ],
-)
-def test_ppo(ray_init, ppo_config, model_classes):
-    class ThisModel(*model_classes):
-        pass
+# @pytest.mark.parametrize(
+#     "model_classes",
+#     [
+#         [HallwayModel],
+#         #(HallwayModel, GraphModelBellmanMixin),
+#     ],
+# )
 
-    ModelCatalog.register_custom_model("ThisModel", ThisModel)
 
-    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+def test_ppo(ray_init, ppo_config):  # , model_classes):
+
+    # class ThisModel(*model_classes):
+    #    pass
+
+    ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
+    register_env("HallwayEnv1", lambda config: HallwayEnv(config))
 
     config = {
-        "env": "HallwayEnv",
+        "env": "HallwayEnv1",
         "env_config": {"corridor_length": 5},
+        "log_level": "DEBUG",
         "model": {
-            "custom_model": "ThisModel",
+            "custom_model": "HallwayModel",
             "custom_model_config": {"hidden_dim": 32},
         },
     }
@@ -106,16 +109,17 @@ def test_dqn(ray_init, dqn_config, caplog):
 
     caplog.set_level(logging.DEBUG)
 
-    ModelCatalog.register_custom_model("ThisModel", HallwayModel)
-    register_env("HallwayEnv", lambda config: HallwayEnv(config))
+    ModelCatalog.register_custom_model("HallwayQModel", HallwayQModel)
+    register_env("HallwayEnv2", lambda config: HallwayEnv(config))
 
     config = {
-        "env": "HallwayEnv",
+        "env": "HallwayEnv2",
         "env_config": {"corridor_length": 5},
         "hiddens": False,
         "dueling": False,
+        # "log_level": "DEBUG",
         "model": {
-            "custom_model": "ThisModel",
+            "custom_model": "HallwayQModel",
             "custom_model_config": {"hidden_dim": 32},
         },
     }

@@ -4,6 +4,7 @@ from ray.rllib.agents import dqn, ppo
 
 
 @pytest.fixture(scope="module")
+# @pytest.fixture
 def ray_init():
     ray.init(num_cpus=1, local_mode=True)
     yield None

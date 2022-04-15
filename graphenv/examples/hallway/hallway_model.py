@@ -1,12 +1,15 @@
 from typing import Tuple
 
+from ray.rllib.models.tf.tf_modelv2 import TFModelV2
+from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
+
 from graphenv import tf
 from graphenv.graph_model import GraphModel, GraphModelObservation
 
 layers = tf.keras.layers
 
 
-class HallwayModel(GraphModel):
+class BaseHallwayModel(GraphModel):
     """An example GraphModel implementation for the HallwayEnv and HallwayState
     Graph.
 
@@ -59,3 +62,11 @@ class HallwayModel(GraphModel):
                 input observation.
         """
         return tuple(self.base_model(input_dict))
+
+
+class HallwayQModel(BaseHallwayModel, DistributionalQTFModel):
+    pass
+
+
+class HallwayModel(BaseHallwayModel, TFModelV2):
+    pass

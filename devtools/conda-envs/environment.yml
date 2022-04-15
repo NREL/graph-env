@@ -10,4 +10,4 @@ dependencies:
   - pandas
   - pip
   - pip:
-    - "ray[tune,rllib]"
+    - "ray[tune,rllib] == 1.10"
