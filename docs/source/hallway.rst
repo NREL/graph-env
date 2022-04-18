@@ -91,7 +91,7 @@ using the color codes:
 
 -  black = current vertex
 -  white = child vertex
--  gray = inaccessible, or **masked**, vertex
+-  gray = inaccessible vertex
 
 If we think of an RL action as selecting one of these children, it’s
 clear that the number of actions can change from one state to the next.
@@ -194,38 +194,27 @@ where ``cur_pos`` is the integer index of the current position. The box
 space has a single element containing the index of the current position
 but, in general, can contain multiple, complex subspaces.
 
-``new``
-~~~~~~~
+``_make_observation``
+~~~~~~~~~~~~~~~~~~~~~
 
-Returns a new vertex instance with updated state. For the hallway
-problem,
-
-.. code:: python
-
-   def new(self, cur_pos: int):
-       """Convenience function for duplicating the existing node.
-       Returns:
-           HallwayState : a copy of this HallwayState.
-       """
-       return HallwayState(self.end_pos, cur_pos)
-
-where ``cur_pos`` is the position of the new state.
-
-``root``
-~~~~~~~~
-
-Returns the root vertex. In the hallway problem, we always go back to
-state 0,
+To decide which child to transition to, the RL agent will need to call a
+policy model with that vertex’s observation. To this end, we implement
+``_make_observation`` which, for the hallway example, returns:
 
 .. code:: python
 
-   @property
-   def root(self) -> "HallwayState":
-       """
+   def _make_observation(self) -> Dict[str, np.ndarray]:
+       """Makes an observation of this HallwayState vertex.
        Returns:
-           HallwayState: initial state (vertex at index 0)
+           Dict[str, np.ndarray]: dictionary containing the current position
+           index under the key 'cur_pos'.
        """
-       return self.new(0)
+       return {
+           "cur_pos": np.array([self.cur_pos], dtype=int),
+       }
+
+Note that the returned observation must exactly match the specification
+in the vertex’s ``observation_space``.
 
 ``reward``
 ~~~~~~~~~~
@@ -280,28 +269,6 @@ In our example above, this method will yield
 
 Note that the number of children (actions) is variable, and that the
 terminal state returns an empty list of next children.
-
-``_make_observation``
-~~~~~~~~~~~~~~~~~~~~~
-
-To decide which child to transition to, the RL agent will need to call a
-policy model with that vertex’s observation. To this end, we implement
-``_make_observation`` which, for the hallway example, returns:
-
-.. code:: python
-
-   def _make_observation(self) -> Dict[str, np.ndarray]:
-       """Makes an observation of this HallwayState vertex.
-       Returns:
-           Dict[str, np.ndarray]: dictionary containing the current position
-           index under the key 'cur_pos'.
-       """
-       return {
-           "cur_pos": np.array([self.cur_pos], dtype=int),
-       }
-
-Note that the returned observation must exactly match the specification
-in the vertex’s ``observation_space``.
 
 HallwayModel
 ------------
@@ -359,5 +326,223 @@ model class.
 HallwayEnv
 ----------
 
-TODO: HERE
+(See ``graphenv.examples.hallway.hallway_env`` for the full
+implementation).
+
+The final step in implementing the hallway problem with graphenv is the
+creation of the environment itself. This requires only an instance of
+the HallwayState as well as a ``max_num_actions`` argument that limits
+the maximum number of next states that we expect to confront during the
+search. As we’ll demonstrate below, the graphenv library takes care of
+masking invalid actions.
+
+.. code:: python
+
+   class HallwayEnv(GraphEnv):
+       """
+       Convience class of a GraphEnv using a HallwayState as the vertex state.
+       """
+
+       def __init__(self, config: EnvContext, *args, **kwargs):
+           super().__init__(
+               HallwayState(config["corridor_length"]),
+               *args,
+               max_num_actions=2,
+               **kwargs,
+           )
+
+HallwayEnv Demo
+===============
+
+Now that we have all of the requisite pieces, let’s demo running the
+HallwayEnv as we would any gym environment. We’ll point out the salient
+differences from a standard gym env – referring the reader to the full
+implementation here: ``graphenv.graph_env``
+
+Unlike the above cells, the cells below should be runnable in the
+notebook.
+
+Env creation
+------------
+
+First, we create the environment with any needed configuration – here,
+just the corridor length.
+
+.. code:: ipython3
+
+    from graphenv.examples.hallway.hallway_env import HallwayEnv
+    
+    config = {"corridor_length": 3}
+    
+    env = HallwayEnv(config=config)
+
+Reset
+-----
+
+Next, let’s call reset and examine the returned observation.
+
+.. code:: ipython3
+
+    obs = env.reset()
+    print(obs)
+
+
+.. parsed-literal::
+
+    {'action_mask': array([False,  True, False]), 'vertex_observations': {'cur_pos': array([[0],
+           [1],
+           [0]])}}
+
+
+Note, the obs data is a dictionary with two keys, ``action_mask`` and
+``vertex_observations``. The ``vertex_observations`` value contains all
+of the vertex data that the graphenv library has conveniently
+concatenated into a single data structure (here, another dictionary as
+specified in the ``HallwayState``). Because the number of valid actions
+can change from one state to the next, graphenv also returns an
+``action_mask`` indicating which of the actions are valid: ``True`` for
+valid actions and ``False`` for invalid.
+
+Notice that, even though ``max_num_actions=2`` for this environment, the
+observation data here contains 3 elements. This is because the parent
+vertex data is needed by the policy model and thus is always returned at
+index 0, while the children appear at indices ``[1:max_num_actions]``.
+
+Let’s now interpret the obs data in full. First, the ``action_mask`` has
+a single ``True`` value – the first child with index 1 – because there
+is only a single, valid next state from the starting position.
+Similarly, the ``cur_pos = 1`` at index 1 because this is the position
+of the child vertex.
+
+Step
+----
+
+Unlike the observation data which are 1-indexed w.r.t. the child
+vertices, the action space is 0-indexed.
+
+To step the environment, we need to select a valid action. Because only
+the first child vertex is valid, the only valid action is 0. If we pass
+1, we get an error.
+
+.. code:: ipython3
+
+    # Not a valid action
+    try:
+        obs, rew, done, info = env.step(1)
+    except IndexError:
+        print("oops, not a valid action!")
+
+
+.. parsed-literal::
+
+    oops, not a valid action!
+
+
+.. code:: ipython3
+
+    # A valid action
+    obs, rew, done, info = env.step(0)
+
+Let’s take a look at the output from step.
+
+.. code:: ipython3
+
+    print(obs)
+
+
+.. parsed-literal::
+
+    {'action_mask': array([False,  True,  True]), 'vertex_observations': {'cur_pos': array([[1],
+           [0],
+           [2]])}}
+
+
+Recall that, from the middle hallway position (:math:`i=1`), there are
+two valid actions. Accordingly, the ``action_mask`` is ``True`` for both
+child vertices, and ``cur_pos`` have their index values, :math:`i=0` and
+:math:`i=2`.
+
+.. code:: ipython3
+
+    # Step reward for non-terminal state.
+    print(rew)
+
+
+.. parsed-literal::
+
+    -0.1
+
+
+.. code:: ipython3
+
+    # Not a terminal state.
+    print(done)
+
+
+.. parsed-literal::
+
+    False
+
+
+.. code:: ipython3
+
+    # Metadata here indicates the cur_pos of the current state.
+    info
+
+
+
+
+.. parsed-literal::
+
+    {'cur_pos': 1}
+
+
+
+Step to the terminal vertex
+---------------------------
+
+We now have two valid actions – let’s choose the one that solves the
+problem.
+
+.. code:: ipython3
+
+    obs, rew, done, info = env.step(1)
+
+.. code:: ipython3
+
+    print(obs)
+
+
+.. parsed-literal::
+
+    {'action_mask': array([False, False, False]), 'vertex_observations': {'cur_pos': array([[2],
+           [2],
+           [2]])}}
+
+
+Notice that, now, all ``action_mask`` values are ``False`` because there
+are no child vertices from the terminal vertex.
+
+.. code:: ipython3
+
+    # It is a terminal state.
+    print(done)
+
+
+.. parsed-literal::
+
+    True
+
+
+.. code:: ipython3
+
+    # Positive, random reward for terminal state.
+    print(rew)
+
+
+.. parsed-literal::
+
+    1.3339214623078812
+
+
 
