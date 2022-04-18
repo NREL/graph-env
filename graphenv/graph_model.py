@@ -3,6 +3,7 @@ from abc import abstractmethod
 from typing import Dict, Iterable, List, Mapping, Tuple, Union
 
 import gym
+
 # from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 # from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
 
@@ -28,7 +29,7 @@ class GraphModel:
     Attributes:
         _action_mask_key observation : space key for the action mask
         _vertex_observation_key : observation space key for the vertex observations
-        action_mask : bool tensor of valid next actions
+        action_mask : bool tensor of valid next children
         current_vertex_value : value of current vertex
         action_values : values of each action vertex
         current_vertex_weight : weight of current vertex
@@ -100,7 +101,7 @@ class GraphModel:
         Returns:
             (action weights tensor, state)
         """
-        # Extract the available actions tensor from the observation.
+        # Extract the available children tensor from the observation.
         observation = input_dict["obs"]
 
         vertex_observations = observation[self._vertex_observation_key]
@@ -115,7 +116,7 @@ class GraphModel:
         if action_mask.dtype != tf.dtypes.bool:
             action_mask = tf.equal(action_mask, 1.0)
 
-        # mask out invalid actions and get current vertex value
+        # mask out invalid children and get current vertex value
         def mask_values(values):
             """Returns the value for the current vertex (index 0 of values),
             and the masked values of the action verticies.
