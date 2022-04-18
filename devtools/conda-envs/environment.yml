@@ -6,8 +6,7 @@ dependencies:
   - gym
   - pytest
   - tensorflow
-  - dm-tree
-  - pandas
+  - networkx
   - pip
   - pip:
     - "ray[tune,rllib] == 1.10"
