@@ -64,7 +64,7 @@ class HallwayState(Vertex):
             float: random reward between 0 and 2 on the goal vertex, -0.1
                 otherwise.
         """
-        return random.random() * 2 if self.cur_pos >= self.end_pos else -0.1
+        return random.random() * 2 if self.cur_pos >= self.end_pos - 1 else -0.1
 
     def new(self, cur_pos: int):
         """Convenience function for duplicating the existing node.
@@ -95,7 +95,7 @@ class HallwayState(Vertex):
         Yields:
             HallwayState: Child verticies of this vertex.
         """
-        if self.cur_pos < self.end_pos:
+        if self.cur_pos < self.end_pos - 1:
             if self.cur_pos > 0:  # Stop the hallway from going negative
                 yield self.new(self.cur_pos - 1)
             yield self.new(self.cur_pos + 1)
