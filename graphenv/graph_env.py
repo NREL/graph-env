@@ -3,6 +3,7 @@ from typing import Dict, Tuple
 
 import gym
 import numpy as np
+from ray.rllib.env.env_context import EnvContext
 
 import graphenv.space_util as space_util
 from graphenv.vertex import V
@@ -20,7 +21,7 @@ class GraphEnv(gym.Env):
 
     Attributes:
         state: current vertex
-        max_num_actions: maximum number of actions considered at a time
+        max_num_children: maximum number of actions considered at a time
         _action_mask_key: key under which the action mask is stored in the root
             observation space dict
         _vertex_observation_key: key under which the per-action vertex observations are
@@ -28,35 +29,41 @@ class GraphEnv(gym.Env):
     """
 
     state: V
-    max_num_actions: int
+    max_num_children: int
     _action_mask_key: str
     _vertex_observation_key: str
 
-    def __init__(
-        self,
-        state: V,
-        max_num_actions: int,
-        action_mask_key: str = "action_mask",
-        vertex_observation_key: str = "vertex_observations",
-    ) -> None:
+    def __init__(self, env_config: EnvContext) -> None:
         """Initializes a GraphEnv instance.
 
         Args:
-            state (N): Current vertex
-            max_num_actions (int): maximum number of actions considered at a time
-            action_mask_key (str, optional): key under which the action mask is stored
-                in the root observation space dict. Defaults to "action_mask".
-            vertex_observation_key (str, optional): key under which the per-action
-                vertex observations are stored in the root observation space dict.
-                Defaults to "vertex_observations".
+            env_config (dict): A dictionary of parameters, required to conform with
+                rllib's environment initialization. Should contain the following keys:
+                state (N): Current vertex
+                max_num_children (int): maximum number of children considered at a time
+                action_mask_key (str, optional): key under which the action mask is
+                    stored in the root observation space dict. Defaults to "action_mask"
+                vertex_observation_key (str, optional): key under which the per-action
+                    vertex observations are stored in the root observation space dict.
+                    Defaults to "vertex_observations".
         """
         super().__init__()
-        logger.debug("GraphEnv init")
-        self.state = state
-        self._action_mask_key = action_mask_key
-        self._vertex_observation_key = vertex_observation_key
-        self.max_num_actions = max_num_actions
-        num_vertex_observations = 1 + max_num_actions
+
+        logger.debug("entering graphenv construction")
+        self.state = env_config["state"]
+        self.max_num_children = env_config["max_num_children"]
+
+        try:
+            self._action_mask_key = env_config["action_mask_key"]
+        except KeyError:
+            self._action_mask_key = "action_mask"
+
+        try:
+            self._vertex_observation_key = env_config["vertex_observation_key"]
+        except KeyError:
+            self._vertex_observation_key = "vertex_observations"
+
+        num_vertex_observations = 1 + self.max_num_children
         self.observation_space = gym.spaces.Dict(
             {
                 self._action_mask_key: gym.spaces.MultiBinary(num_vertex_observations),
@@ -65,7 +72,8 @@ class GraphEnv(gym.Env):
                 ),
             }
         )
-        self.action_space = gym.spaces.Discrete(self.max_num_actions)
+        self.action_space = gym.spaces.Discrete(self.max_num_children)
+        logger.debug("leaving graphenv construction")
 
     def reset(self) -> Dict[str, np.ndarray]:
         """Reset this state to the root vertex. It is possible for state.root to
@@ -96,16 +104,16 @@ class GraphEnv(gym.Env):
                 a dictionary of debugging information related to this call
         """
 
-        if len(self.state.children) > self.max_num_actions:
+        if len(self.state.children) > self.max_num_children:
             raise RuntimeError(
-                f"State {self.state} has {len(self.state.children)} actions "
-                f"(> {self.max_num_actions})"
+                f"State {self.state} has {len(self.state.children)} children "
+                f"(> {self.max_num_children})"
             )
 
         if action not in self.action_space:
             raise RuntimeError(
                 f"Action {action} outside the action space of state {self.state}: "
-                f"{len(self.state.children)} max actions"
+                f"{len(self.state.children)} max children"
             )
 
         # Move the state to the next action
@@ -134,7 +142,7 @@ class GraphEnv(gym.Env):
         the action observation keys, and values that are the current state
         and every action's values for that key concatenated into numpy arrays.
 
-        The current state is the 0th entry in these arrays, and the actions
+        The current state is the 0th entry in these arrays, and the children
         are offset by one index to accomodate that.
 
         Returns:
@@ -144,9 +152,9 @@ class GraphEnv(gym.Env):
 
         """
 
-        num_actions = 1 + self.max_num_actions
-        action_mask = np.zeros(num_actions, dtype=bool)
-        action_observations = [self.state.observation] * num_actions
+        num_children = 1 + self.max_num_children
+        action_mask = np.zeros(num_children, dtype=bool)
+        action_observations = [self.state.observation] * num_children
 
         for i, successor in enumerate(self.state.children):
             action_observations[i + 1] = successor.observation
