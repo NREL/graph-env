@@ -87,7 +87,7 @@
 <span id="graphenv-graph-env-module"></span><h2>graphenv.graph_env module<a class="headerlink" href="#module-graphenv.graph_env" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_env.</span></span><span class="sig-name descname"><span class="pre">GraphEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">graphenv.vertex.V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_env.GraphEnv" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">graphenv.graph_env.</span></span><span class="sig-name descname"><span class="pre">GraphEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ray.rllib.env.env_context.EnvContext</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.graph_env.GraphEnv" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gym.core.Env</span></code></p>
 <p>Defines an OpenAI Gym Env for traversing a graph using the current vertex
 as the state, and the successor verticies as actions.</p>
@@ -105,8 +105,8 @@ which defines the graph via it’s _get_children() method.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.max_num_actions">
-<span class="sig-name descname"><span class="pre">max_num_actions</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.max_num_actions" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.max_num_children">
+<span class="sig-name descname"><span class="pre">max_num_children</span></span><a class="headerlink" href="#graphenv.graph_env.GraphEnv.max_num_children" title="Permalink to this definition"></a></dt>
 <dd><p>maximum number of actions considered at a time</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -148,7 +148,7 @@ each possible action, and the current state.</p>
 <p>Returns a column-oriented representation, a Dict with keys matching
 the action observation keys, and values that are the current state
 and every action’s values for that key concatenated into numpy arrays.</p>
-<p>The current state is the 0th entry in these arrays, and the actions
+<p>The current state is the 0th entry in these arrays, and the children
 are offset by one index to accomodate that.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -167,7 +167,7 @@ observations}</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">max_num_actions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_num_children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -245,7 +245,7 @@ GraphEnv.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_mask">
 <span class="sig-name descname"><span class="pre">action_mask</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_mask" title="Permalink to this definition"></a></dt>
-<dd><p>bool tensor of valid next actions</p>
+<dd><p>bool tensor of valid next children</p>
 </dd></dl>
 
 <dl class="py attribute">
