@@ -9,4 +9,4 @@ dependencies:
   - networkx
   - pip
   - pip:
-    - "ray[tune,rllib] == 1.10"
+    - "ray[tune,rllib]"
