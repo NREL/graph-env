@@ -72,7 +72,7 @@ class HallwayState(Vertex):
         Returns:
             HallwayState : a copy of this HallwayState.
         """
-        return HallwayState(self.end_pos, cur_pos)
+        return HallwayState(self.end_pos + 1, cur_pos)
 
     @property
     def info(self) -> Dict:
