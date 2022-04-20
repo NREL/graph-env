@@ -33,7 +33,7 @@ def test_children(hallway_state: HallwayState):
 
 def test_terminal(hallway_state: HallwayState):
     assert hallway_state.new(0).terminal is False
-    assert hallway_state.new(5).terminal is True
+    assert hallway_state.new(4).terminal is True
     # assert hallway_state.new(3, 10).terminal is True
 
 
@@ -61,7 +61,7 @@ def test_graphenv_reset(hallway_env: GraphEnv):
 def test_graphenv_step(hallway_env: GraphEnv):
     obs, reward, terminal, info = hallway_env.step(0)
 
-    for _ in range(4):
+    for _ in range(3):
         assert terminal is False
         assert reward == -0.1
         assert hallway_env.observation_space.contains(obs)

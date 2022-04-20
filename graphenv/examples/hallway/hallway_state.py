@@ -28,7 +28,7 @@ class HallwayState(Vertex):
             cur_pos (int, optional): initial vertex index. Defaults to 0.
         """
         super().__init__()
-        self.end_pos = corridor_length
+        self.end_pos = corridor_length - 1
         self.cur_pos = cur_pos
 
     @property
@@ -72,7 +72,7 @@ class HallwayState(Vertex):
         Returns:
             HallwayState : a copy of this HallwayState.
         """
-        return HallwayState(self.end_pos, cur_pos)
+        return HallwayState(self.end_pos + 1, cur_pos)
 
     @property
     def info(self) -> Dict:
