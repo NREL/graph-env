@@ -126,7 +126,7 @@ class GraphEnv(gym.Env):
                 "rllib's env pre_check module, or due to a failure of the policy model "
                 "to mask invalid actions. Returning the current state to satisfy the "
                 "pre_check module.",
-                warnings.RuntimeWarning,
+                RuntimeWarning,
             )
 
         result = (
