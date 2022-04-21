@@ -120,9 +120,10 @@ class GraphEnv(gym.Env):
         try:
             # Move the state to the next action
             self.state = self.state.children[action]
+
         except IndexError:
             warnings.warn(
-                "Attempting to chose a masked child state. This is either due to "
+                "Attempting to choose a masked child state. This is either due to "
                 "rllib's env pre_check module, or due to a failure of the policy model "
                 "to mask invalid actions. Returning the current state to satisfy the "
                 "pre_check module.",

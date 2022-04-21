@@ -9,4 +9,5 @@ dependencies:
   - networkx
   - pip
   - pip:
+    - nfp >= 0.3.10
     - "ray[tune,rllib]"

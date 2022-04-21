@@ -17,6 +17,12 @@ class TSPState(Vertex):
             G: A fully connected networkx graph.
             tour: A list of nodes in visitation order that led to this
                 state. Defaults to [0] which begins the tour at node 0.
+
+
+        Notes:
+            We'll need to make `self.num_nodes` a passable parameter if we later want
+            this to handle dynamic graphs of potentially different sizes.
+
         """
 
         super().__init__()
@@ -50,7 +56,7 @@ class TSPState(Vertex):
         Returns:
             Node with node 0 as the starting point of the tour.
         """
-        return self.new(self.G, [0])
+        return self.new([0])
 
     @property
     def reward(self) -> float:
@@ -70,7 +76,7 @@ class TSPState(Vertex):
 
         return rew
 
-    def new(self, G: nx.Graph, tour: List[int]):
+    def new(self, tour: List[int]):
         """Convenience function for duplicating the existing node.
 
         Args:
@@ -80,7 +86,7 @@ class TSPState(Vertex):
         Returns:
             New TSP state.
         """
-        return TSPState(G, tour)
+        return self.__class__(self.G, tour)
 
     @property
     def info(self) -> Dict:
@@ -115,7 +121,7 @@ class TSPState(Vertex):
             tour = self.tour.copy()
             tour.append(nbr)
 
-            yield self.new(self.G, tour)
+            yield self.new(tour)
 
     def _make_observation(self) -> Dict[str, np.ndarray]:
         """Return an observation.  The dict returned here needs to match
