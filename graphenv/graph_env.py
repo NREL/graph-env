@@ -120,6 +120,7 @@ class GraphEnv(gym.Env):
         try:
             # Move the state to the next action
             self.state = self.state.children[action]
+
         except IndexError:
             warnings.warn(
                 "Attempting to chose a masked child state. This is either due to "

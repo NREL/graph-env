@@ -3,6 +3,8 @@ import logging
 import pytest
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel, TSPQModelBellman
+from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel
+from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
 from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.graph_env import GraphEnv
 from ray.rllib.agents import dqn, ppo
@@ -102,4 +104,28 @@ def test_dqn_bellman(ray_init, dqn_config, caplog, N, G):
     }
     dqn_config.update(config)
     trainer = dqn.DQNTrainer(config=dqn_config)
+    trainer.train()
+
+
+def test_ppo_nfp(ray_init, ppo_config, N, G):
+
+    ModelCatalog.register_custom_model("TSPGNNModel", TSPGNNModel)
+    register_env("graphenv", lambda config: GraphEnv(config))
+
+    config = {
+        "env": "graphenv",
+        "env_config": {
+            "state": TSPNFPState(G),
+            "max_num_children": G.number_of_nodes(),
+        },
+        "model": {
+            "custom_model": "TSPGNNModel",
+            "custom_model_config": {
+                "num_messages": 1,
+                "embed_dim": 32,
+            },
+        },
+    }
+    ppo_config.update(config)
+    trainer = ppo.PPOTrainer(config=ppo_config)
     trainer.train()
