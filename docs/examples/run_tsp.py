@@ -65,37 +65,37 @@ if __name__ == "__main__":
 
     ray.init(local_mode=args.local_mode)
 
+    N = args.N
+    G = make_complete_planar_graph(N=N, seed=args.seed)
+
     # Customize based on whether using NFP or not.
     if args.use_nfp:
-        Model = TSPGNNModel
-        State = TSPNFPState
+        state = TSPNFPState(G)
         custom_model_config = {
             "num_messages": 1,
             "embed_dim": 32
         }
+        custom_model = "TSPGNNModel"
+        ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
     else:
-        Model = TSPModel
-        State = TSPState
+        state = TSPState(G)
         custom_model_config = {
             "num_nodes": args.N,
             "hidden_dim": 256,
             "embed_dim": 256,
         }
+        # Model and env registration.
+        custom_model = "TSPModel"
+        ModelCatalog.register_custom_model(custom_model, TSPModel)
 
     # Create a baseline solution using networkx heuristics
     import networkx as nx
-
-    N = args.N
-    G = make_complete_planar_graph(N=N, seed=args.seed)
 
     # Compute the reward baseline with heuristic
     tsp = nx.approximation.traveling_salesman_problem
     path = tsp(G, cycle=True)
     reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N - 1)])
     print(f"Networkx heuristic reward: {reward_baseline:1.3f}")
-
-    # Model and env registration.
-    ModelCatalog.register_custom_model("CustomModel", Model)
 
     # Put the size of the graph in the name
     env_name = f"tsp-{N}"
@@ -106,13 +106,13 @@ if __name__ == "__main__":
     config.update({
         "env": env_name,  # or "corridor" if registered above
         "env_config": {
-            "state": State(G),
+            "state": state,
             "max_num_children": N
         },
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": args.num_gpus,  # int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
-            "custom_model": "CustomModel",
+            "custom_model": custom_model,
             "custom_model_config": custom_model_config
         },
         "num_workers": args.num_workers,  # parallelism
