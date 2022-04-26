@@ -11,7 +11,6 @@ clear
 source env.sh
 python run_tsp.py \
     --N=10 \
-    --use-nfp \
     --seed=0 \
     --num-workers 35 \
     --num-gpus 1 \
