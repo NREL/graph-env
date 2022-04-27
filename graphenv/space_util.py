@@ -1,6 +1,6 @@
 import collections
 from functools import singledispatch
-from typing import OrderedDict, Tuple
+from typing import Tuple
 
 import gym.spaces as spaces
 import numpy as np
@@ -154,7 +154,9 @@ def _(target: collections.abc.Iterable):
 
 @flatten_first_dim.register(collections.abc.Mapping)
 def _(target: collections.abc.Mapping):
-    return OrderedDict([(k, flatten_first_dim(e)) for k, e in target.items()])
+    return collections.OrderedDict(
+        [(k, flatten_first_dim(e)) for k, e in target.items()]
+    )
 
 
 @flatten_first_dim.register(tf.Tensor)
