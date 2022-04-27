@@ -83,7 +83,7 @@ class SimpleCorridor(gym.Env):
         self.end_pos = config["corridor_length"]
         self.cur_pos = 0
         self.action_space = Discrete(2)
-        self.observation_space = Box(0.0, self.end_pos, shape=(1,), dtype=np.float32)
+        self.observation_space = Box(0.0, self.end_pos, shape=(1,), dtype=float)
         # Set the seed. This is only used for the final (reach goal) reward.
         self.seed(config.worker_index * config.num_workers)
 
@@ -207,7 +207,6 @@ if __name__ == "__main__":
             print("Checking if learning goals were achieved")
             check_learning_achieved(results, args.stop_reward)
 
-        results.results_df.to_csv('custom_env_results.csv')
-
+        results.results_df.to_csv("custom_env_results.csv")
 
     ray.shutdown()
