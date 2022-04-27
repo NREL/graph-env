@@ -33,9 +33,9 @@ jobs:
       
       - name: Build docs with Sphinx
         run: |
-          pip install sphinx sphinx-rtd-theme
           cd docs
-          sphinx-apidoc -f -o source/ ../graphenv/
+          pip install -r requirements_for_docs.txt
+          #sphinx-apidoc -f -o source/ ../graphenv/
           make html
           touch build/html/.nojekyll
 
