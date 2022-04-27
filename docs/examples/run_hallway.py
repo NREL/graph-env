@@ -2,8 +2,9 @@ import argparse
 import os
 
 import ray
-from graphenv.examples.hallway.hallway_env import HallwayEnv
 from graphenv.examples.hallway.hallway_model import HallwayModel
+from graphenv.examples.hallway.hallway_state import HallwayState
+from graphenv.graph_env import GraphEnv
 from ray import tune
 from ray.rllib.agents import ppo
 from ray.rllib.models import ModelCatalog
@@ -53,19 +54,19 @@ if __name__ == "__main__":
 
     ray.init(local_mode=args.local_mode)
 
-    # Can also register the env creator function explicitly with:
-    register_env("hallway", lambda config: HallwayEnv(config))
-    ModelCatalog.register_custom_model("my_model", HallwayModel)
+    ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
+    register_env("graphenv", lambda config: GraphEnv(config))
 
     config = {
-        "env": HallwayEnv,  # or "corridor" if registered above
+        "env": "graphenv",
         "env_config": {
-            "corridor_length": 5,
+            "state": HallwayState(5),
+            "max_num_children": 2,
         },
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
         "model": {
-            "custom_model": "my_model",
+            "custom_model": "HallwayModel",
             "custom_model_config": {"hidden_dim": 32},
         },
         "num_workers": 1,  # parallelism
@@ -87,7 +88,7 @@ if __name__ == "__main__":
         ppo_config.update(config)
         # use fixed learning rate instead of grid search (needs tune)
         ppo_config["lr"] = 1e-3
-        trainer = ppo.PPOTrainer(config=ppo_config, env=HallwayEnv)
+        trainer = ppo.PPOTrainer(config=ppo_config, env=GraphEnv)
         # run manual training loop and print results after each iteration
         for _ in range(args.stop_iters):
             result = trainer.train()
@@ -107,6 +108,6 @@ if __name__ == "__main__":
             print("Checking if learning goals were achieved")
             check_learning_achieved(results, args.stop_reward)
 
-        results.results_df.to_csv('hallway_results.csv')
+        results.results_df.to_csv("hallway_results.csv")
 
     ray.shutdown()
