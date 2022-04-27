@@ -1,3 +1,4 @@
+from math import sqrt
 from typing import Dict, List
 
 import gym
@@ -31,7 +32,7 @@ class TSPNFPState(TSPState):
                 ),
                 "edge_weights": gym.spaces.Box(
                     low=0,
-                    high=1,
+                    high=sqrt(2),
                     shape=(self.num_edges,),
                     dtype=float,
                 ),
