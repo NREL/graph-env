@@ -160,14 +160,18 @@ def _(target: collections.abc.Mapping):
 
 
 @flatten_first_dim.register(tf.Tensor)
+@tf.function
 def _(target: tf.Tensor):
     shape = tf.shape(target)
-    dest_shape = (shape[0] * shape[1], *shape[2:])
+    dest_shape = [shape[0] * shape[1]]
+    for i in range(2, len(shape)):
+        dest_shape += [shape[i]]
+
     return tf.reshape(target, dest_shape)
 
 
 @flatten_first_dim.register(np.ndarray)
 def _(target: np.ndarray):
     shape = np.shape(target)
-    dest_shape = (shape[0] * shape[1], *shape[2:])
+    dest_shape = [shape[0] * shape[1], *shape[2:]]
     return np.reshape(target, dest_shape)

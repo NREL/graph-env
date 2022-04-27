@@ -2,15 +2,20 @@
 #SBATCH --account=rlmolecule
 #SBATCH --job-name=tsp
 #SBATCH --qos=high
-#SBATCH --time=2:00:00
+#SBATCH --time=4:00:00
 #SBATCH --nodes=1
+#SBATCH --gres=gpu:1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=36
 
 clear
 source env.sh
 python run_tsp.py \
-    --N=10 \
+    --N=20 \
+    --lr=0.0001 \
+    --entropy-coeff=0.01 \
     --seed=0 \
     --num-workers 35 \
-    --stop-iters 10000 \
-    --stop-timesteps 1000000
- 
+    --num-gpus 1 \
+    --stop-iters 1000000 \
+    --stop-timesteps 100000000

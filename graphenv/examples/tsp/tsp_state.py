@@ -134,6 +134,6 @@ class TSPState(Vertex):
         """
 
         cur_node = self.tour[-1]
-        cur_pos = np.array(self.G.nodes[cur_node]["pos"], dtype=np.float).squeeze()
+        cur_pos = np.array(self.G.nodes[cur_node]["pos"], dtype=float).squeeze()
 
-        return {"node_obs": cur_pos, "node_idx": np.array([cur_node], dtype=np.int)}
+        return {"node_obs": cur_pos, "node_idx": np.array([cur_node], dtype=int)}
