@@ -11,8 +11,9 @@
 clear
 source env.sh
 python run_tsp.py \
-    --N=20 \
-    --lr=0.0001 \
+    --N=40 \
+    --run=PPO \
+    --lr=0.001 \
     --entropy-coeff=0.01 \
     --seed=0 \
     --num-workers 35 \
