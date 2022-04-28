@@ -148,7 +148,7 @@ if __name__ == "__main__":
             "explore": False
         },
         "evaluation_interval": 1,
-        "evaluation_duration": 4
+        "evaluation_duration": 1
     }
     run_config.update(config)
 
