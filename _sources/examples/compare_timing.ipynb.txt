@@ -1,0 +1,230 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "b628db7e-bb20-4194-a0ef-cb423c124c9f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "47944a6b-7d15-4b03-8c2e-4a85d2004f1b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "custom_env = pd.read_csv('custom_env_results.csv')\n",
+    "graph_env = pd.read_csv('hallway_results.csv')\n",
+    "graph_env.index = ('graph_env', )\n",
+    "custom_env.index = ('custom_env', )\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "c0e396e6-f8ff-4080-ae0e-fcaf4d9597d5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "custom_env.append(graph_env).T.to_csv('combined.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "657101eb-78bb-46dc-a844-bc8e16d84f19",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df = custom_env.append(graph_env).T"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "7c2b78af-fd44-47dc-a6d8-473f93e3c69d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "sampler_perf = df[df.index.str.startswith('sampler_perf') | df.index.str.startswith('timers')]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "0af19c2f-8894-4127-90b4-b42a104dc63d",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>custom_env</th>\n",
+       "      <th>graph_env</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>sampler_perf.mean_raw_obs_processing_ms</th>\n",
+       "      <td>0.082217</td>\n",
+       "      <td>0.113669</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>sampler_perf.mean_inference_ms</th>\n",
+       "      <td>0.406885</td>\n",
+       "      <td>3.47847</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>sampler_perf.mean_action_processing_ms</th>\n",
+       "      <td>0.045303</td>\n",
+       "      <td>0.039587</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>sampler_perf.mean_env_wait_ms</th>\n",
+       "      <td>0.033029</td>\n",
+       "      <td>0.084355</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>sampler_perf.mean_env_render_ms</th>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.sample_time_ms</th>\n",
+       "      <td>3208.597</td>\n",
+       "      <td>23010.599</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.sample_throughput</th>\n",
+       "      <td>1246.651</td>\n",
+       "      <td>173.833</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.load_time_ms</th>\n",
+       "      <td>0.279</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.load_throughput</th>\n",
+       "      <td>14339500.855</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.learn_time_ms</th>\n",
+       "      <td>1335.128</td>\n",
+       "      <td>10634.572</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.learn_throughput</th>\n",
+       "      <td>2995.967</td>\n",
+       "      <td>376.132</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timers.update_time_ms</th>\n",
+       "      <td>1.127</td>\n",
+       "      <td>1.106</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                           custom_env  graph_env\n",
+       "sampler_perf.mean_raw_obs_processing_ms      0.082217   0.113669\n",
+       "sampler_perf.mean_inference_ms               0.406885    3.47847\n",
+       "sampler_perf.mean_action_processing_ms       0.045303   0.039587\n",
+       "sampler_perf.mean_env_wait_ms                0.033029   0.084355\n",
+       "sampler_perf.mean_env_render_ms                   0.0        0.0\n",
+       "timers.sample_time_ms                        3208.597  23010.599\n",
+       "timers.sample_throughput                     1246.651    173.833\n",
+       "timers.load_time_ms                             0.279        NaN\n",
+       "timers.load_throughput                   14339500.855        NaN\n",
+       "timers.learn_time_ms                         1335.128  10634.572\n",
+       "timers.learn_throughput                      2995.967    376.132\n",
+       "timers.update_time_ms                           1.127      1.106"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "sampler_perf"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "e5348ff2-dbba-40ad-ba25-24046e7fa34f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "sampler_perf.mean_raw_obs_processing_ms    1.382546\n",
+       "sampler_perf.mean_inference_ms              8.54902\n",
+       "sampler_perf.mean_action_processing_ms     0.873835\n",
+       "sampler_perf.mean_env_wait_ms              2.553954\n",
+       "sampler_perf.mean_env_render_ms                 0.0\n",
+       "timers.sample_time_ms                      7.171545\n",
+       "timers.sample_throughput                    0.13944\n",
+       "timers.learn_time_ms                       7.965208\n",
+       "timers.learn_throughput                    0.125546\n",
+       "timers.update_time_ms                      0.981366\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(sampler_perf.graph_env / (sampler_perf.custom_env + 1E-12)).dropna()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3.8.10 64-bit ('rlmol': conda)",
+   "language": "python",
+   "name": "python3810jvsc74a57bd0114d3f206ebe7f7a204130250ab8ab1dce9760d08c8e557a7a3306f441e54354"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

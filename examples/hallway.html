@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hallway Environment Example &mdash; graphenv 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Create and visualize simple network" href="tsp-env.html" />
+    <link rel="prev" title="Installation" href="../background/installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> graphenv
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hallway Environment Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#The-hallway-problem-as-graph-problem">The hallway problem as graph problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#The-hallway-problem-as-graphenv-problem">The hallway problem as graphenv problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#HallwayState">HallwayState</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#__init__"><code class="docutils literal notranslate"><span class="pre">__init__</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observation_space"><code class="docutils literal notranslate"><span class="pre">observation_space</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_make_observation"><code class="docutils literal notranslate"><span class="pre">_make_observation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reward"><code class="docutils literal notranslate"><span class="pre">reward</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_get_children"><code class="docutils literal notranslate"><span class="pre">_get_children</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#HallwayModel">HallwayModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#HallwayEnv">HallwayEnv</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#HallwayEnv-Demo">HallwayEnv Demo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Env-creation">Env creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Reset">Reset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step">Step</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-to-the-terminal-vertex">Step to the terminal vertex</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tsp-env.html">Create and visualize simple network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tsp-env.html#Solve-TSP-using-nx-heuristics">Solve TSP using nx heuristics</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../graphenv.html">graphenv package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">graphenv</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Hallway Environment Example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/hallway.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Hallway-Environment-Example">
+<h1>Hallway Environment Example<a class="headerlink" href="#Hallway-Environment-Example" title="Permalink to this headline"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> library implements graph search as a reinforcement learning (RL) problem with parameteric action spaces, and is ready to use with many off-the-shelf algorithms available in the RLLib framework.</p>
+<p>Before jumping into the implementation details, let’s take a look a simple motivating example: the hallway problem.</p>
+<p>The hallway problem is effectively a 1d version of the gridworld problem in classic RL. We are given a hallway with <span class="math notranslate nohighlight">\(N\)</span> discrete positions and, starting at one end, want to learn to reach the opposite end in as few steps as possible.</p>
+<img alt="hallway-flat" src="../_images/hallway-flat.png" />
+<p>The figure above shows a hallway problem with <span class="math notranslate nohighlight">\(N=3\)</span>, and the optimal solution starting at state 0 and ending at state 2, with each “current state” highlighted in black.</p>
+<p>This trivial problem can be used to express the “RL on a graph” idea succinctly, and enable solving much more interesting, non-trivial problems.</p>
+<section id="The-hallway-problem-as-graph-problem">
+<h2>The hallway problem as graph problem<a class="headerlink" href="#The-hallway-problem-as-graph-problem" title="Permalink to this headline"></a></h2>
+<p>Before we jump into the graph formulation of the hallway problem, let’s talk first about <em>actions</em>, because this is one of the key differences between <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> and traditional RL gym environments.</p>
+<p>Typically, discrete actions spaces in gym environments have fixed dimension and fixed definitions. In the hallway problem, for instance, there are always two actions: “move left” (action=0) and “move right” (action=1). Cases where the action is infeasible, like trying to move left from the start position, are typically handled by implmenting a <em>null</em> transition where the action doesn’t change the current state.</p>
+<p>In general graph search problems, however, such fixed action spaces are not practical. In the game of chess, for example, the total number of possible board states and, subsequently, moves, is astronomical, while the set of <em>feasible</em> moves changes continually throughout the game.</p>
+<p>The key observation that makes graph search tractable as a gym environment is: even for large and complex graph search problems, the number of states that are accessible from the current state is usually relatively small. If, instead of fixing the action to a pre-defined set of choices, we think of each action as representing an accessible next state, this endeavor becomes tractable.</p>
+<p>And so, we abandon the idea of “fixed” action spaces in favor of “parametric” action spaces. Here, <strong>parametric</strong> means that actions coincide with next states represented by feature vectors, rather than having a single, index-based interpretation. In other words, rather than actions as “move <span class="math notranslate nohighlight">\([ left, right ]\)</span>”, parametric actions can be thought of as “go to state <span class="math notranslate nohighlight">\([i, j]\)</span>” where the states <span class="math notranslate nohighlight">\(i,j\)</span> each have a vector representation. Also unliked fixed spaces, the order doesn’t
+matter: we could equivalently say “go to state <span class="math notranslate nohighlight">\([j, i]\)</span>”.</p>
+<p>A key ingredient in making this machinery work is to have policy models that can work on parameteric action spaces</p>
+<p>The figure below illustrates how to think of the simple hallway example as a graph problem.</p>
+<img alt="hallway-graph" src="../_images/hallway-graph.png" />
+<p>Before jumping into the specifics of how all of this works in <code class="docutils literal notranslate"><span class="pre">graphenv</span></code>, let’s define some terms.</p>
+<p>A <strong>vertex</strong> reprents a single state in the graph which, for this problem, can be described by an index <span class="math notranslate nohighlight">\(i\in \{ 0, 1, 2 \}\)</span>. (Sometimes we’ll use the terms vertex, state, and node interchangeably). In the figure, each vertex is shown alongside the corresponding state of the hallway problem.</p>
+<p>The <strong>root</strong> is the starting vertex of the graph search, here, <span class="math notranslate nohighlight">\(i=0\)</span>.</p>
+<p>At each state in the search, a certain number of child states (or <strong>children</strong>) are accessible. In the figure above, we illustrate this using the color codes:</p>
+<ul class="simple">
+<li><p>black = current vertex</p></li>
+<li><p>white = child vertex</p></li>
+<li><p>gray = inaccessible vertex</p></li>
+</ul>
+<p>If we think of an RL action as selecting one of these children, it’s clear that the number of actions can change from one state to the next. For example:</p>
+<ul class="simple">
+<li><p>Starting at the root vertex <span class="math notranslate nohighlight">\(i=0\)</span> (black), state <span class="math notranslate nohighlight">\(i=1\)</span> (white) is accessible by moving right, while state <span class="math notranslate nohighlight">\(i=2\)</span> (gray) can’t be accessed in a single move.</p></li>
+<li><p>Starting at vertex <span class="math notranslate nohighlight">\(i=1\)</span> (black), both <span class="math notranslate nohighlight">\(i=0\)</span> and <span class="math notranslate nohighlight">\(i=2\)</span> are accessible (white) – there are no masked states in this case.</p></li>
+</ul>
+<p>The <strong>terminal</strong> vertex here coincides with <span class="math notranslate nohighlight">\(i=2\)</span>. Notice that this vertex has no children because, when reached, the problem is solved.</p>
+</section>
+</section>
+<section id="The-hallway-problem-as-graphenv-problem">
+<h1>The hallway problem as graphenv problem<a class="headerlink" href="#The-hallway-problem-as-graphenv-problem" title="Permalink to this headline"></a></h1>
+<p>The graphenv module makes it easy for a user to implement their graph search problem as a gym environment, and then to plug that environment into RLLib using both custom and off-the-shelf RL algorithm. At a high level, the user implements a <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> and <code class="docutils literal notranslate"><span class="pre">Model</span></code> class to represent the graph state and correspnding RL policy model and graphenv takes care of the rest.</p>
+<p>The figure highlights below illustrates how the <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> and <code class="docutils literal notranslate"><span class="pre">Model</span></code> classes interact, with data labeled on the left and associated methods labeled on the right.</p>
+<img alt="graphenv" src="../_images/graphenv.png" />
+<p>Below, we step through the implementation of the <code class="docutils literal notranslate"><span class="pre">HallwayState</span></code> (inheriting from the graphenv <code class="docutils literal notranslate"><span class="pre">Vertex</span></code>) and <code class="docutils literal notranslate"><span class="pre">HallwayModel</span></code> (inheriting from the graphenv <code class="docutils literal notranslate"><span class="pre">Model</span></code>). We then provide a working example of building and running a hallway environment.</p>
+<section id="HallwayState">
+<h2>HallwayState<a class="headerlink" href="#HallwayState" title="Permalink to this headline"></a></h2>
+<p>(See <code class="docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_state</span></code> for the full implementation).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">HallwayState</span></code> represents all of the problem logic at the level of a single vertex that enables graphenv to automate the overarching search and RL training. This class inherits from <code class="docutils literal notranslate"><span class="pre">graphenv.vertex.Vertex</span></code> which has a number of required methods and attributes which we step through below.</p>
+<section id="__init__">
+<h3><code class="docutils literal notranslate"><span class="pre">__init__</span></code><a class="headerlink" href="#__init__" title="Permalink to this headline"></a></h3>
+<p>As you’d expect, problem configuration happens here. The hallway state is completely specified by the current and end positions,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">corridor_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cur_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initializes this HallwayState.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            corridor_length (int): length of the vertex chain</span>
+<span class="sd">            cur_pos (int, optional): initial vertex index. Defaults to 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span> <span class="o">=</span> <span class="n">corridor_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">=</span> <span class="n">cur_pos</span>
+</pre></div>
+</div>
+</section>
+<section id="observation_space">
+<h3><code class="docutils literal notranslate"><span class="pre">observation_space</span></code><a class="headerlink" href="#observation_space" title="Permalink to this headline"></a></h3>
+<p>Returns a <code class="docutils literal notranslate"><span class="pre">gym.spaces.Space</span></code> object that describes the structure of the data used to represent a vertex. In the hallway problem,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;HallwayStates are observed with a dictionary containing a single</span>
+<span class="sd">    key, &#39;cur_pos&#39;, with an integer value between 0 and self.end_pos,</span>
+<span class="sd">    indicating the index of the vertex.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        gym.spaces.Dict: The observation space for HallwayStates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;cur_pos&quot;</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+                <span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">cur_pos</span></code> is the integer index of the current position. The box space has a single element containing the index of the current position but, in general, can contain multiple, complex subspaces.</p>
+</section>
+<section id="_make_observation">
+<h3><code class="docutils literal notranslate"><span class="pre">_make_observation</span></code><a class="headerlink" href="#_make_observation" title="Permalink to this headline"></a></h3>
+<p>To decide which child to transition to, the RL agent will need to call a policy model with that vertex’s observation. To this end, we implement <code class="docutils literal notranslate"><span class="pre">_make_observation</span></code> which, for the hallway example, returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Makes an observation of this HallwayState vertex.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, np.ndarray]: dictionary containing the current position</span>
+<span class="sd">        index under the key &#39;cur_pos&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;cur_pos&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that the returned observation must exactly match the specification in the vertex’s <code class="docutils literal notranslate"><span class="pre">observation_space</span></code>.</p>
+</section>
+<section id="reward">
+<h3><code class="docutils literal notranslate"><span class="pre">reward</span></code><a class="headerlink" href="#reward" title="Permalink to this headline"></a></h3>
+<p>Returns the vertex reward. For the hallway problem, we give a small negative reward for each non-terminal step, and a random, positive reward for reaching the goal.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The reward function for the HallwayState graph.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: random reward between 0 and 2 on the goal vertex, -0.1</span>
+<span class="sd">            otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.1</span>
+</pre></div>
+</div>
+</section>
+<section id="_get_children">
+<h3><code class="docutils literal notranslate"><span class="pre">_get_children</span></code><a class="headerlink" href="#_get_children" title="Permalink to this headline"></a></h3>
+<p>To take an action from a given vertex in the graph search, we need to be able observe its children. The <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> class implements this first part through a <code class="docutils literal notranslate"><span class="pre">_get_children</span></code> generator which, for the hallway problem, looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;HallwayState&quot;</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Gets child verticies of this vertex. Each vertex has both larger</span>
+<span class="sd">    and smaller adjacent index verticies as children, except for the initial</span>
+<span class="sd">    and goal verticies.</span>
+<span class="sd">    Yields:</span>
+<span class="sd">        HallwayState: Child verticies of this vertex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Stop the hallway from going negative</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the <code class="docutils literal notranslate"><span class="pre">new</span></code> methods simply returns a new instance with updated state index.</p>
+<p>In our example above, this method will yield</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* [new(1)] if cur_pos == 0
+* [new(0), new(2)] if cur_pos == 1
+* [] if cur_pos == 2
+</pre></div>
+</div>
+<p>Note that the number of children (actions) is variable, and that the terminal state returns an empty list of next children.</p>
+</section>
+</section>
+<section id="HallwayModel">
+<h2>HallwayModel<a class="headerlink" href="#HallwayModel" title="Permalink to this headline"></a></h2>
+<p>(See <code class="docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_model</span></code> for the full implementation).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Model</span></code> class implements the policy model used by the RL algorithm and, as such, needs to be implemented to take vertex observation data as input, and to output an action value and action weight for each observation. In practice, this amounts to implementing a keras model in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, and storing it in the <code class="docutils literal notranslate"><span class="pre">base_model</span></code> attribute of the model class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HallwayModel</span><span class="p">(</span><span class="n">GraphModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An example GraphModel implementation for the HallwayEnv and HallwayState</span>
+<span class="sd">    Graph.</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        base_model : The Keras model used to evaluate vertex observations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializs this HallwayModel.</span>
+<span class="sd">        Uses a dense fully connected Keras network.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            hidden_dim (int, optional): The number of hidden layers to use.</span>
+<span class="sd">                Defaults to 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">cur_pos</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cur_pos&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">hidden_layer</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;hidden_layer&quot;</span><span class="p">)</span>
+        <span class="n">action_value_output</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;action_value_output&quot;</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s2">&quot;ones&quot;</span>
+        <span class="p">)</span>
+        <span class="n">action_weight_output</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;action_weight_output&quot;</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s2">&quot;ones&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">hidden_layer</span><span class="p">(</span><span class="n">cur_pos</span><span class="p">)</span>
+        <span class="n">action_values</span> <span class="o">=</span> <span class="n">action_value_output</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">action_weights</span> <span class="o">=</span> <span class="n">action_weight_output</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">cur_pos</span><span class="p">],</span> <span class="p">[</span><span class="n">action_values</span><span class="p">,</span> <span class="n">action_weights</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="HallwayEnv">
+<h2>HallwayEnv<a class="headerlink" href="#HallwayEnv" title="Permalink to this headline"></a></h2>
+<p>(See <code class="docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_env</span></code> for the full implementation).</p>
+<p>The final step in implementing the hallway problem with graphenv is the creation of the environment itself. This requires only an instance of the HallwayState as well as a <code class="docutils literal notranslate"><span class="pre">max_num_actions</span></code> argument that limits the maximum number of next states that we expect to confront during the search. As we’ll demonstrate below, the graphenv library takes care of masking invalid actions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HallwayEnv</span><span class="p">(</span><span class="n">GraphEnv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convience class of a GraphEnv using a HallwayState as the vertex state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">EnvContext</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">HallwayState</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;corridor_length&quot;</span><span class="p">]),</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="n">max_num_actions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="HallwayEnv-Demo">
+<h1>HallwayEnv Demo<a class="headerlink" href="#HallwayEnv-Demo" title="Permalink to this headline"></a></h1>
+<p>Now that we have all of the requisite pieces, let’s demo running the HallwayEnv as we would any gym environment. We’ll point out the salient differences from a standard gym env – referring the reader to the full implementation here: <code class="docutils literal notranslate"><span class="pre">graphenv.graph_env</span></code></p>
+<p>Unlike the above cells, the cells below should be runnable in the notebook.</p>
+<section id="Env-creation">
+<h2>Env creation<a class="headerlink" href="#Env-creation" title="Permalink to this headline"></a></h2>
+<p>First, we create the environment with any needed configuration – here, just the corridor length.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">graphenv.examples.hallway.hallway_env</span> <span class="kn">import</span> <span class="n">HallwayEnv</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;corridor_length&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">HallwayEnv</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Reset">
+<h2>Reset<a class="headerlink" href="#Reset" title="Permalink to this headline"></a></h2>
+<p>Next, let’s call reset and examine the returned observation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;action_mask&#39;: array([False,  True, False]), &#39;vertex_observations&#39;: {&#39;cur_pos&#39;: array([[0],
+       [1],
+       [0]])}}
+</pre></div></div>
+</div>
+<p>Note, the obs data is a dictionary with two keys, <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> and <code class="docutils literal notranslate"><span class="pre">vertex_observations</span></code>. The <code class="docutils literal notranslate"><span class="pre">vertex_observations</span></code> value contains all of the vertex data that the graphenv library has conveniently concatenated into a single data structure (here, another dictionary as specified in the <code class="docutils literal notranslate"><span class="pre">HallwayState</span></code>). Because the number of valid actions can change from one state to the next, graphenv also returns an <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> indicating which of the actions are valid: <code class="docutils literal notranslate"><span class="pre">True</span></code> for valid actions and
+<code class="docutils literal notranslate"><span class="pre">False</span></code> for invalid.</p>
+<p>Notice that, even though <code class="docutils literal notranslate"><span class="pre">max_num_actions=2</span></code> for this environment, the observation data here contains 3 elements. This is because the parent vertex data is needed by the policy model and thus is always returned at index 0, while the children appear at indices <code class="docutils literal notranslate"><span class="pre">[1:max_num_actions]</span></code>.</p>
+<p>Let’s now interpret the obs data in full. First, the <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> has a single <code class="docutils literal notranslate"><span class="pre">True</span></code> value – the first child with index 1 – because there is only a single, valid next state from the starting position. Similarly, the <code class="docutils literal notranslate"><span class="pre">cur_pos</span> <span class="pre">=</span> <span class="pre">1</span></code> at index 1 because this is the position of the child vertex.</p>
+</section>
+<section id="Step">
+<h2>Step<a class="headerlink" href="#Step" title="Permalink to this headline"></a></h2>
+<p>Unlike the observation data which are 1-indexed w.r.t. the child vertices, the action space is 0-indexed.</p>
+<p>To step the environment, we need to select a valid action. Because only the first child vertex is valid, the only valid action is 0. If we pass 1, we get an error.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Not a valid action</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;oops, not a valid action!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+oops, not a valid action!
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># A valid action</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s take a look at the output from step.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;action_mask&#39;: array([False,  True,  True]), &#39;vertex_observations&#39;: {&#39;cur_pos&#39;: array([[1],
+       [0],
+       [2]])}}
+</pre></div></div>
+</div>
+<p>Recall that, from the middle hallway position (<span class="math notranslate nohighlight">\(i=1\)</span>), there are two valid actions. Accordingly, the <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> for both child vertices, and <code class="docutils literal notranslate"><span class="pre">cur_pos</span></code> have their index values, <span class="math notranslate nohighlight">\(i=0\)</span> and <span class="math notranslate nohighlight">\(i=2\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step reward for non-terminal state.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rew</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+-0.1
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Not a terminal state.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+False
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata here indicates the cur_pos of the current state.</span>
+<span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;cur_pos&#39;: 1}
+</pre></div></div>
+</div>
+</section>
+<section id="Step-to-the-terminal-vertex">
+<h2>Step to the terminal vertex<a class="headerlink" href="#Step-to-the-terminal-vertex" title="Permalink to this headline"></a></h2>
+<p>We now have two valid actions – let’s choose the one that solves the problem.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;action_mask&#39;: array([False, False, False]), &#39;vertex_observations&#39;: {&#39;cur_pos&#39;: array([[2],
+       [2],
+       [2]])}}
+</pre></div></div>
+</div>
+<p>Notice that, now, all <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> values are <code class="docutils literal notranslate"><span class="pre">False</span></code> because there are no child vertices from the terminal vertex.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># It is a terminal state.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+True
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Positive, random reward for terminal state.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rew</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1.3339214623078812
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../background/installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tsp-env.html" class="btn btn-neutral float-right" title="Create and visualize simple network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, TODO.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
