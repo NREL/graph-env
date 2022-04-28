@@ -8,7 +8,7 @@ from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel
 from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
 from ray import tune
-from ray.rllib.agents import ppo, dqn
+from ray.rllib.agents import ppo, dqn, a3c, marwil
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.tune.registry import register_env
@@ -20,7 +20,7 @@ parser.add_argument(
     "--run", 
     type=str,
     default="PPO",
-    choices=["PPO", "DQN"], 
+    choices=["PPO", "DQN", "A3C", "MARWIL"], 
     help="The RLlib-registered algorithm to use."
 )
 parser.add_argument(
@@ -90,14 +90,25 @@ if __name__ == "__main__":
         run_config = ppo.DEFAULT_CONFIG.copy()
         run_config.update({
             "entropy_coeff": args.entropy_coeff,
-            "sgd_minibatch_size": 128,
+            "sgd_minibatch_size": 16,
             "num_sgd_iter": 5,
         })
-    elif args.run == "DQN":
+    elif args.run in ["DQN"]:
         run_config = dqn.DEFAULT_CONFIG.copy()
         # Update here with custom config
+        run_config.update({
+            "hiddens": False,
+            "dueling": False,
+            "exploration_config": {
+                "epsilon_timesteps": 250000
+            }
+        })
+    elif args.run == "A3C":
+        run_config = a3c.DEFAULT_CONFIG.copy()
+    elif args.run == "MARWIL":
+        run_config = marwil.DEFAULT_CONFIG.copy()
     else:
-        raise ValueError(f"Invalid run arg {args.run}")
+        raise ValueError(f"Import agent {args.run} and try again")
 
     # Define custom_model, config, and state based on GNN yes/no
     if args.use_gnn:
@@ -116,14 +127,14 @@ if __name__ == "__main__":
             "num_nodes": N
         }
         custom_model = "TSPModel"
-        Model = TSPModel if args.run == "PPO" else TSPQModel
+        Model = TSPQModel if args.run in ["DQN", "R2D2"] else TSPModel
         ModelCatalog.register_custom_model(custom_model, Model)
         _tag = f"basic{args.run}"
         state = TSPState(G)
 
     # Register env name with hyperparams that will help tracking experiments
     # via tensorboard
-    env_name = f"graphenv_{N}_{_tag}_lr={args.lr}_ec={args.entropy_coeff}"
+    env_name = f"graphenv_{N}_{_tag}_lr={args.lr}"
     register_env(env_name, lambda config: GraphEnv(config))
 
     config = {
@@ -139,7 +150,7 @@ if __name__ == "__main__":
         "num_workers": args.num_workers,  # parallelism
         "num_gpus": args.num_gpus,
         "framework": "tf2",
-        "eager_tracing": False,
+        "eager_tracing": True,
         "rollout_fragment_length": N,  # a multiple of N (collect whole episodes)
         "train_batch_size": 10 * N * args.num_workers,  # a multiple of N * num workers
         "lr": args.lr,
