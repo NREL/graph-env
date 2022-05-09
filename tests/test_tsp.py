@@ -1,13 +1,10 @@
-import logging
-
 import pytest
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
-from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel, TSPQModelBellman
-from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel
+from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel
+from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel, TSPGNNQModel
 from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
 from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.graph_env import GraphEnv
-from ray.rllib.agents import dqn, ppo
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
 
@@ -23,109 +20,60 @@ def G(N):
     return make_complete_planar_graph(N=N, seed=seed)
 
 
-def test_ppo(ray_init, ppo_config, N, G):
+def test_rllib_base(ray_init, agent, N, G):
 
-    ModelCatalog.register_custom_model("TSPModel", TSPModel)
+    trainer_fn, config, needs_q_model = agent
+    model = TSPQModel if needs_q_model else TSPModel
+
+    ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": TSPState(G),
-            "max_num_children": G.number_of_nodes(),
-        },
-        "model": {
-            "custom_model": "TSPModel",
-            "custom_model_config": {
-                "num_nodes": N,
-                "hidden_dim": 256,
-                "embed_dim": 256,
+    config.update(
+        {
+            "env": "graphenv",
+            "env_config": {
+                "state": TSPState(G),
+                "max_num_children": G.number_of_nodes(),
             },
-        },
-    }
-    ppo_config.update(config)
-    trainer = ppo.PPOTrainer(config=ppo_config)
+            "model": {
+                "custom_model": "this_model",
+                "custom_model_config": {
+                    "num_nodes": N,
+                    "hidden_dim": 256,
+                    "embed_dim": 256,
+                },
+            },
+        }
+    )
+
+    trainer = trainer_fn(config=config)
     trainer.train()
 
 
-def test_dqn(ray_init, dqn_config, caplog, N, G):
+def test_rllib_nfp(ray_init, agent, N, G):
 
-    caplog.set_level(logging.DEBUG)
+    trainer_fn, config, needs_q_model = agent
+    model = TSPGNNQModel if needs_q_model else TSPGNNModel
 
-    ModelCatalog.register_custom_model("TSPQModel", TSPQModel)
+    ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": TSPState(G),
-            "max_num_children": G.number_of_nodes(),
-        },
-        "hiddens": False,
-        "dueling": False,
-        "log_level": "DEBUG",
-        "model": {
-            "custom_model": "TSPQModel",
-            "custom_model_config": {
-                "num_nodes": N,
-                "hidden_dim": 256,
-                "embed_dim": 256,
+    config.update(
+        {
+            "env": "graphenv",
+            "env_config": {
+                "state": TSPNFPState(G),
+                "max_num_children": G.number_of_nodes(),
             },
-        },
-    }
-    dqn_config.update(config)
-    trainer = dqn.DQNTrainer(config=dqn_config)
-    trainer.train()
-
-
-def test_dqn_bellman(ray_init, dqn_config, caplog, N, G):
-
-    caplog.set_level(logging.DEBUG)
-
-    ModelCatalog.register_custom_model("TSPQModelBellman", TSPQModelBellman)
-    register_env("graphenv", lambda config: GraphEnv(config))
-
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": TSPState(G),
-            "max_num_children": G.number_of_nodes(),
-        },
-        "hiddens": False,
-        "dueling": False,
-        "model": {
-            "custom_model": "TSPQModelBellman",
-            "custom_model_config": {
-                "num_nodes": N,
-                "hidden_dim": 256,
-                "embed_dim": 256,
+            "model": {
+                "custom_model": "this_model",
+                "custom_model_config": {
+                    "num_messages": 1,
+                    "embed_dim": 32,
+                },
             },
-        },
-    }
-    dqn_config.update(config)
-    trainer = dqn.DQNTrainer(config=dqn_config)
-    trainer.train()
+        }
+    )
 
-
-def test_ppo_nfp(ray_init, ppo_config, N, G):
-
-    ModelCatalog.register_custom_model("TSPGNNModel", TSPGNNModel)
-    register_env("graphenv", lambda config: GraphEnv(config))
-
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": TSPNFPState(G),
-            "max_num_children": G.number_of_nodes(),
-        },
-        "model": {
-            "custom_model": "TSPGNNModel",
-            "custom_model_config": {
-                "num_messages": 1,
-                "embed_dim": 32,
-            },
-        },
-    }
-    ppo_config.update(config)
-    trainer = ppo.PPOTrainer(config=ppo_config)
+    trainer = trainer_fn(config=config)
     trainer.train()
