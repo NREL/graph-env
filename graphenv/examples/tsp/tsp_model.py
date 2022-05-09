@@ -21,8 +21,9 @@ class BaseTSPModel(GraphModel):
         super().__init__(*args, **kwargs)
         self.base_model = self._create_base_model(num_nodes, hidden_dim, embed_dim)
 
+    @staticmethod
     def _create_base_model(
-        self, num_nodes: int, hidden_dim: int = 32, embed_dim: int = 32
+        num_nodes: int, hidden_dim: int = 32, embed_dim: int = 32
     ) -> tf.keras.Model:
 
         node_obs = layers.Input(shape=(2,), name="node_obs", dtype=tf.float32)

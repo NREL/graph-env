@@ -22,8 +22,9 @@ class BaseTSPGNNModel(GraphModel):
         super().__init__(*args, **kwargs)
         self.base_model = self._create_base_model(num_messages, embed_dim)
 
+    @staticmethod
     def _create_base_model(
-        self, num_messages: int = 3, embed_dim: int = 32
+        num_messages: int = 3, embed_dim: int = 32
     ) -> tf.keras.Model:
 
         current_node = layers.Input(shape=[], dtype=tf.int32, name="current_node")
