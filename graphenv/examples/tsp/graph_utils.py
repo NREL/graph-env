@@ -1,3 +1,4 @@
+import random
 from typing import Tuple
 
 import matplotlib.pyplot as plt
@@ -67,3 +68,45 @@ def plot_network(G, path: list = None) -> Tuple[any, any]:
         _ = nx.draw_networkx_edges(G, pos, edgelist=edgelist, width=1)
 
     return fig, ax
+
+
+def random_tsp(G, weight="weight", source=None, seed=None):
+    """Return a baseline cost cycle starting at `source` and its cost.
+    Randomly chooses nodes from each position.
+
+    Parameters:
+        G: The Graph should be a complete weighted undirected graph.
+        weight: string, optional (default="weight").
+        source: node, optional (default: first node in list(G))
+        seed: Optional(int) a random seed
+
+    Returns:
+        cycle: list of nodes
+
+    """
+    if seed is not None:
+        random.seed(seed)
+
+    # Check that G is a complete graph
+    N = len(G) - 1
+    # This check ignores selfloops which is what we want here.
+    if any(len(nbrdict) - (n in nbrdict) != N for n, nbrdict in G.adj.items()):
+        raise nx.NetworkXError("G must be a complete graph.")
+
+    if source is None:
+        source = nx.utils.arbitrary_element(G)
+
+    if G.number_of_nodes() == 2:
+        neighbor = next(G.neighbors(source))
+        return [source, neighbor, source]
+
+    nodeset = set(G)
+    nodeset.remove(source)
+    cycle = [source]
+    next_node = source
+    while nodeset:
+        next_node = random.choice(list(nodeset))
+        cycle.append(next_node)
+        nodeset.remove(next_node)
+    cycle.append(cycle[0])
+    return cycle

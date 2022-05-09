@@ -4,7 +4,6 @@ import pytest
 from graphenv.examples.hallway.hallway_model import HallwayModel, HallwayQModel
 from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.graph_env import GraphEnv
-from ray.rllib.agents import dqn, ppo
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
 
@@ -72,49 +71,29 @@ def test_graphenv_step(hallway_env: GraphEnv):
     assert reward > 0
 
 
-def test_ppo(ray_init, ppo_config):
+def test_rllib(ray_init, agent, caplog):
 
-    ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
-    register_env("graphenv", lambda config: GraphEnv(config))
-
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": HallwayState(5),
-            "max_num_children": 2,
-        },
-        "log_level": "DEBUG",
-        "model": {
-            "custom_model": "HallwayModel",
-            "custom_model_config": {"hidden_dim": 32},
-        },
-    }
-    ppo_config.update(config)
-    trainer = ppo.PPOTrainer(config=ppo_config)
-    trainer.train()
-
-
-def test_dqn(ray_init, dqn_config, caplog):
+    trainer_fn, config, needs_q_model = agent
+    model = HallwayQModel if needs_q_model else HallwayModel
 
     caplog.set_level(logging.DEBUG)
-
-    ModelCatalog.register_custom_model("HallwayQModel", HallwayQModel)
+    ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": HallwayState(5),
-            "max_num_children": 2,
-        },
-        "hiddens": False,
-        "dueling": False,
-        # "log_level": "DEBUG",
-        "model": {
-            "custom_model": "HallwayQModel",
-            "custom_model_config": {"hidden_dim": 32},
-        },
-    }
-    dqn_config.update(config)
-    trainer = dqn.DQNTrainer(config=dqn_config)
+    config.update(
+        {
+            "env": "graphenv",
+            "env_config": {
+                "state": HallwayState(5),
+                "max_num_children": 2,
+            },
+            "log_level": "DEBUG",
+            "model": {
+                "custom_model": "this_model",
+                "custom_model_config": {"hidden_dim": 32},
+            },
+        }
+    )
+
+    trainer = trainer_fn(config=config)
     trainer.train()
