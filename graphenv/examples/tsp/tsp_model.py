@@ -19,9 +19,17 @@ class BaseTSPModel(GraphModel):
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+        self.base_model = self._create_base_model(num_nodes, hidden_dim, embed_dim)
+
+    @staticmethod
+    def _create_base_model(
+        num_nodes: int, hidden_dim: int = 32, embed_dim: int = 32
+    ) -> tf.keras.Model:
 
         node_obs = layers.Input(shape=(2,), name="node_obs", dtype=tf.float32)
         node_idx = layers.Input(shape=(1,), name="node_idx", dtype=tf.int32)
+        parent_dist = layers.Input(shape=(1,), name="parent_dist", dtype=tf.float32)
+        nbr_dist = layers.Input(shape=(1,), name="nbr_dist", dtype=tf.float32)
 
         embed_layer = layers.Embedding(
             num_nodes, embed_dim, name="embed_layer", input_length=1
@@ -41,7 +49,8 @@ class BaseTSPModel(GraphModel):
 
         # Process the positional node data.  Here we need to expand the
         # middle axis to match the embedding output dimension.
-        hidden = layers.Reshape((1, hidden_dim))(hidden_layer_1(node_obs))
+        x = layers.Concatenate(axis=-1)([node_obs, parent_dist, nbr_dist])
+        hidden = layers.Reshape((1, hidden_dim))(hidden_layer_1(x))
 
         # Process the embedding.
         embed = embed_layer(node_idx)
@@ -55,8 +64,8 @@ class BaseTSPModel(GraphModel):
         action_values = action_value_output(out)
         action_weights = action_weight_output(out)
 
-        self.base_model = tf.keras.Model(
-            [node_obs, node_idx], [action_values, action_weights]
+        return tf.keras.Model(
+            [node_obs, node_idx, parent_dist, nbr_dist], [action_values, action_weights]
         )
 
     def forward_vertex(

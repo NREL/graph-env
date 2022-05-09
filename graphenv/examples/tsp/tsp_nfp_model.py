@@ -20,6 +20,13 @@ class BaseTSPGNNModel(GraphModel):
     ):
 
         super().__init__(*args, **kwargs)
+        self.base_model = self._create_base_model(num_messages, embed_dim)
+
+    @staticmethod
+    def _create_base_model(
+        num_messages: int = 3, embed_dim: int = 32
+    ) -> tf.keras.Model:
+
         current_node = layers.Input(shape=[], dtype=tf.int32, name="current_node")
         node_visited = layers.Input(shape=[None], dtype=tf.int32, name="node_visited")
         edge_weights = layers.Input(shape=[None], dtype=tf.float32, name="edge_weights")
@@ -53,7 +60,7 @@ class BaseTSPGNNModel(GraphModel):
             1, name="action_weight_output", bias_initializer="ones"
         )(current_node_embedding)
 
-        self.base_model = tf.keras.Model(
+        return tf.keras.Model(
             [current_node, node_visited, edge_weights, connectivity],
             [action_values, action_weights],
             name="policy_model",

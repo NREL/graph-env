@@ -3,11 +3,12 @@ import argparse
 import ray
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from graphenv.graph_env import GraphEnv
+from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel
+from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel
 from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
 from ray import tune
-from ray.tune.logger import pretty_print
-from ray.rllib.agents import ppo
+from ray.rllib.agents import ppo, dqn, a3c, marwil
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.tune.registry import register_env
@@ -19,7 +20,7 @@ parser.add_argument(
     "--run", 
     type=str,
     default="PPO",
-    choices=["PPO"], 
+    choices=["PPO", "DQN", "A3C", "MARWIL"], 
     help="The RLlib-registered algorithm to use."
 )
 parser.add_argument(
@@ -27,6 +28,11 @@ parser.add_argument(
     type=int,
     default=5,
     help="Number of nodes in TSP network"
+)
+parser.add_argument(
+    "--use-gnn",
+    action="store_true",
+    help="use the nfp state and gnn model"
 )
 parser.add_argument(
     "--seed",
@@ -76,42 +82,86 @@ if __name__ == "__main__":
     import networkx as nx
     tsp_approx = nx.approximation.traveling_salesman_problem
     path = tsp_approx(G, cycle=True)
-    reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N - 1)])
+    reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N)])
     print(f"Networkx heuristic reward: {reward_baseline:1.3f}")
 
-    ModelCatalog.register_custom_model("TSPGNNModel", TSPGNNModel)
+    # Algorithm-specific config, common ones are in the main config dict below
+    if args.run == "PPO":
+        run_config = ppo.DEFAULT_CONFIG.copy()
+        run_config.update({
+            "entropy_coeff": args.entropy_coeff,
+            "sgd_minibatch_size": 16,
+            "num_sgd_iter": 5,
+        })
+    elif args.run in ["DQN"]:
+        run_config = dqn.DEFAULT_CONFIG.copy()
+        # Update here with custom config
+        run_config.update({
+            "hiddens": False,
+            "dueling": False,
+            "exploration_config": {
+                "epsilon_timesteps": 250000
+            }
+        })
+    elif args.run == "A3C":
+        run_config = a3c.DEFAULT_CONFIG.copy()
+    elif args.run == "MARWIL":
+        run_config = marwil.DEFAULT_CONFIG.copy()
+    else:
+        raise ValueError(f"Import agent {args.run} and try again")
 
-    env_name = f"graphenv_{N}_lr={args.lr:1.1e}_ec={args.entropy_coeff:1.1e}"
+    # Define custom_model, config, and state based on GNN yes/no
+    if args.use_gnn:
+        custom_model = "TSPGNNModel"
+        custom_model_config = {
+            "num_messages": 1,
+            "embed_dim": 32
+        }
+        ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
+        _tag = "gnn"
+        state = TSPNFPState(G)
+    else:
+        custom_model_config = {
+            "hidden_dim": 256,
+            "embed_dim": 256,
+            "num_nodes": N
+        }
+        custom_model = "TSPModel"
+        Model = TSPQModel if args.run in ["DQN", "R2D2"] else TSPModel
+        ModelCatalog.register_custom_model(custom_model, Model)
+        _tag = f"basic{args.run}"
+        state = TSPState(G)
+
+    # Register env name with hyperparams that will help tracking experiments
+    # via tensorboard
+    env_name = f"graphenv_{N}_{_tag}_lr={args.lr}"
     register_env(env_name, lambda config: GraphEnv(config))
 
     config = {
         "env": env_name,
         "env_config": {
-            "state": TSPNFPState(G),
+            "state": state,
             "max_num_children": G.number_of_nodes(),
         },
         "model": {
-            "custom_model": "TSPGNNModel",
-            "custom_model_config": {
-                "num_messages": 1,
-                "embed_dim": 32,
-            },
+            "custom_model": custom_model,
+            "custom_model_config": custom_model_config
         },
         "num_workers": args.num_workers,  # parallelism
         "num_gpus": args.num_gpus,
         "framework": "tf2",
-        "eager_tracing": False,
+        "eager_tracing": True,
         "rollout_fragment_length": N,  # a multiple of N (collect whole episodes)
         "train_batch_size": 10 * N * args.num_workers,  # a multiple of N * num workers
-        "entropy_coeff": args.entropy_coeff,
-        "sgd_minibatch_size": 128,
-        "num_sgd_iter": 5,
         "lr": args.lr,
-        "log_level": "DEBUG"
+        "log_level": "DEBUG",
+        "evaluation_config": {
+            "explore": False
+        },
+        "evaluation_interval": 1,
+        "evaluation_duration": 1
     }
-
-    ppo_config = ppo.DEFAULT_CONFIG.copy()
-    ppo_config.update(config)
+    run_config.update(config)
 
     stop = {
         "training_iteration": args.stop_iters,
@@ -121,7 +171,7 @@ if __name__ == "__main__":
 
     tune.run(
         args.run,
-        config=ppo_config,
+        config=run_config,
         stop=stop,
         local_dir="/scratch/dbiagion/ray_results"
     )

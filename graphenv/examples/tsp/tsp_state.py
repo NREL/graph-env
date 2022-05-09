@@ -44,8 +44,14 @@ class TSPState(Vertex):
                     low=np.zeros(2), high=np.ones(2), dtype=float
                 ),
                 "node_idx": gym.spaces.Box(
-                    low=np.array([0]), high=np.array([self.num_nodes]), dtype=int
+                    low=0, high=self.num_nodes, shape=(1,), dtype=int
                 ),
+                "parent_dist": gym.spaces.Box(
+                    low=0., high=np.sqrt(2), shape=(1,), dtype=float
+                ),
+                "nbr_dist": gym.spaces.Box(
+                    low=0., high=np.sqrt(2), shape=(1,), dtype=float
+                )
             }
         )
 
@@ -136,4 +142,22 @@ class TSPState(Vertex):
         cur_node = self.tour[-1]
         cur_pos = np.array(self.G.nodes[cur_node]["pos"], dtype=float).squeeze()
 
-        return {"node_obs": cur_pos, "node_idx": np.array([cur_node], dtype=int)}
+        # Compute distance to parent node, or 0 if this is the root.
+        if len(self.tour) == 1:
+            parent_dist = 0.
+        else:
+            parent_dist = self.G[cur_node][self.tour[-2]]["weight"]
+
+        # Get list of all neighbors that are unvisited.  If none, then the only
+        # remaining neighbor is the root so dist is 0.
+        nbrs = [n for n in self.G.neighbors(cur_node) if n not in self.tour]
+        nbr_dist = 0.
+        if len(nbrs) > 0:
+            nbr_dist = np.min([self.G[cur_node][n]["weight"] for n in nbrs])
+
+        return {
+            "node_obs": cur_pos,
+            "node_idx": np.array([cur_node]),
+            "parent_dist": np.array([parent_dist]),
+            "nbr_dist": np.array([nbr_dist])
+        }
