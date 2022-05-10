@@ -3,7 +3,6 @@ from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel
 from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel, TSPGNNQModel
 from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
-from graphenv.examples.tsp.tsp_preprocessor import TSPPreprocessor
 from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.graph_env import GraphEnv
 from ray.rllib.models import ModelCatalog
@@ -28,13 +27,12 @@ def test_rllib_base(ray_init, agent, N, G):
 
     ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
-    graph_inputs = TSPPreprocessor(max_num_neighbors=N - 1)(G)
 
     config.update(
         {
             "env": "graphenv",
             "env_config": {
-                "state": TSPState(G, graph_inputs),
+                "state": TSPState(G),
                 "max_num_children": G.number_of_nodes(),
             },
             "model": {
@@ -59,13 +57,12 @@ def test_rllib_nfp(ray_init, agent, N, G):
 
     ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
-    graph_inputs = TSPPreprocessor(max_num_neighbors=N - 1)(G)
 
     config.update(
         {
             "env": "graphenv",
             "env_config": {
-                "state": TSPNFPState(G, graph_inputs),
+                "state": TSPNFPState(G),
                 "max_num_children": G.number_of_nodes(),
             },
             "model": {

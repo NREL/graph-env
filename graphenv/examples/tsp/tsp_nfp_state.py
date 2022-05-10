@@ -1,9 +1,10 @@
 from math import sqrt
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import gym
 import networkx as nx
 import numpy as np
+from graphenv.examples.tsp.tsp_preprocessor import TSPPreprocessor
 from graphenv.examples.tsp.tsp_state import TSPState
 
 
@@ -11,10 +12,13 @@ class TSPNFPState(TSPState):
     def __init__(
         self,
         G: nx.Graph,
-        graph_inputs: Dict,
+        graph_inputs: Optional[Dict] = None,
+        max_num_neighbors: Optional[int] = None,
         tour: List[int] = [0],
     ) -> None:
         super().__init__(G, tour)
+        if graph_inputs is None:
+            graph_inputs = TSPPreprocessor(max_num_neighbors=max_num_neighbors)(G)
         self.graph_inputs = graph_inputs
         self.num_edges = len(graph_inputs["edge_weights"])
 
