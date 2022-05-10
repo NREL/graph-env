@@ -79,7 +79,7 @@ class TSPNFPState(TSPState):
             distance = self.G.get_edge_data(self.tour[-2], self.tour[-1])["weight"]
         else:
             # First node
-            distance = 0
+            distance = 0.0
 
         outputs.update(
             {
