@@ -4,15 +4,22 @@ from typing import Dict, List
 import gym
 import networkx as nx
 import numpy as np
-from graphenv.examples.tsp.tsp_preprocessor import TSPPreprocessor
 from graphenv.examples.tsp.tsp_state import TSPState
 
 
 class TSPNFPState(TSPState):
-    def __init__(self, G: nx.Graph, tour: List[int] = [0]) -> None:
+    def __init__(
+        self,
+        G: nx.Graph,
+        graph_inputs: Dict,
+        tour: List[int] = [0],
+    ) -> None:
         super().__init__(G, tour)
-        self.preprocessor = TSPPreprocessor()
-        self.num_edges = self.num_nodes ** 2 - self.num_nodes
+        self.graph_inputs = graph_inputs
+        self.num_edges = len(graph_inputs["edge_weights"])
+
+    def new(self, tour: List[int]):
+        return self.__class__(self.G, self.graph_inputs, tour)
 
     @property
     def observation_space(self) -> gym.spaces.Dict:
@@ -23,6 +30,12 @@ class TSPNFPState(TSPState):
                     high=self.num_nodes,
                     shape=(),
                     dtype=int,
+                ),
+                "distance": gym.spaces.Box(
+                    low=0,
+                    high=sqrt(2),
+                    shape=(),
+                    dtype=float,
                 ),
                 "node_visited": gym.spaces.Box(
                     low=0,
@@ -53,4 +66,22 @@ class TSPNFPState(TSPState):
         Returns:
             Observation dict.
         """
-        return self.preprocessor(self.G, self.tour)
+        outputs = dict(self.graph_inputs)  # not sure the shallow copy is necessary
+
+        node_visited = np.ones(self.num_nodes)
+        node_visited[self.tour] += 1
+
+        if len(self.tour) > 1:
+            distance = self.G.get_edge_data(self.tour[-2], self.tour[-1])["weight"]
+        else:
+            # First node
+            distance = 0
+
+        outputs.update(
+            {
+                "current_node": self.tour[-1],
+                "distance": distance,
+                "node_visited": node_visited,
+            }
+        )
+        return outputs
