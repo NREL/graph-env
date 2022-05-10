@@ -6,9 +6,9 @@ from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
 from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel
 from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel
 from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
-from graphenv.examples.tsp.tsp_preprocessor import TSPPreprocessor
 from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.graph_env import GraphEnv
+from networkx.algorithms.approximation.traveling_salesman import greedy_tsp
 from ray import tune
 from ray.rllib.agents import a3c, dqn, marwil, ppo
 from ray.rllib.models import ModelCatalog
@@ -82,6 +82,10 @@ if __name__ == "__main__":
     path = tsp_approx(G, cycle=True)
     reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N)])
     print(f"Networkx heuristic reward: {reward_baseline:1.3f}")
+
+    path = tsp_approx(G, cycle=True, method=greedy_tsp)
+    reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N)])
+    print(f"Networkx greedy reward: {reward_baseline:1.3f}")
 
     # Algorithm-specific config, common ones are in the main config dict below
     if args.run == "PPO":
