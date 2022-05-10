@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 import ray
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
@@ -53,6 +54,10 @@ parser.add_argument(
     "--entropy-coeff", type=float, default=0., help="entropy coefficient"
 )
 parser.add_argument(
+    "--rollouts-per-worker", type=int, default=1,
+    help="Number of rollouts for each worker to collect"
+)
+parser.add_argument(
     "--stop-iters", type=int, default=50, help="Number of iterations to train."
 )
 parser.add_argument(
@@ -66,12 +71,19 @@ parser.add_argument(
     action="store_true",
     help="Init Ray in local mode for easier debugging.",
 )
+parser.add_argument(
+    "--log-level",
+    type=str,
+    default="INFO"
+)
 
 
 if __name__ == "__main__":
 
     args = parser.parse_args()
     print(f"Running with following CLI options: {args}")
+
+    logging.basicConfig(level=args.log_level.upper())
 
     ray.init(local_mode=args.local_mode)
 
@@ -150,11 +162,11 @@ if __name__ == "__main__":
         "num_workers": args.num_workers,  # parallelism
         "num_gpus": args.num_gpus,
         "framework": "tf2",
-        "eager_tracing": True,
+        "eager_tracing": False,
         "rollout_fragment_length": N,  # a multiple of N (collect whole episodes)
-        "train_batch_size": 10 * N * args.num_workers,  # a multiple of N * num workers
+        "train_batch_size": args.rollouts_per_worker * N * args.num_workers, 
         "lr": args.lr,
-        "log_level": "DEBUG",
+        "log_level": args.log_level,
         "evaluation_config": {
             "explore": False
         },
