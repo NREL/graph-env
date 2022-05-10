@@ -47,11 +47,11 @@ class TSPState(Vertex):
                     low=0, high=self.num_nodes, shape=(1,), dtype=int
                 ),
                 "parent_dist": gym.spaces.Box(
-                    low=0., high=np.sqrt(2), shape=(1,), dtype=float
+                    low=0.0, high=np.sqrt(2), shape=(1,), dtype=float
                 ),
                 "nbr_dist": gym.spaces.Box(
-                    low=0., high=np.sqrt(2), shape=(1,), dtype=float
-                )
+                    low=0.0, high=np.sqrt(2), shape=(1,), dtype=float
+                ),
             }
         )
 
@@ -82,7 +82,7 @@ class TSPState(Vertex):
 
         return rew
 
-    def new(self, tour: List[int]):
+    def new(self, tour: List[int] = [0]):
         """Convenience function for duplicating the existing node.
 
         Args:
@@ -144,14 +144,14 @@ class TSPState(Vertex):
 
         # Compute distance to parent node, or 0 if this is the root.
         if len(self.tour) == 1:
-            parent_dist = 0.
+            parent_dist = 0.0
         else:
             parent_dist = self.G[cur_node][self.tour[-2]]["weight"]
 
         # Get list of all neighbors that are unvisited.  If none, then the only
         # remaining neighbor is the root so dist is 0.
         nbrs = [n for n in self.G.neighbors(cur_node) if n not in self.tour]
-        nbr_dist = 0.
+        nbr_dist = 0.0
         if len(nbrs) > 0:
             nbr_dist = np.min([self.G[cur_node][n]["weight"] for n in nbrs])
 
@@ -159,5 +159,5 @@ class TSPState(Vertex):
             "node_obs": cur_pos,
             "node_idx": np.array([cur_node]),
             "parent_dist": np.array([parent_dist]),
-            "nbr_dist": np.array([nbr_dist])
+            "nbr_dist": np.array([nbr_dist]),
         }
