@@ -116,9 +116,7 @@ if __name__ == "__main__":
         custom_model_config = {"num_messages": 1, "embed_dim": 32}
         ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
         _tag = "gnn"
-        n_neighbors = 10
-        graph_inputs = TSPPreprocessor(max_num_neighbors=n_neighbors)(G)
-        state = TSPNFPState(G, graph_inputs=graph_inputs, max_num_neighbors=n_neighbors)
+        state = TSPNFPState(G, max_num_neighbors=10)
     else:
         custom_model_config = {"hidden_dim": 256, "embed_dim": 256, "num_nodes": N}
         custom_model = "TSPModel"
