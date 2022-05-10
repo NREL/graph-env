@@ -73,13 +73,13 @@ class BaseTSPGNNModel(GraphModel):
         distance_values = layers.Dense(
             1,
             name="distance_values",
-            kernel_initializer=tf.keras.initializers.Constant(-1),
+            kernel_initializer=tf.keras.initializers.Constant(-20),
         )(reshaped_distance)
 
         distance_weights = layers.Dense(
             1,
             name="distance__weights",
-            kernel_initializer=tf.keras.initializers.Constant(-1),
+            kernel_initializer=tf.keras.initializers.Constant(-20),
         )(reshaped_distance)
 
         action_values = layers.Add()([distance_values, action_values])
