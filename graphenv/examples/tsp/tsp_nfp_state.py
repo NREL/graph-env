@@ -22,7 +22,7 @@ class TSPNFPState(TSPState):
         self.graph_inputs = graph_inputs
         self.num_edges = len(graph_inputs["edge_weights"])
 
-    def new(self, tour: List[int]):
+    def new(self, tour: List[int] = [0]):
         return self.__class__(self.G, self.graph_inputs, tour)
 
     @property
