@@ -30,6 +30,12 @@ parser.add_argument(
     "--use-gnn", action="store_true", help="use the nfp state and gnn model"
 )
 parser.add_argument(
+    "--max-num-neighbors",
+    type=int,
+    default=5,
+    help="Number of nearest neighbors for the gnn model",
+)
+parser.add_argument(
     "--seed", type=int, default=0, help="Random seed used to generate networkx graph"
 )
 parser.add_argument(
@@ -120,7 +126,7 @@ if __name__ == "__main__":
         custom_model_config = {"num_messages": 1, "embed_dim": 32}
         ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
         _tag = "gnn"
-        state = TSPNFPState(G, max_num_neighbors=10)
+        state = TSPNFPState(G, max_num_neighbors=args.max_num_neighbors)
     else:
         custom_model_config = {"hidden_dim": 256, "embed_dim": 256, "num_nodes": N}
         custom_model = "TSPModel"
