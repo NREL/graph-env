@@ -72,7 +72,7 @@ class TSPNFPState(TSPState):
         """
         outputs = dict(self.graph_inputs)  # not sure the shallow copy is necessary
 
-        node_visited = np.ones(self.num_nodes)
+        node_visited = np.ones(self.num_nodes, dtype=np.int64)
         node_visited[self.tour] += 1
 
         if len(self.tour) > 1:
