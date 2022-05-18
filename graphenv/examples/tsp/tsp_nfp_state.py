@@ -19,12 +19,17 @@ class TSPNFPState(TSPState):
         if graph_inputs is None:
             graph_inputs = TSPPreprocessor(max_num_neighbors=max_num_neighbors)(self.G)
         self.graph_inputs = graph_inputs
+        self.max_num_neighbors = max_num_neighbors
         self.num_edges = len(graph_inputs["edge_weights"])
 
     def new(self, *args, new_graph=False, **kwargs):
         graph_inputs = None if new_graph else self.graph_inputs
         return super().new(
-            *args, graph_inputs=graph_inputs, new_graph=new_graph, **kwargs
+            *args,
+            graph_inputs=graph_inputs,
+            max_num_nieghbors=self.max_num_neighbors,
+            new_graph=new_graph,
+            **kwargs
         )
 
     @property
