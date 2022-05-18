@@ -30,6 +30,7 @@ class BaseTSPGNNModel(GraphModel):
         current_node = layers.Input(shape=[], dtype=tf.int32, name="current_node")
         node_visited = layers.Input(shape=[None], dtype=tf.int32, name="node_visited")
         edge_weights = layers.Input(shape=[None], dtype=tf.float32, name="edge_weights")
+        distance = layers.Input(shape=[], dtype=tf.float32, name="distance")
         connectivity = layers.Input(
             shape=[None, 2], dtype=tf.int32, name="connectivity"
         )
@@ -53,15 +54,39 @@ class BaseTSPGNNModel(GraphModel):
         current_node_embedding = layers.Flatten()(current_node_embedding)
 
         action_values = layers.Dense(
-            1, name="action_value_output", bias_initializer="ones"
+            1,
+            name="action_value_output",
+            kernel_initializer=tf.keras.initializers.RandomNormal(
+                mean=0.0, stddev=1e-6, seed=None
+            ),
         )(current_node_embedding)
 
         action_weights = layers.Dense(
-            1, name="action_weight_output", bias_initializer="ones"
+            1,
+            name="action_weight_output",
+            kernel_initializer=tf.keras.initializers.RandomNormal(
+                mean=0.0, stddev=1e-6, seed=None
+            ),
         )(current_node_embedding)
 
+        reshaped_distance = layers.Reshape((1,))(distance)
+        distance_values = layers.Dense(
+            1,
+            name="distance_values",
+            kernel_initializer=tf.keras.initializers.Constant(-20),
+        )(reshaped_distance)
+
+        distance_weights = layers.Dense(
+            1,
+            name="distance__weights",
+            kernel_initializer=tf.keras.initializers.Constant(-20),
+        )(reshaped_distance)
+
+        action_values = layers.Add()([distance_values, action_values])
+        action_weights = layers.Add()([distance_weights, action_weights])
+
         return tf.keras.Model(
-            [current_node, node_visited, edge_weights, connectivity],
+            [current_node, distance, node_visited, edge_weights, connectivity],
             [action_values, action_weights],
             name="policy_model",
         )

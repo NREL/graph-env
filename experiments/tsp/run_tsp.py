@@ -1,14 +1,16 @@
 import argparse
+import logging
 
 import ray
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
-from graphenv.graph_env import GraphEnv
 from graphenv.examples.tsp.tsp_model import TSPModel, TSPQModel
-from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.examples.tsp.tsp_nfp_model import TSPGNNModel
 from graphenv.examples.tsp.tsp_nfp_state import TSPNFPState
+from graphenv.examples.tsp.tsp_state import TSPState
+from graphenv.graph_env import GraphEnv
+from networkx.algorithms.approximation.traveling_salesman import greedy_tsp
 from ray import tune
-from ray.rllib.agents import ppo, dqn, a3c, marwil
+from ray.rllib.agents import a3c, dqn, marwil, ppo
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.tune.registry import register_env
@@ -17,40 +19,38 @@ tf1, tf, tfv = try_import_tf()
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--run", 
+    "--run",
     type=str,
     default="PPO",
-    choices=["PPO", "DQN", "A3C", "MARWIL"], 
-    help="The RLlib-registered algorithm to use."
+    choices=["PPO", "DQN", "A3C", "MARWIL"],
+    help="The RLlib-registered algorithm to use.",
+)
+parser.add_argument("--N", type=int, default=5, help="Number of nodes in TSP network")
+parser.add_argument(
+    "--use-gnn", action="store_true", help="use the nfp state and gnn model"
 )
 parser.add_argument(
-    "--N",
+    "--max-num-neighbors",
     type=int,
     default=5,
-    help="Number of nodes in TSP network"
+    help="Number of nearest neighbors for the gnn model",
 )
 parser.add_argument(
-    "--use-gnn",
-    action="store_true",
-    help="use the nfp state and gnn model"
-)
-parser.add_argument(
-    "--seed",
-    type=int,
-    default=0,
-    help="Random seed used to generate networkx graph"
+    "--seed", type=int, default=0, help="Random seed used to generate networkx graph"
 )
 parser.add_argument(
     "--num-workers", type=int, default=1, help="Number of rllib workers"
 )
+parser.add_argument("--num-gpus", type=int, default=0, help="Number of GPUs")
+parser.add_argument("--lr", type=float, default=1e-4, help="learning rate")
 parser.add_argument(
-    "--num-gpus", type=int, default=0, help="Number of GPUs"
+    "--entropy-coeff", type=float, default=0.0, help="entropy coefficient"
 )
 parser.add_argument(
-    "--lr", type=float, default=1e-4, help="learning rate"
-)
-parser.add_argument(
-    "--entropy-coeff", type=float, default=0., help="entropy coefficient"
+    "--rollouts-per-worker",
+    type=int,
+    default=1,
+    help="Number of rollouts for each worker to collect",
 )
 parser.add_argument(
     "--stop-iters", type=int, default=50, help="Number of iterations to train."
@@ -66,12 +66,15 @@ parser.add_argument(
     action="store_true",
     help="Init Ray in local mode for easier debugging.",
 )
+parser.add_argument("--log-level", type=str, default="INFO")
 
 
 if __name__ == "__main__":
 
     args = parser.parse_args()
     print(f"Running with following CLI options: {args}")
+
+    logging.basicConfig(level=args.log_level.upper())
 
     ray.init(local_mode=args.local_mode)
 
@@ -80,29 +83,36 @@ if __name__ == "__main__":
 
     # Compute the reward baseline with heuristic
     import networkx as nx
+
     tsp_approx = nx.approximation.traveling_salesman_problem
     path = tsp_approx(G, cycle=True)
     reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N)])
     print(f"Networkx heuristic reward: {reward_baseline:1.3f}")
 
+    path = tsp_approx(G, cycle=True, method=greedy_tsp)
+    reward_baseline = -sum([G[path[i]][path[i + 1]]["weight"] for i in range(0, N)])
+    print(f"Networkx greedy reward: {reward_baseline:1.3f}")
+
     # Algorithm-specific config, common ones are in the main config dict below
     if args.run == "PPO":
         run_config = ppo.DEFAULT_CONFIG.copy()
-        run_config.update({
-            "entropy_coeff": args.entropy_coeff,
-            "sgd_minibatch_size": 16,
-            "num_sgd_iter": 5,
-        })
+        run_config.update(
+            {
+                "entropy_coeff": args.entropy_coeff,
+                "sgd_minibatch_size": 16,
+                "num_sgd_iter": 5,
+            }
+        )
     elif args.run in ["DQN"]:
         run_config = dqn.DEFAULT_CONFIG.copy()
         # Update here with custom config
-        run_config.update({
-            "hiddens": False,
-            "dueling": False,
-            "exploration_config": {
-                "epsilon_timesteps": 250000
+        run_config.update(
+            {
+                "hiddens": False,
+                "dueling": False,
+                "exploration_config": {"epsilon_timesteps": 250000},
             }
-        })
+        )
     elif args.run == "A3C":
         run_config = a3c.DEFAULT_CONFIG.copy()
     elif args.run == "MARWIL":
@@ -113,19 +123,12 @@ if __name__ == "__main__":
     # Define custom_model, config, and state based on GNN yes/no
     if args.use_gnn:
         custom_model = "TSPGNNModel"
-        custom_model_config = {
-            "num_messages": 1,
-            "embed_dim": 32
-        }
+        custom_model_config = {"num_messages": 1, "embed_dim": 32}
         ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
         _tag = "gnn"
-        state = TSPNFPState(G)
+        state = TSPNFPState(G, max_num_neighbors=args.max_num_neighbors)
     else:
-        custom_model_config = {
-            "hidden_dim": 256,
-            "embed_dim": 256,
-            "num_nodes": N
-        }
+        custom_model_config = {"hidden_dim": 256, "embed_dim": 256, "num_nodes": N}
         custom_model = "TSPModel"
         Model = TSPQModel if args.run in ["DQN", "R2D2"] else TSPModel
         ModelCatalog.register_custom_model(custom_model, Model)
@@ -145,21 +148,19 @@ if __name__ == "__main__":
         },
         "model": {
             "custom_model": custom_model,
-            "custom_model_config": custom_model_config
+            "custom_model_config": custom_model_config,
         },
         "num_workers": args.num_workers,  # parallelism
         "num_gpus": args.num_gpus,
         "framework": "tf2",
-        "eager_tracing": True,
+        "eager_tracing": False,
         "rollout_fragment_length": N,  # a multiple of N (collect whole episodes)
-        "train_batch_size": 10 * N * args.num_workers,  # a multiple of N * num workers
+        "train_batch_size": args.rollouts_per_worker * N * args.num_workers,
         "lr": args.lr,
-        "log_level": "DEBUG",
-        "evaluation_config": {
-            "explore": False
-        },
+        "log_level": args.log_level,
+        "evaluation_config": {"explore": False},
         "evaluation_interval": 1,
-        "evaluation_duration": 1
+        "evaluation_duration": 1,
     }
     run_config.update(config)
 
@@ -173,7 +174,7 @@ if __name__ == "__main__":
         args.run,
         config=run_config,
         stop=stop,
-        local_dir="/scratch/dbiagion/ray_results"
+        local_dir="/scratch/dbiagion/ray_results",
     )
 
     ray.shutdown()

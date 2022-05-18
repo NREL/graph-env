@@ -145,3 +145,4 @@ Untitled*.ipynb
 *.sw[op]
 *.out
 *.code-workspace
+.DS_Store
