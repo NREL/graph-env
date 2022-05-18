@@ -16,8 +16,7 @@ def N():
 
 @pytest.fixture
 def G(N):
-    seed = 1
-    return make_complete_planar_graph(N=N, seed=seed)
+    return lambda: make_complete_planar_graph(N=N)
 
 
 def test_rllib_base(ray_init, agent, N, G):
@@ -33,7 +32,7 @@ def test_rllib_base(ray_init, agent, N, G):
             "env": "graphenv",
             "env_config": {
                 "state": TSPState(G),
-                "max_num_children": G.number_of_nodes(),
+                "max_num_children": N,
             },
             "model": {
                 "custom_model": "this_model",
@@ -63,7 +62,7 @@ def test_rllib_nfp(ray_init, agent, N, G):
             "env": "graphenv",
             "env_config": {
                 "state": TSPNFPState(G),
-                "max_num_children": G.number_of_nodes(),
+                "max_num_children": N,
             },
             "model": {
                 "custom_model": "this_model",

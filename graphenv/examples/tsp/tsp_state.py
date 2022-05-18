@@ -1,4 +1,4 @@
-from typing import Dict, List, Sequence
+from typing import Callable, Dict, List, Optional, Sequence
 
 import gym
 import networkx as nx
@@ -10,10 +10,16 @@ layers = tf.keras.layers
 
 
 class TSPState(Vertex):
-    def __init__(self, G: nx.Graph, tour: List[int] = [0]) -> None:
+    def __init__(
+        self,
+        graph_generator: Callable[[], nx.Graph],
+        G: Optional[nx.Graph] = None,
+        tour: List[int] = [0],
+    ) -> None:
         """Create a TSP vertex that defines the graph search problem.
 
         Args:
+            generator: a function that creates a networkx graph
             G: A fully connected networkx graph.
             tour: A list of nodes in visitation order that led to this
                 state. Defaults to [0] which begins the tour at node 0.
@@ -27,9 +33,10 @@ class TSPState(Vertex):
 
         super().__init__()
 
-        self.G = G
+        self.G = G if G is not None else graph_generator()
         self.num_nodes = self.G.number_of_nodes()
         self.tour = tour
+        self.graph_generator = graph_generator
 
     @property
     def observation_space(self) -> gym.spaces.Dict:
@@ -60,9 +67,11 @@ class TSPState(Vertex):
         """Returns the root node of the graph env.
 
         Returns:
-            Node with node 0 as the starting point of the tour.
+            Node with node 0 as the starting point of the tour, and generates a new
+            graph using the given constructor
         """
-        return self.new([0])
+
+        return self.new([0], new_graph=True)
 
     @property
     def reward(self) -> float:
@@ -82,7 +91,7 @@ class TSPState(Vertex):
 
         return rew
 
-    def new(self, tour: List[int] = [0]):
+    def new(self, tour: List[int] = [0], new_graph=False, **kwargs):
         """Convenience function for duplicating the existing node.
 
         Args:
@@ -92,7 +101,8 @@ class TSPState(Vertex):
         Returns:
             New TSP state.
         """
-        return self.__class__(self.G, tour)
+        G = self.G if not new_graph else self.graph_generator()
+        return self.__class__(self.graph_generator, G=G, tour=tour, **kwargs)
 
     @property
     def info(self) -> Dict:

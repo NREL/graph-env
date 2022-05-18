@@ -1,8 +1,7 @@
 from math import sqrt
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 import gym
-import networkx as nx
 import numpy as np
 from graphenv.examples.tsp.tsp_preprocessor import TSPPreprocessor
 from graphenv.examples.tsp.tsp_state import TSPState
@@ -11,19 +10,22 @@ from graphenv.examples.tsp.tsp_state import TSPState
 class TSPNFPState(TSPState):
     def __init__(
         self,
-        G: nx.Graph,
+        *args,
         graph_inputs: Optional[Dict] = None,
         max_num_neighbors: Optional[int] = None,
-        tour: List[int] = [0],
+        **kwargs
     ) -> None:
-        super().__init__(G, tour)
+        super().__init__(*args, **kwargs)
         if graph_inputs is None:
-            graph_inputs = TSPPreprocessor(max_num_neighbors=max_num_neighbors)(G)
+            graph_inputs = TSPPreprocessor(max_num_neighbors=max_num_neighbors)(self.G)
         self.graph_inputs = graph_inputs
         self.num_edges = len(graph_inputs["edge_weights"])
 
-    def new(self, tour: List[int] = [0]):
-        return self.__class__(self.G, graph_inputs=self.graph_inputs, tour=tour)
+    def new(self, *args, new_graph=False, **kwargs):
+        graph_inputs = None if new_graph else self.graph_inputs
+        return super().new(
+            *args, graph_inputs=graph_inputs, new_graph=new_graph, **kwargs
+        )
 
     @property
     def observation_space(self) -> gym.spaces.Dict:
