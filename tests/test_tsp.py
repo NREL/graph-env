@@ -19,6 +19,36 @@ def G(N):
     return lambda: make_complete_planar_graph(N=N)
 
 
+def test_graphenv():
+
+    env = GraphEnv(
+        {
+            "state": TSPState(
+                lambda: make_complete_planar_graph(10),
+            ),
+            "max_num_children": 10,
+        }
+    )
+
+    obs = env.reset()
+    assert env.observation_space.contains(obs)
+
+
+def test_graphenv_nfp():
+
+    env = GraphEnv(
+        {
+            "state": TSPNFPState(
+                lambda: make_complete_planar_graph(10), max_num_neighbors=5
+            ),
+            "max_num_children": 10,
+        }
+    )
+
+    obs = env.reset()
+    assert env.observation_space.contains(obs)
+
+
 def test_rllib_base(ray_init, agent, N, G):
 
     trainer_fn, config, needs_q_model = agent

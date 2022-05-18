@@ -27,7 +27,7 @@ class TSPNFPState(TSPState):
         return super().new(
             *args,
             graph_inputs=graph_inputs,
-            max_num_nieghbors=self.max_num_neighbors,
+            max_num_neighbors=self.max_num_neighbors,
             new_graph=new_graph,
             **kwargs
         )
