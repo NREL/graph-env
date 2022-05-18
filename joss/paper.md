@@ -14,7 +14,7 @@ authors:
   # - name: Author with no affiliation^[Corresponding author]
   #   affiliation: 3
   - name: Peter St. John
-    orcid: 0000-0000-0000-0000
+    orcid: 0000-0002-7928-3722
     affiliation: 1
   - name: Charles Edison Tripp
     orcid: 0000-0000-0000-0000
@@ -94,11 +94,14 @@ and referenced from text using \autoref{fig:example}.
 
 Figure sizes can be customized by adding an optional second parameter:
 ![Caption for example figure.](figure.png){ width=20% } -->
+# Examples of usage
+
+This package is a generalization of methods employed in the optimization of molecular structure for energy storage applications, funded by DOE's Advanced Research Projects Agency - Energy [@sv2021multi]. Specifically, this package enables optimization against a surrogate objective function based on high-throughput density functional theory calculations [@Sowndarya_S_V_2021; @St_John_2020_a; @St_John_2020_b] by considering molecule selection as an iterative process of adding atoms and bonds, transforming the optimization into a rooted search over a directed, acyclic graph.  Ongoing work is leveraging this library to enable similar optimization for inorganic crystal structures, again using a surrogate objective function based on high-throughput quantum mechanical calculations [@Pandey_2021].
 
 
 # Acknowledgements
 
-TODO
+This work was authored by the National Renewable Energy Laboratory, operated by Alliance for Sustainable Energy, LLC, for the US Department of Energy (DOE) under Contract No. DE-AC36-08GO28308. The information, data, or work presented herein was funded in part by the Advanced Research Projects Agency-Energy (ARPA-E), U.S. Department of Energy, under Award Number DE-AR0001205. The views and opinions of authors expressed herein do not necessarily state or reflect those of the United States Government or any agency thereof. The US Government retains and the publisher, by accepting the article for publication, acknowledges that the US Government retains a nonexclusive, paid-up, irrevocable, worldwide license to publish or reproduce the published form of this work or allow others to do so, for US Government purposes.
 
 # References
 
