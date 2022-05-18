@@ -17,17 +17,21 @@ authors:
     orcid: 0000-0002-7928-3722
     affiliation: 1
   - name: Charles Edison Tripp
-    orcid: 0000-0000-0000-0000
+    orcid: 0000-0002-5867-3561
+    affiliation: 2
+  - name: Jeffrey Law
     affiliation: 1
   - name: Struan Clark
-    orcid: 0000-0000-0000-0000
-    affiliation: 1
+    affiliation: 2
   - name: David Biagioni
-    orcid: 0000-0000-0000-0000
-    affiliation: 1
+    orcid: 0000-0001-6140-1957
+    affiliation: 2
 affiliations:
- - name: National Renewable Energy Laboratory
+ - name: Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA
    index: 1
+ - name: Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA
+   index: 2
+
 #  - name: Institution Name, Country
 #    index: 2
 #  - name: Independent Researcher, Country
@@ -54,6 +58,9 @@ software to execute, especially when combining advanced state representations su
 # Statement of need
 
 The `graphenv` Python library is designed to 1) make graph search problems more readily expressible as RL problems via an extension of the OpenAI gym API [@brockman2016openai] while 2) enabling their solution via scalable learning algorithms in the popular RLLib library [@liang2018rllib].  
+
+RLLib provides out-of-the-box support for both parametrically-defined actions and masking of invalid actions. However, native support for action spaces where the action _choices_ change for each state is challenging to implement in a computationally efficient fashion. The `graphenv` library provides utility classes that simplify the flattening and masking of action observations for choosing from a set of successor states at every node in a graph search.
+
 
 <!-- # Mathematics
 
