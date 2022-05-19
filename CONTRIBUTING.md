@@ -21,7 +21,7 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 6. Issue that pull request!
 
 ## Report bugs using Github's [issues](https://github.com/nrel/graph-env/issues)
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue]().
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/NREL/graph-env/issues/new).
 
 ## License
 By contributing, you agree that your contributions will be licensed under the same [BSD 3-Clause License](http://choosealicense.com/licenses/bsd-3-clause/) that covers the project.
