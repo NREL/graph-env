@@ -18,7 +18,6 @@ import os
 import random
 
 import gym
-import numpy as np
 import ray
 from gym.spaces import Box, Discrete
 from ray import tune
