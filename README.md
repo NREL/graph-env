@@ -1,4 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/graphenv.svg)](https://badge.fury.io/py/graphenv)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/NREL/graph-env.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/NREL/graph-env/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/NREL/graph-env.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/NREL/graph-env/context:python)
 
 # graph-env
 
