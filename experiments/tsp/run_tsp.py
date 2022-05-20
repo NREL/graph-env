@@ -162,7 +162,7 @@ if __name__ == "__main__":
         "log_level": args.log_level,
         "evaluation_config": {"explore": False},
         "evaluation_interval": 1,
-        "evaluation_duration": 1,
+        "evaluation_duration": 100,
     }
     run_config.update(config)
 
