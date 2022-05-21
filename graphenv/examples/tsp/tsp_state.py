@@ -92,7 +92,7 @@ class TSPState(Vertex):
             rew = -self.G[src][dst]["weight"]
 
         else:
-            raise RuntimeError(f"Invalid tour: {self.tour =}")
+            raise RuntimeError(f"Invalid tour: {self.tour}")
 
         return rew
 
