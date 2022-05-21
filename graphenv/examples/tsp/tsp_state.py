@@ -83,13 +83,17 @@ class TSPState(Vertex):
         """
 
         if len(self.tour) == 1:
-            # For the first node, we offset the reward by the greedy search distance
-            rew = calc_greedy_dist(self.G)
+            # This should never be called
+            rew = 0
 
         elif len(self.tour) >= 2:
             # Otherwise, reward is negative distance between last two nodes.
             src, dst = self.tour[-2:]
             rew = -self.G[src][dst]["weight"]
+
+        if len(self.tour) == self.num_nodes + 1:
+            # If this is the final leg of the tour, offset by the greedy distance
+            rew += calc_greedy_dist(self.G)
 
         else:
             raise RuntimeError(f"Invalid tour: {self.tour}")
