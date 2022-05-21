@@ -91,12 +91,12 @@ class TSPState(Vertex):
             src, dst = self.tour[-2:]
             rew = -self.G[src][dst]["weight"]
 
+        else:
+            raise RuntimeError(f"Invalid tour: {self.tour}")
+
         if len(self.tour) == self.num_nodes + 1:
             # If this is the final leg of the tour, offset by the greedy distance
             rew += calc_greedy_dist(self.G)
-
-        else:
-            raise RuntimeError(f"Invalid tour: {self.tour}")
 
         return rew
 
