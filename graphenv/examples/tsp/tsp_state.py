@@ -4,6 +4,7 @@ import gym
 import networkx as nx
 import numpy as np
 from graphenv import tf
+from graphenv.examples.tsp.graph_utils import calc_greedy_dist
 from graphenv.vertex import Vertex
 
 layers = tf.keras.layers
@@ -81,13 +82,17 @@ class TSPState(Vertex):
             Negative distance between last two nodes in the tour.
         """
 
-        if len(self.tour) < 2:
-            # First node in the tour does not have a reward associatd with it.
-            rew = 0.0
-        else:
+        if len(self.tour) == 1:
+            # For the first node, we offset the reward by the greedy search distance
+            rew = calc_greedy_dist(self.G)
+
+        elif len(self.tour) >= 2:
             # Otherwise, reward is negative distance between last two nodes.
             src, dst = self.tour[-2:]
             rew = -self.G[src][dst]["weight"]
+
+        else:
+            raise RuntimeError(f"Invalid tour: {self.tour =}")
 
         return rew
 
