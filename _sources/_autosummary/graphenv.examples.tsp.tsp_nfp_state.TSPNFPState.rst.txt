@@ -1,0 +1,37 @@
+graphenv.examples.tsp.tsp\_nfp\_state.TSPNFPState
+=================================================
+
+.. currentmodule:: graphenv.examples.tsp.tsp_nfp_state
+
+.. autoclass:: TSPNFPState
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TSPNFPState.new
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TSPNFPState.children
+      ~TSPNFPState.info
+      ~TSPNFPState.observation
+      ~TSPNFPState.observation_space
+      ~TSPNFPState.reward
+      ~TSPNFPState.root
+      ~TSPNFPState.terminal
+   
+   

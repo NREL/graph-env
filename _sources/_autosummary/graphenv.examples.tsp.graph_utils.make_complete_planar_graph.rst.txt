@@ -1,0 +1,6 @@
+graphenv.examples.tsp.graph\_utils.make\_complete\_planar\_graph
+================================================================
+
+.. currentmodule:: graphenv.examples.tsp.graph_utils
+
+.. autofunction:: make_complete_planar_graph

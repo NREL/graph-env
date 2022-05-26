@@ -1,0 +1,37 @@
+graphenv.examples.hallway.hallway\_state.HallwayState
+=====================================================
+
+.. currentmodule:: graphenv.examples.hallway.hallway_state
+
+.. autoclass:: HallwayState
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~HallwayState.new
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HallwayState.children
+      ~HallwayState.info
+      ~HallwayState.observation
+      ~HallwayState.observation_space
+      ~HallwayState.reward
+      ~HallwayState.root
+      ~HallwayState.terminal
+   
+   

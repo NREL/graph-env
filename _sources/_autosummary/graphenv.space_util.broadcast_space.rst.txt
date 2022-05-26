@@ -1,0 +1,6 @@
+graphenv.space\_util.broadcast\_space
+=====================================
+
+.. currentmodule:: graphenv.space_util
+
+.. autofunction:: broadcast_space

@@ -1,0 +1,6 @@
+graphenv.space\_util.flatten\_first\_dim
+========================================
+
+.. currentmodule:: graphenv.space_util
+
+.. autofunction:: flatten_first_dim

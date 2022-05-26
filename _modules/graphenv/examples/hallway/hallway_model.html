@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphenv.examples.hallway.hallway_model &mdash; graphenv 0+untagged.1.g2cebce2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> graphenv
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../background/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../background/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/hallway.html">Hallway Environment Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/hallway.html#The-hallway-problem-as-graphenv-problem">The hallway problem as graphenv problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/hallway.html#HallwayEnv-Demo">HallwayEnv Demo</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp-env.html">Create and visualize simple network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp-env.html#Solve-TSP-using-nx-heuristics">Solve TSP using nx heuristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/graphenv.html">graphenv</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#principal-investigator">Principal Investigator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#team">Team</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">graphenv</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>graphenv.examples.hallway.hallway_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphenv.examples.hallway.hallway_model</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">ray.rllib.models.tf.tf_modelv2</span> <span class="kn">import</span> <span class="n">TFModelV2</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.agents.dqn.distributional_q_tf_model</span> <span class="kn">import</span> <span class="n">DistributionalQTFModel</span>
+
+<span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span>
+<span class="kn">from</span> <span class="nn">graphenv.graph_model</span> <span class="kn">import</span> <span class="n">GraphModel</span><span class="p">,</span> <span class="n">GraphModelObservation</span>
+
+<span class="n">layers</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span>
+
+
+<div class="viewcode-block" id="BaseHallwayModel"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_model.BaseHallwayModel.html#graphenv.examples.hallway.hallway_model.BaseHallwayModel">[docs]</a><span class="k">class</span> <span class="nc">BaseHallwayModel</span><span class="p">(</span><span class="n">GraphModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An example GraphModel implementation for the HallwayEnv and HallwayState</span>
+<span class="sd">    Graph.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        base_model : The Keras model used to evaluate vertex observations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializs this HallwayModel.</span>
+<span class="sd">        Uses a dense fully connected Keras network.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hidden_dim (int, optional): The number of hidden layers to use. Defaults to</span>
+<span class="sd">                1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">cur_pos</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cur_pos&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">hidden_layer</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;hidden_layer&quot;</span><span class="p">)</span>
+        <span class="n">action_value_output</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;action_value_output&quot;</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s2">&quot;ones&quot;</span>
+        <span class="p">)</span>
+        <span class="n">action_weight_output</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;action_weight_output&quot;</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s2">&quot;ones&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">hidden_layer</span><span class="p">(</span><span class="n">cur_pos</span><span class="p">)</span>
+        <span class="n">action_values</span> <span class="o">=</span> <span class="n">action_value_output</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">action_weights</span> <span class="o">=</span> <span class="n">action_weight_output</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">([</span><span class="n">cur_pos</span><span class="p">],</span> <span class="p">[</span><span class="n">action_values</span><span class="p">,</span> <span class="n">action_weights</span><span class="p">])</span>
+
+<div class="viewcode-block" id="BaseHallwayModel.forward_vertex"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_model.BaseHallwayModel.html#graphenv.examples.hallway.hallway_model.BaseHallwayModel.forward_vertex">[docs]</a>    <span class="k">def</span> <span class="nf">forward_vertex</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_dict</span><span class="p">:</span> <span class="n">GraphModelObservation</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Forward function computing the evaluation of vertex observations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_dict (GraphModelObservation): vertex observations</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[tf.Tensor, tf.Tensor]: Tensor of value and weights for each</span>
+<span class="sd">                input observation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_model</span><span class="p">(</span><span class="n">input_dict</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="HallwayQModel"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_model.HallwayQModel.html#graphenv.examples.hallway.hallway_model.HallwayQModel">[docs]</a><span class="k">class</span> <span class="nc">HallwayQModel</span><span class="p">(</span><span class="n">BaseHallwayModel</span><span class="p">,</span> <span class="n">DistributionalQTFModel</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HallwayModel"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_model.HallwayModel.html#graphenv.examples.hallway.hallway_model.HallwayModel">[docs]</a><span class="k">class</span> <span class="nc">HallwayModel</span><span class="p">(</span><span class="n">BaseHallwayModel</span><span class="p">,</span> <span class="n">TFModelV2</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, TODO.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

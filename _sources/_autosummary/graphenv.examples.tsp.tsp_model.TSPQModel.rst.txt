@@ -1,0 +1,41 @@
+graphenv.examples.tsp.tsp\_model.TSPQModel
+==========================================
+
+.. currentmodule:: graphenv.examples.tsp.tsp_model
+
+.. autoclass:: TSPQModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TSPQModel.context
+      ~TSPQModel.custom_loss
+      ~TSPQModel.forward
+      ~TSPQModel.forward_vertex
+      ~TSPQModel.from_batch
+      ~TSPQModel.get_initial_state
+      ~TSPQModel.get_q_value_distributions
+      ~TSPQModel.get_state_value
+      ~TSPQModel.import_from_h5
+      ~TSPQModel.is_time_major
+      ~TSPQModel.last_output
+      ~TSPQModel.metrics
+      ~TSPQModel.register_variables
+      ~TSPQModel.trainable_variables
+      ~TSPQModel.update_ops
+      ~TSPQModel.value_function
+      ~TSPQModel.variables
+   
+   
+
+   
+   
+   

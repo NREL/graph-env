@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.g2cebce2 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> graphenv
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../background/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../background/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hallway.html">Hallway Environment Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hallway.html#The-hallway-problem-as-graphenv-problem">The hallway problem as graphenv problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hallway.html#HallwayEnv-Demo">HallwayEnv Demo</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/tsp-env.html">Create and visualize simple network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/tsp-env.html#Solve-TSP-using-nx-heuristics">Solve TSP using nx heuristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/graphenv.html">graphenv</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#principal-investigator">Principal Investigator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#team">Team</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">graphenv</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>graphenv.graph_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphenv.graph_model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">gym</span>
+
+<span class="kn">import</span> <span class="nn">graphenv.space_util</span> <span class="k">as</span> <span class="nn">space_util</span>
+<span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+
+<span class="c1"># Type defining the contents of vertex observations as passed to forward()</span>
+<span class="n">GraphModelObservation</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">[</span><span class="s2">&quot;GraphModelObservation&quot;</span><span class="p">],</span>
+    <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;GraphModelObservation&quot;</span><span class="p">],</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="GraphModel"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel">[docs]</a><span class="k">class</span> <span class="nc">GraphModel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines a RLLib compatible model for using RL algorithms on a</span>
+<span class="sd">    GraphEnv.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _action_mask_key observation : space key for the action mask</span>
+<span class="sd">        _vertex_observation_key : observation space key for the vertex observations</span>
+<span class="sd">        action_mask : bool tensor of valid next children</span>
+<span class="sd">        current_vertex_value : value of current vertex</span>
+<span class="sd">        action_values : values of each action vertex</span>
+<span class="sd">        current_vertex_weight : weight of current vertex</span>
+<span class="sd">        action_weights : action weights of each action vertex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">obs_space</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">,</span>
+        <span class="n">action_space</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">,</span>
+        <span class="n">num_outputs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">model_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="n">action_mask_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;action_mask&quot;</span><span class="p">,</span>
+        <span class="n">vertex_observation_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;vertex_observations&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes a GraphModel instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            obs_space: The observation space to use.</span>
+<span class="sd">            action_space: The action space to use.</span>
+<span class="sd">            num_outputs: The number of scalar outputs per state to produce.</span>
+<span class="sd">            model_config: Config forwarded to TFModelV2.__init()__.</span>
+<span class="sd">            name: Config forwarded to TFModelV2.__init()__.</span>
+<span class="sd">            action_mask_key: Key used to retrieve the action mask from the observation</span>
+<span class="sd">                space dictionary. Defaults to &quot;action_mask&quot;.</span>
+<span class="sd">            vertex_observation_key: Key used to retrieve the per-action vertex</span>
+<span class="sd">                observations from the observation space dictionary. Defaults to</span>
+<span class="sd">                &quot;vertex_observations&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">obs_space</span><span class="p">,</span>
+            <span class="n">action_space</span><span class="p">,</span>
+            <span class="n">num_outputs</span><span class="p">,</span>
+            <span class="n">model_config</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_mask_key</span> <span class="o">=</span> <span class="n">action_mask_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vertex_observation_key</span> <span class="o">=</span> <span class="n">vertex_observation_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_values</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_weight</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_weights</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_outputs</span> <span class="o">=</span> <span class="n">num_outputs</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_outputs: </span><span class="si">{</span><span class="n">num_outputs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GraphModel.forward"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">seq_lens</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tensorflow/Keras style forward method. Sets up the computation graph used by</span>
+<span class="sd">        this model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_dict: Observation input to the model. Consists of a dictionary</span>
+<span class="sd">                including key &#39;obs&#39; which stores the raw observation from the process.</span>
+<span class="sd">            state: Tensor of current states. Passes through this function untouched.</span>
+<span class="sd">            seq_lens: Unused. Required by API.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (action weights tensor, state)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Extract the available children tensor from the observation.</span>
+        <span class="n">observation</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">]</span>
+
+        <span class="n">vertex_observations</span> <span class="o">=</span> <span class="n">observation</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertex_observation_key</span><span class="p">]</span>
+        <span class="n">flattened_observations</span> <span class="o">=</span> <span class="n">space_util</span><span class="o">.</span><span class="n">flatten_first_dim</span><span class="p">(</span><span class="n">vertex_observations</span><span class="p">)</span>
+
+        <span class="c1"># flat_values is structured like this: (vertex values, vertex weights)</span>
+        <span class="n">flat_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_vertex</span><span class="p">(</span><span class="n">flattened_observations</span><span class="p">)</span>
+
+        <span class="n">action_mask</span> <span class="o">=</span> <span class="n">observation</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_mask_key</span><span class="p">]</span>
+
+        <span class="c1"># Ray likes to make bool arrays into floats, so we undo it here.</span>
+        <span class="k">if</span> <span class="n">action_mask</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">tf</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">bool</span><span class="p">:</span>
+            <span class="n">action_mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">action_mask</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># mask out invalid children and get current vertex value</span>
+        <span class="k">def</span> <span class="nf">mask_values</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
+<span class="sd">            and the masked values of the action verticies.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                values: Tensor to apply the action mask to.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                (a current state value tensor, a masked action values tensor)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="n">values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">action_mask</span><span class="p">))</span>
+            <span class="n">current_value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">masked_action_values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">action_mask</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">min</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_value</span><span class="p">,</span> <span class="n">masked_action_values</span>
+
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_values</span><span class="p">),</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_weight</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_weights</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">mask_values</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">flat_values</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_total_value</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_weights</span><span class="p">,</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="GraphModel.value_function"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.value_function">[docs]</a>    <span class="k">def</span> <span class="nf">value_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tensor of current state values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_value</span></div>
+
+<div class="viewcode-block" id="GraphModel.forward_vertex"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.forward_vertex">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">forward_vertex</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_dict</span><span class="p">:</span> <span class="n">GraphModelObservation</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Forward function returning a value and weight tensor for the verticies</span>
+<span class="sd">        observed via input_dict (a dict of tensors for each vertex property)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_dict: per-vertex observations</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (value tensor, weight tensor) for the given observations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">_forward_total_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Forward method computing the value assesment of the current state,</span>
+<span class="sd">        as returned by the value_function() method.</span>
+
+<span class="sd">        The default implementation return the action value of the current state.</span>
+
+<span class="sd">        Breaking this into a separate method allows subclasses to override the</span>
+<span class="sd">        state value assesment, for example with a Bellman backup returning</span>
+<span class="sd">        the max over all successor states&#39;s values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            current value tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, TODO.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

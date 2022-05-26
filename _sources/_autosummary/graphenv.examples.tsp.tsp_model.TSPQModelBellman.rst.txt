@@ -1,0 +1,41 @@
+graphenv.examples.tsp.tsp\_model.TSPQModelBellman
+=================================================
+
+.. currentmodule:: graphenv.examples.tsp.tsp_model
+
+.. autoclass:: TSPQModelBellman
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TSPQModelBellman.context
+      ~TSPQModelBellman.custom_loss
+      ~TSPQModelBellman.forward
+      ~TSPQModelBellman.forward_vertex
+      ~TSPQModelBellman.from_batch
+      ~TSPQModelBellman.get_initial_state
+      ~TSPQModelBellman.get_q_value_distributions
+      ~TSPQModelBellman.get_state_value
+      ~TSPQModelBellman.import_from_h5
+      ~TSPQModelBellman.is_time_major
+      ~TSPQModelBellman.last_output
+      ~TSPQModelBellman.metrics
+      ~TSPQModelBellman.register_variables
+      ~TSPQModelBellman.trainable_variables
+      ~TSPQModelBellman.update_ops
+      ~TSPQModelBellman.value_function
+      ~TSPQModelBellman.variables
+   
+   
+
+   
+   
+   

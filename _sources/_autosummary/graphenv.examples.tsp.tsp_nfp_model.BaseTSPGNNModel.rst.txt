@@ -1,0 +1,27 @@
+graphenv.examples.tsp.tsp\_nfp\_model.BaseTSPGNNModel
+=====================================================
+
+.. currentmodule:: graphenv.examples.tsp.tsp_nfp_model
+
+.. autoclass:: BaseTSPGNNModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~BaseTSPGNNModel.forward
+      ~BaseTSPGNNModel.forward_vertex
+      ~BaseTSPGNNModel.value_function
+   
+   
+
+   
+   
+   

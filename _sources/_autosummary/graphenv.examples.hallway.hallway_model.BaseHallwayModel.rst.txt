@@ -1,0 +1,27 @@
+graphenv.examples.hallway.hallway\_model.BaseHallwayModel
+=========================================================
+
+.. currentmodule:: graphenv.examples.hallway.hallway_model
+
+.. autoclass:: BaseHallwayModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~BaseHallwayModel.forward
+      ~BaseHallwayModel.forward_vertex
+      ~BaseHallwayModel.value_function
+   
+   
+
+   
+   
+   

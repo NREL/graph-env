@@ -1,0 +1,39 @@
+graphenv.examples.tsp.tsp\_nfp\_model.TSPGNNModel
+=================================================
+
+.. currentmodule:: graphenv.examples.tsp.tsp_nfp_model
+
+.. autoclass:: TSPGNNModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TSPGNNModel.context
+      ~TSPGNNModel.custom_loss
+      ~TSPGNNModel.forward
+      ~TSPGNNModel.forward_vertex
+      ~TSPGNNModel.from_batch
+      ~TSPGNNModel.get_initial_state
+      ~TSPGNNModel.import_from_h5
+      ~TSPGNNModel.is_time_major
+      ~TSPGNNModel.last_output
+      ~TSPGNNModel.metrics
+      ~TSPGNNModel.register_variables
+      ~TSPGNNModel.trainable_variables
+      ~TSPGNNModel.update_ops
+      ~TSPGNNModel.value_function
+      ~TSPGNNModel.variables
+   
+   
+
+   
+   
+   

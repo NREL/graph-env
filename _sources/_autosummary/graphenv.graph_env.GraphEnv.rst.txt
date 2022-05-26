@@ -1,0 +1,43 @@
+graphenv.graph\_env.GraphEnv
+============================
+
+.. currentmodule:: graphenv.graph_env
+
+.. autoclass:: GraphEnv
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~GraphEnv.close
+      ~GraphEnv.make_observation
+      ~GraphEnv.render
+      ~GraphEnv.reset
+      ~GraphEnv.seed
+      ~GraphEnv.step
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GraphEnv.action_space
+      ~GraphEnv.metadata
+      ~GraphEnv.observation_space
+      ~GraphEnv.reward_range
+      ~GraphEnv.spec
+      ~GraphEnv.unwrapped
+      ~GraphEnv.state
+      ~GraphEnv.max_num_children
+   
+   
