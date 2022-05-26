@@ -14,6 +14,10 @@ class HallwayState(Vertex):
     The hallway graph is a simple bidirectional chain of verticies. The root
     vertex is on one end of the chain and the terminal goal vertex is on the
     opposite end. The length is configurable.
+
+    Args:
+        corridor_length (int): length of the vertex chain
+        cur_pos (int, optional): initial vertex index. Defaults to 0.
     """
 
     def __init__(
@@ -21,12 +25,6 @@ class HallwayState(Vertex):
         corridor_length: int,
         cur_pos: int = 0,
     ) -> None:
-        """Initializes this HallwayState.
-
-        Args:
-            corridor_length (int): length of the vertex chain
-            cur_pos (int, optional): initial vertex index. Defaults to 0.
-        """
         super().__init__()
         self.end_pos = corridor_length - 1
         self.cur_pos = cur_pos

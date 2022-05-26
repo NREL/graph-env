@@ -19,18 +19,20 @@ GraphModelObservation = Union[
 
 
 class GraphModel:
-    """
-    Defines a RLLib compatible model for using RL algorithms on a
-    GraphEnv.
+    """Defines a RLLib compatible model for using RL algorithms on a GraphEnv.
 
-    Attributes:
-        _action_mask_key observation : space key for the action mask
-        _vertex_observation_key : observation space key for the vertex observations
-        action_mask : bool tensor of valid next children
-        current_vertex_value : value of current vertex
-        action_values : values of each action vertex
-        current_vertex_weight : weight of current vertex
-        action_weights : action weights of each action vertex
+    Args:
+        obs_space: The observation space to use.
+        action_space: The action space to use.
+        num_outputs: The number of scalar outputs per state to produce.
+        model_config: Config forwarded to TFModelV2.__init()__.
+        name: Config forwarded to TFModelV2.__init()__.
+        action_mask_key: Key used to retrieve the action mask from the observation
+            space dictionary. Defaults to "action_mask".
+        vertex_observation_key: Key used to retrieve the per-action vertex
+            observations from the observation space dictionary. Defaults to
+            "vertex_observations".
+
     """
 
     def __init__(
@@ -45,20 +47,6 @@ class GraphModel:
         vertex_observation_key: str = "vertex_observations",
         **kwargs,
     ):
-        """Initializes a GraphModel instance.
-
-        Args:
-            obs_space: The observation space to use.
-            action_space: The action space to use.
-            num_outputs: The number of scalar outputs per state to produce.
-            model_config: Config forwarded to TFModelV2.__init()__.
-            name: Config forwarded to TFModelV2.__init()__.
-            action_mask_key: Key used to retrieve the action mask from the observation
-                space dictionary. Defaults to "action_mask".
-            vertex_observation_key: Key used to retrieve the per-action vertex
-                observations from the observation space dictionary. Defaults to
-                "vertex_observations".
-        """
 
         super().__init__(
             obs_space,
@@ -71,7 +59,6 @@ class GraphModel:
         )
         self._action_mask_key = action_mask_key
         self._vertex_observation_key = vertex_observation_key
-        self.action_mask = None
         self.current_vertex_value = None
         self.action_values = None
         self.current_vertex_weight = None

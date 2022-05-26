@@ -17,26 +17,10 @@ class GraphEnv(gym.Env):
     Defines an OpenAI Gym Env for traversing a graph using the current vertex
     as the state, and the successor verticies as actions.
 
-    GraphEnv uses composition to supply the per-vertex model of type Vertex,
-    which defines the graph via it's _get_children() method.
+    GraphEnv uses composition to supply the per-vertex model of type Vertex, which
+    defines the graph via it's `_get_children()` method.
 
-    Attributes:
-        state: current vertex
-        max_num_children: maximum number of actions considered at a time
-        _action_mask_key: key under which the action mask is stored in the root
-            observation space dict
-        _vertex_observation_key: key under which the per-action vertex observations are
-            stored in the root observation space dict
-    """
-
-    state: V
-    max_num_children: int
-    _action_mask_key: str
-    _vertex_observation_key: str
-
-    def __init__(self, env_config: EnvContext) -> None:
-        """Initializes a GraphEnv instance. The `env_config` dictionary should contain
-        the following keys:
+    The `env_config` dictionary should contain the following keys::
 
         state (N): Current vertex
         max_num_children (int): maximum number of children considered at a time
@@ -46,10 +30,27 @@ class GraphEnv(gym.Env):
             vertex observations are stored in the root observation space dict.
             Defaults to "vertex_observations".
 
-        Args:
-            env_config (dict): A dictionary of parameters, required to conform with
-                rllib's environment initialization.
-        """
+    Args:
+        env_config (dict): A dictionary of parameters, required to conform with
+            rllib's environment initialization.
+    """
+
+    #: graphenv.vertex.Vertex: current vertex
+    state: V
+
+    #: int: maximum number of actions considered at a time
+    max_num_children: int
+
+    #: the observation space of the graph environment
+    observation_space: gym.Space
+
+    #: the action space, a Discrete space over `max_num_children`
+    action_space: gym.Space
+
+    _action_mask_key: str
+    _vertex_observation_key: str
+
+    def __init__(self, env_config: EnvContext) -> None:
         super().__init__()
 
         logger.debug("entering graphenv construction")

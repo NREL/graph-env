@@ -1,21 +1,23 @@
 from typing import Tuple
 
-from ray.rllib.models.tf.tf_modelv2 import TFModelV2
-from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
-
 from graphenv import tf
 from graphenv.graph_model import GraphModel, GraphModelObservation
+from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
+from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 
 layers = tf.keras.layers
 
 
 class BaseHallwayModel(GraphModel):
     """An example GraphModel implementation for the HallwayEnv and HallwayState
-    Graph.
+    Graph. Uses a dense fully connected Keras network.
 
-    Attributes:
-        base_model : The Keras model used to evaluate vertex observations.
+    Args:
+        hidden_dim (int, optional): The number of hidden layers to use. Defaults to 1.
     """
+
+    #: tf.keras.Model: The Keras model used to evaluate vertex observations
+    base_model: tf.keras.Model
 
     def __init__(
         self,
@@ -23,13 +25,6 @@ class BaseHallwayModel(GraphModel):
         hidden_dim: int = 1,
         **kwargs,
     ):
-        """Initializs this HallwayModel.
-        Uses a dense fully connected Keras network.
-
-        Args:
-            hidden_dim (int, optional): The number of hidden layers to use. Defaults to
-                1.
-        """
         super().__init__(*args, **kwargs)
 
         cur_pos = layers.Input(shape=(1,), name="cur_pos", dtype=tf.float32)

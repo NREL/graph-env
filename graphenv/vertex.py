@@ -12,15 +12,11 @@ class Vertex(Generic[V]):
 
     Args:
         Generic (V): The implementing vertex subclass.
-
-    Attributes:
-        _children (Optional[List]) : memoized list of child vertices
-        _observation (Optional[any]) : memoized observation of this vertex
     """
 
     def __init__(self) -> None:
-        self._children: Optional[List] = None
-        self._observation: Optional[any] = None
+        self._children: Optional[List] = None  #: memoized list of child vertices
+        self._observation: Optional[any] = None  #: memoized observation of this vertex
 
     @property
     @abstractmethod

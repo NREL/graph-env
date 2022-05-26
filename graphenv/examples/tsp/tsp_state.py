@@ -11,26 +11,21 @@ layers = tf.keras.layers
 
 
 class TSPState(Vertex):
+    """Create a TSP vertex that defines the graph search problem.
+
+    Args:
+        generator: a function that creates a networkx graph
+        G: A fully connected networkx graph.
+        tour: A list of nodes in visitation order that led to this
+            state. Defaults to [0] which begins the tour at node 0.
+    """
+
     def __init__(
         self,
         graph_generator: Callable[[], nx.Graph],
         G: Optional[nx.Graph] = None,
         tour: List[int] = [0],
     ) -> None:
-        """Create a TSP vertex that defines the graph search problem.
-
-        Args:
-            generator: a function that creates a networkx graph
-            G: A fully connected networkx graph.
-            tour: A list of nodes in visitation order that led to this
-                state. Defaults to [0] which begins the tour at node 0.
-
-
-        Notes:
-            We'll need to make `self.num_nodes` a passable parameter if we later want
-            this to handle dynamic graphs of potentially different sizes.
-
-        """
 
         super().__init__()
 
