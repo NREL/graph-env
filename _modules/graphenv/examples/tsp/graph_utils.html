@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.graph_utils &mdash; graphenv 0+untagged.1.g2cebce2 documentation</title>
+  <title>graphenv.examples.tsp.graph_utils &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -94,6 +94,10 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">networkx.algorithms.approximation.traveling_salesman</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">greedy_tsp</span><span class="p">,</span>
+    <span class="n">traveling_salesman_problem</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance_matrix</span>
 
 
@@ -199,6 +203,20 @@
         <span class="n">nodeset</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">next_node</span><span class="p">)</span>
     <span class="n">cycle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cycle</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<div class="viewcode-block" id="calc_greedy_dist"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.tsp.graph_utils.calc_greedy_dist.html#graphenv.examples.tsp.graph_utils.calc_greedy_dist">[docs]</a><span class="k">def</span> <span class="nf">calc_greedy_dist</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the distance for a greedy search tour over the given graph.</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        G: The Graph should be a complete weighted undirected graph.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dist: a positive distance for the resulting search</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">traveling_salesman_problem</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">greedy_tsp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">())]</span>
+    <span class="p">)</span></div>
 </pre></div>
 
            </div>

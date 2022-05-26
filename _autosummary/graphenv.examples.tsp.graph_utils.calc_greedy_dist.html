@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.graph_utils.calc_greedy_dist &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="graphenv.space_util" href="graphenv.space_util.html" />
-    <link rel="prev" title="graphenv.graph_model_bellman_mixin" href="graphenv.graph_model_bellman_mixin.html" /> 
+    <link rel="next" title="graphenv.examples.tsp.graph_utils.make_complete_planar_graph" href="graphenv.examples.tsp.graph_utils.make_complete_planar_graph.html" />
+    <link rel="prev" title="graphenv.examples.tsp.graph_utils" href="graphenv.examples.tsp.graph_utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,13 +58,22 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="graphenv.html">graphenv</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="graphenv.examples.html">graphenv.examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_env.html">graphenv.graph_env</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model.html">graphenv.graph_model</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="graphenv.examples.html">graphenv.examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="graphenv.examples.hallway.html">graphenv.examples.hallway</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="graphenv.examples.tsp.html">graphenv.examples.tsp</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="graphenv.examples.tsp.graph_utils.html">graphenv.examples.tsp.graph_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.tsp.tsp_model.html">graphenv.examples.tsp.tsp_model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.tsp.tsp_nfp_model.html">graphenv.examples.tsp.tsp_nfp_model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.tsp.tsp_nfp_state.html">graphenv.examples.tsp.tsp_nfp_state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.tsp.tsp_preprocessor.html">graphenv.examples.tsp.tsp_preprocessor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.tsp.tsp_state.html">graphenv.examples.tsp.tsp_state</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_env.html">graphenv.graph_env</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model.html">graphenv.graph_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.space_util.html">graphenv.space_util</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
@@ -92,8 +101,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="graphenv.html">graphenv</a> &raquo;</li>
-          <li><a href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a> &raquo;</li>
-      <li>graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin</li>
+          <li><a href="graphenv.examples.html">graphenv.examples</a> &raquo;</li>
+          <li><a href="graphenv.examples.tsp.html">graphenv.examples.tsp</a> &raquo;</li>
+          <li><a href="graphenv.examples.tsp.graph_utils.html">graphenv.examples.tsp.graph_utils</a> &raquo;</li>
+      <li>graphenv.examples.tsp.graph_utils.calc_greedy_dist</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -126,23 +137,24 @@
     text-align: unset;
 }
 </style>
-<section id="graphenv-graph-model-bellman-mixin-graphmodelbellmanmixin">
-<h1>graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin<a class="headerlink" href="#graphenv-graph-model-bellman-mixin-graphmodelbellmanmixin" title="Permalink to this headline"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphModelBellmanMixin</span></span><a class="reference internal" href="../_modules/graphenv/graph_model_bellman_mixin.html#GraphModelBellmanMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Mixin for use with GraphModel that evaluates the current state as the
-max of the successor state value assesments.</p>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-</tbody>
-</table>
+<section id="graphenv-examples-tsp-graph-utils-calc-greedy-dist">
+<h1>graphenv.examples.tsp.graph_utils.calc_greedy_dist<a class="headerlink" href="#graphenv-examples-tsp-graph-utils-calc-greedy-dist" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="graphenv.examples.tsp.graph_utils.calc_greedy_dist">
+<span class="sig-name descname"><span class="pre">calc_greedy_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/graph_utils.html#calc_greedy_dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.graph_utils.calc_greedy_dist" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the distance for a greedy search tour over the given graph.
+:param G: The Graph should be a complete weighted undirected graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a positive distance for the resulting search</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dist</p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>G</strong> (<em>networkx.classes.graph.Graph</em>) – </p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -151,8 +163,8 @@ max of the successor state value assesments.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="graphenv.graph_model_bellman_mixin.html" class="btn btn-neutral float-left" title="graphenv.graph_model_bellman_mixin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="graphenv.space_util.html" class="btn btn-neutral float-right" title="graphenv.space_util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="graphenv.examples.tsp.graph_utils.html" class="btn btn-neutral float-left" title="graphenv.examples.tsp.graph_utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="graphenv.examples.tsp.graph_utils.make_complete_planar_graph.html" class="btn btn-neutral float-right" title="graphenv.examples.tsp.graph_utils.make_complete_planar_graph" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
