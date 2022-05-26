@@ -1,0 +1,163 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "ddc3ca63",
+   "metadata": {},
+   "source": [
+    "# Running TSP on AWS"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a515e273",
+   "metadata": {},
+   "source": [
+    "This page details the process of running TSP example from `graphenv` library on Ray clusters deployed on AWS cloud. The deployment relies on a working configuration in the `example-tsp.yml` file provided by this library and follows the steps decribed at [Ray Tutorial for Cloud Installations](https://docs.ray.io/en/latest/cluster/cloud.html)."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d20a0bf6",
+   "metadata": {},
+   "source": [
+    "## Getting Started\n",
+    "\n",
+    "1. Install Ray on your workstation; follow the steps described at [Ray Installation Manual](https://docs.ray.io/en/latest/ray-overview/installation.html). This workstation will be the environment from which you will interact with the Ray clusters throughout the rest of the process described on this page.\n",
+    "\n",
+    "    For installation using `pip`, you might want to try: \n",
+    "    ```\n",
+    "    pip install -U ray\n",
+    "    ```\n",
+    "    \n",
+    "2. Clone `graphenv` library's code and navigate to the directory with the Ray cluster configuration file:\n",
+    "    \n",
+    "    ```\n",
+    "    git clone https://github.com/NREL/graph-env.git\n",
+    "    cd graph-env/devtools/aws/\n",
+    "    ```\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7cc44a24",
+   "metadata": {},
+   "source": [
+    "## Deploy Ray cluster\n",
+    "\n",
+    "Ray will handle the deployment according to the settings chosen inside `example-tsp.yml`. The version distributed with the library's code launches 2 instances on AWS: 1 head node and 1 worker node; both are of the type: [g3.4xlarge](https://aws.amazon.com/ec2/instance-types/g3/), which includes 1 GPU per instance.\n",
+    "\n",
+    "Following the commands listed above, run:\n",
+    "\n",
+    "```\n",
+    "ray up example-tsp.yml --no-config-cache\n",
+    "```\n",
+    "This command may ask you to confirm that you desire to launch a cluster; type `y` and press Return to proceed.\n",
+    "\n",
+    "This command will trigger provisioning instances in AWS, launching Docker containers with Ray inside those instances, and performing a number of customizations described in the configuration file. The entire process may take up to 15 minutes. \n",
+    "\n",
+    "When the deployment is complete, you should see the output that ends with the block titled: \"Useful commands\"."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7c810e63",
+   "metadata": {},
+   "source": [
+    "## Connecting to head node\n",
+    "\n",
+    "You do not need to copy & paste IP addresses from the output of the previous command. Instead, you can run the following command:\n",
+    "\n",
+    "```\n",
+    "ray attach example-tsp.yml --no-config-cache\n",
+    "```\n",
+    "It will query the cloud, get the details of the currently running cluster, and give you shell on the head node (notice the prompt in your terminal changing to something like: `(base) ray@ip-123...456`)\n",
+    "\n",
+    "There, you can run:\n",
+    "\n",
+    "```\n",
+    "ray status\n",
+    "```\n",
+    "and the output should include:\n",
+    "```\n",
+    "Healthy:\n",
+    " 1 ray.worker.default\n",
+    " 1 ray.head.default\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c75deaa2",
+   "metadata": {},
+   "source": [
+    "## Running TSP example:\n",
+    "\n",
+    "On the head node (see previous step), run: \n",
+    "\n",
+    "```\n",
+    "python graph-env/experiments/tsp/run_tsp_aws.py --N=40 --use-gnn --run=PPO --lr=0.001 --entropy-coeff=0.01 --seed=0 --num-workers=31 --num-gpus=1 --stop-iters=1000000 --stop-timesteps=100000000 --log-level=DEBUG\n",
+    "```\n",
+    "\n",
+    "For more detailed examples of running TSP and available command-line options, refer to **ToDo: Add Link**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dd442446",
+   "metadata": {},
+   "source": [
+    "## Monitor the load through Ray dashboard\n",
+    "\n",
+    "In a separate terminal, navigate to the same directory where you ran `ray up...` and `ray attach...` above and run: \n",
+    "\n",
+    "``` \n",
+    "ray dashboard example-tsp.yml --no-config-cache\n",
+    "```\n",
+    "\n",
+    "Keep this process running (and terminal open), and navigate in your browser to: `localhost:8265`. You should see a dashboard similar to this:\n",
+    "\n",
+    "![ray-dashboard-example](./ray-dashboard-example.png)\n",
+    "\n",
+    "The dashboard should show current CPU loads, memory usage, GPU usage, etc."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "071f348f",
+   "metadata": {},
+   "source": [
+    "## Destroy Ray cluster (free up cloud resources)\n",
+    "\n",
+    "To terminate cloud instances, run: \n",
+    "\n",
+    "```\n",
+    "ray down example-tsp.yml \n",
+    "```\n",
+    "\n",
+    "**This is an important step. Without it, AWS will *continue charging* for the allocated resources.**"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
