@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_nfp_state.TSPNFPState &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.tsp_nfp_state.TSPNFPState &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -78,12 +77,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -143,25 +136,6 @@
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TSPNFPState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/tsp_nfp_state.html#TSPNFPState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState" title="graphenv.examples.tsp.tsp_state.TSPState"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.examples.tsp.tsp_state.TSPState</span></code></a></p>
-<p>Create a TSP vertex that defines the graph search problem.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>generator</strong> – a function that creates a networkx graph</p></li>
-<li><p><strong>G</strong> – A fully connected networkx graph.</p></li>
-<li><p><strong>tour</strong> – A list of nodes in visitation order that led to this
-state. Defaults to [0] which begins the tour at node 0.</p></li>
-<li><p><strong>graph_inputs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – </p></li>
-<li><p><strong>max_num_neighbors</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>We’ll need to make <cite>self.num_nodes</cite> a passable parameter if we later want
-this to handle dynamic graphs of potentially different sizes.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -181,53 +155,40 @@ this to handle dynamic graphs of potentially different sizes.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.children" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></p></td>
 <td><p>Gets the child verticies of this vertex.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.info" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></p></td>
 <td><p>Returns: An optional dictionary with additional information about the state</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></p></td>
 <td><p>Gets the observation of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation_space" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation_space</span></code></a></p></td>
 <td><p>Returns the graph env's observation space.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.reward" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.reward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reward</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reward</span></code></p></td>
 <td><p>Returns the graph env reward.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.root" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></p></td>
 <td><p>Returns the root node of the graph env.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.terminal" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.terminal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal</span></code></p></td>
 <td><p>Returns: True if this is a terminal vertex in the graph.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.children">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.children" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the child verticies of this vertex.
-Acts as a wrapper that memoizes calls to _get_children() and
-ensures that it is a list. If you would like a different behavior,
-such as stochastic child verticies, override this property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of child verticies</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph_inputs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – </p></li>
+<li><p><strong>max_num_neighbors</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>List[N]</p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.info">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.info" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-An optional dictionary with additional information about the state</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.new">
 <span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/tsp_nfp_state.html#TSPNFPState.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.new" title="Permalink to this definition"></a></dt>
@@ -246,20 +207,6 @@ An optional dictionary with additional information about the state</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the observation of this vertex.
-Acts as a wrapper that memoizes calls to _make_observation().
-If you would like a different behavior,
-such as stochastic observations, override this property.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Observation of this vertex.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation_space">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.dict.Dict</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.observation_space" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the graph env’s observation space.</p>
@@ -268,36 +215,6 @@ such as stochastic observations, override this property.</p>
 <dd class="field-odd"><p>Dict observation space.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.reward">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.reward" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the graph env reward.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Negative distance between last two nodes in the tour.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.root">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState" title="graphenv.examples.tsp.tsp_state.TSPState"><span class="pre">graphenv.examples.tsp.tsp_state.TSPState</span></a></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.root" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the root node of the graph env.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Node with node 0 as the starting point of the tour, and generates a new
-graph using the given constructor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.terminal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">terminal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.terminal" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-True if this is a terminal vertex in the graph.</p>
 </dd></dl>
 
 </dd></dl>

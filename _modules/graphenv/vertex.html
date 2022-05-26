@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.vertex &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.vertex &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -55,12 +54,6 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/graphenv.html">graphenv</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -102,15 +95,11 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        Generic (V): The implementing vertex subclass.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        _children (Optional[List]) : memoized list of child vertices</span>
-<span class="sd">        _observation (Optional[any]) : memoized observation of this vertex</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_observation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">#: memoized list of child vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">#: memoized observation of this vertex</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.hallway.hallway_model &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.hallway.hallway_model &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -55,12 +54,6 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/graphenv.html">graphenv</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -90,22 +83,24 @@
   <h1>Source code for graphenv.examples.hallway.hallway_model</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">ray.rllib.models.tf.tf_modelv2</span> <span class="kn">import</span> <span class="n">TFModelV2</span>
-<span class="kn">from</span> <span class="nn">ray.rllib.agents.dqn.distributional_q_tf_model</span> <span class="kn">import</span> <span class="n">DistributionalQTFModel</span>
-
 <span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span>
 <span class="kn">from</span> <span class="nn">graphenv.graph_model</span> <span class="kn">import</span> <span class="n">GraphModel</span><span class="p">,</span> <span class="n">GraphModelObservation</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.agents.dqn.distributional_q_tf_model</span> <span class="kn">import</span> <span class="n">DistributionalQTFModel</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.models.tf.tf_modelv2</span> <span class="kn">import</span> <span class="n">TFModelV2</span>
 
 <span class="n">layers</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span>
 
 
 <div class="viewcode-block" id="BaseHallwayModel"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_model.BaseHallwayModel.html#graphenv.examples.hallway.hallway_model.BaseHallwayModel">[docs]</a><span class="k">class</span> <span class="nc">BaseHallwayModel</span><span class="p">(</span><span class="n">GraphModel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An example GraphModel implementation for the HallwayEnv and HallwayState</span>
-<span class="sd">    Graph.</span>
+<span class="sd">    Graph. Uses a dense fully connected Keras network.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        base_model : The Keras model used to evaluate vertex observations.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim (int, optional): The number of hidden layers to use. Defaults to 1.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># #: tf.keras.Model: The Keras model used to evaluate vertex observations</span>
+    <span class="c1"># base_model: &quot;tf.keras.Model&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -113,13 +108,6 @@
         <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializs this HallwayModel.</span>
-<span class="sd">        Uses a dense fully connected Keras network.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            hidden_dim (int, optional): The number of hidden layers to use. Defaults to</span>
-<span class="sd">                1.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">cur_pos</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cur_pos&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>

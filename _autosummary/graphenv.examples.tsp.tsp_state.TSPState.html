@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_state.TSPState &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.tsp_state.TSPState &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -78,12 +77,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -158,9 +151,6 @@ state. Defaults to [0] which begins the tour at node 0.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>We’ll need to make <cite>self.num_nodes</cite> a passable parameter if we later want
-this to handle dynamic graphs of potentially different sizes.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -180,13 +170,13 @@ this to handle dynamic graphs of potentially different sizes.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_state.TSPState.children" title="graphenv.examples.tsp.tsp_state.TSPState.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></p></td>
 <td><p>Gets the child verticies of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_state.TSPState.info" title="graphenv.examples.tsp.tsp_state.TSPState.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
 <td><p>Returns: An optional dictionary with additional information about the state</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_state.TSPState.observation" title="graphenv.examples.tsp.tsp_state.TSPState.observation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></p></td>
 <td><p>Gets the observation of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_state.TSPState.observation_space" title="graphenv.examples.tsp.tsp_state.TSPState.observation_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation_space</span></code></a></p></td>
@@ -198,28 +188,11 @@ this to handle dynamic graphs of potentially different sizes.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_state.TSPState.root" title="graphenv.examples.tsp.tsp_state.TSPState.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a></p></td>
 <td><p>Returns the root node of the graph env.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_state.TSPState.terminal" title="graphenv.examples.tsp.tsp_state.TSPState.terminal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal</span></code></p></td>
 <td><p>Returns: True if this is a terminal vertex in the graph.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_state.TSPState.children">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_state.TSPState.children" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the child verticies of this vertex.
-Acts as a wrapper that memoizes calls to _get_children() and
-ensures that it is a list. If you would like a different behavior,
-such as stochastic child verticies, override this property.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of child verticies</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>List[N]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_state.TSPState.info">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_state.TSPState.info" title="Permalink to this definition"></a></dt>
@@ -240,20 +213,6 @@ An optional dictionary with additional information about the state</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>New TSP state.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_state.TSPState.observation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_state.TSPState.observation" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the observation of this vertex.
-Acts as a wrapper that memoizes calls to _make_observation().
-If you would like a different behavior,
-such as stochastic observations, override this property.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Observation of this vertex.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -290,13 +249,6 @@ such as stochastic observations, override this property.</p>
 graph using the given constructor</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_state.TSPState.terminal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">terminal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#graphenv.examples.tsp.tsp_state.TSPState.terminal" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-True if this is a terminal vertex in the graph.</p>
 </dd></dl>
 
 </dd></dl>

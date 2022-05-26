@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.graph_env &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -55,12 +54,6 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/graphenv.html">graphenv</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -107,26 +100,10 @@
 <span class="sd">    Defines an OpenAI Gym Env for traversing a graph using the current vertex</span>
 <span class="sd">    as the state, and the successor verticies as actions.</span>
 
-<span class="sd">    GraphEnv uses composition to supply the per-vertex model of type Vertex,</span>
-<span class="sd">    which defines the graph via it&#39;s _get_children() method.</span>
+<span class="sd">    GraphEnv uses composition to supply the per-vertex model of type Vertex, which</span>
+<span class="sd">    defines the graph via it&#39;s `_get_children()` method.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        state: current vertex</span>
-<span class="sd">        max_num_children: maximum number of actions considered at a time</span>
-<span class="sd">        _action_mask_key: key under which the action mask is stored in the root</span>
-<span class="sd">            observation space dict</span>
-<span class="sd">        _vertex_observation_key: key under which the per-action vertex observations are</span>
-<span class="sd">            stored in the root observation space dict</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">state</span><span class="p">:</span> <span class="n">V</span>
-    <span class="n">max_num_children</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">_action_mask_key</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">_vertex_observation_key</span><span class="p">:</span> <span class="nb">str</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EnvContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Initializes a GraphEnv instance. The `env_config` dictionary should contain</span>
-<span class="sd">        the following keys:</span>
+<span class="sd">    The `env_config` dictionary should contain the following keys::</span>
 
 <span class="sd">        state (N): Current vertex</span>
 <span class="sd">        max_num_children (int): maximum number of children considered at a time</span>
@@ -136,10 +113,27 @@
 <span class="sd">            vertex observations are stored in the root observation space dict.</span>
 <span class="sd">            Defaults to &quot;vertex_observations&quot;.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            env_config (dict): A dictionary of parameters, required to conform with</span>
-<span class="sd">                rllib&#39;s environment initialization.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        env_config (dict): A dictionary of parameters, required to conform with</span>
+<span class="sd">            rllib&#39;s environment initialization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: graphenv.vertex.Vertex: current vertex</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">V</span>
+
+    <span class="c1">#: int: maximum number of actions considered at a time</span>
+    <span class="n">max_num_children</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="c1">#: the observation space of the graph environment</span>
+    <span class="n">observation_space</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Space</span>
+
+    <span class="c1">#: the action space, a Discrete space over `max_num_children`</span>
+    <span class="n">action_space</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Space</span>
+
+    <span class="n">_action_mask_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">_vertex_observation_key</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EnvContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;entering graphenv construction&quot;</span><span class="p">)</span>

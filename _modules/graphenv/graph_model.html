@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -55,12 +54,6 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/graphenv.html">graphenv</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -109,18 +102,20 @@
 
 
 <div class="viewcode-block" id="GraphModel"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel">[docs]</a><span class="k">class</span> <span class="nc">GraphModel</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Defines a RLLib compatible model for using RL algorithms on a</span>
-<span class="sd">    GraphEnv.</span>
+    <span class="sd">&quot;&quot;&quot;Defines a RLLib compatible model for using RL algorithms on a GraphEnv.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        _action_mask_key observation : space key for the action mask</span>
-<span class="sd">        _vertex_observation_key : observation space key for the vertex observations</span>
-<span class="sd">        action_mask : bool tensor of valid next children</span>
-<span class="sd">        current_vertex_value : value of current vertex</span>
-<span class="sd">        action_values : values of each action vertex</span>
-<span class="sd">        current_vertex_weight : weight of current vertex</span>
-<span class="sd">        action_weights : action weights of each action vertex</span>
+<span class="sd">    Args:</span>
+<span class="sd">        obs_space: The observation space to use.</span>
+<span class="sd">        action_space: The action space to use.</span>
+<span class="sd">        num_outputs: The number of scalar outputs per state to produce.</span>
+<span class="sd">        model_config: Config forwarded to TFModelV2.__init()__.</span>
+<span class="sd">        name: Config forwarded to TFModelV2.__init()__.</span>
+<span class="sd">        action_mask_key: Key used to retrieve the action mask from the observation</span>
+<span class="sd">            space dictionary. Defaults to &quot;action_mask&quot;.</span>
+<span class="sd">        vertex_observation_key: Key used to retrieve the per-action vertex</span>
+<span class="sd">            observations from the observation space dictionary. Defaults to</span>
+<span class="sd">            &quot;vertex_observations&quot;.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -135,20 +130,6 @@
         <span class="n">vertex_observation_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;vertex_observations&quot;</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializes a GraphModel instance.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            obs_space: The observation space to use.</span>
-<span class="sd">            action_space: The action space to use.</span>
-<span class="sd">            num_outputs: The number of scalar outputs per state to produce.</span>
-<span class="sd">            model_config: Config forwarded to TFModelV2.__init()__.</span>
-<span class="sd">            name: Config forwarded to TFModelV2.__init()__.</span>
-<span class="sd">            action_mask_key: Key used to retrieve the action mask from the observation</span>
-<span class="sd">                space dictionary. Defaults to &quot;action_mask&quot;.</span>
-<span class="sd">            vertex_observation_key: Key used to retrieve the per-action vertex</span>
-<span class="sd">                observations from the observation space dictionary. Defaults to</span>
-<span class="sd">                &quot;vertex_observations&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">obs_space</span><span class="p">,</span>
@@ -161,7 +142,6 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_action_mask_key</span> <span class="o">=</span> <span class="n">action_mask_key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vertex_observation_key</span> <span class="o">=</span> <span class="n">vertex_observation_key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_mask</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_values</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_weight</span> <span class="o">=</span> <span class="kc">None</span>

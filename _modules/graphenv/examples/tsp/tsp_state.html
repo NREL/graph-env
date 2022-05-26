@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_state &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.tsp_state &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -55,12 +54,6 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/graphenv.html">graphenv</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -101,26 +94,21 @@
 
 
 <div class="viewcode-block" id="TSPState"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState">[docs]</a><span class="k">class</span> <span class="nc">TSPState</span><span class="p">(</span><span class="n">Vertex</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        generator: a function that creates a networkx graph</span>
+<span class="sd">        G: A fully connected networkx graph.</span>
+<span class="sd">        tour: A list of nodes in visitation order that led to this</span>
+<span class="sd">            state. Defaults to [0] which begins the tour at node 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">graph_generator</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span>
         <span class="n">G</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">tour</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            generator: a function that creates a networkx graph</span>
-<span class="sd">            G: A fully connected networkx graph.</span>
-<span class="sd">            tour: A list of nodes in visitation order that led to this</span>
-<span class="sd">                state. Defaults to [0] which begins the tour at node 0.</span>
-
-
-<span class="sd">        Notes:</span>
-<span class="sd">            We&#39;ll need to make `self.num_nodes` a passable parameter if we later want</span>
-<span class="sd">            this to handle dynamic graphs of potentially different sizes.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 

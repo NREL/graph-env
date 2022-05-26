@@ -6,7 +6,6 @@ graphenv.examples.hallway.hallway\_state.HallwayState
 .. autoclass:: HallwayState
    :members:
    :show-inheritance:
-   :inherited-members:
    :special-members: __call__, __add__, __mul__
 
    

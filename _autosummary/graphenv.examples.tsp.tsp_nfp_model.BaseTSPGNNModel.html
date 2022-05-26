@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -78,12 +77,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -143,25 +136,6 @@
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseTSPGNNModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_messages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/tsp_nfp_model.html#BaseTSPGNNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel" title="graphenv.graph_model.GraphModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.graph_model.GraphModel</span></code></a></p>
-<p>Initializes a GraphModel instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obs_space</strong> – The observation space to use.</p></li>
-<li><p><strong>action_space</strong> – The action space to use.</p></li>
-<li><p><strong>num_outputs</strong> – The number of scalar outputs per state to produce.</p></li>
-<li><p><strong>model_config</strong> – Config forwarded to TFModelV2.__init()__.</p></li>
-<li><p><strong>name</strong> – Config forwarded to TFModelV2.__init()__.</p></li>
-<li><p><strong>action_mask_key</strong> – Key used to retrieve the action mask from the observation
-space dictionary. Defaults to “action_mask”.</p></li>
-<li><p><strong>vertex_observation_key</strong> – Key used to retrieve the per-action vertex
-observations from the observation space dictionary. Defaults to
-“vertex_observations”.</p></li>
-<li><p><strong>num_messages</strong> (<em>int</em>) – </p></li>
-<li><p><strong>embed_dim</strong> (<em>int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -169,13 +143,13 @@ observations from the observation space dictionary. Defaults to
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward" title="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></p></td>
 <td><p>Tensorflow/Keras style forward method.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward_vertex" title="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_vertex</span></code></a></p></td>
 <td><p>Forward function returning a value and weight tensor for the verticies observed via input_dict (a dict of tensors for each vertex property)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.value_function" title="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.value_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_function</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_function</span></code></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">returns</dt>
 <dd class="field-odd"><p>A tensor of current state values.</p>
@@ -185,29 +159,14 @@ observations from the observation space dictionary. Defaults to
 </tr>
 </tbody>
 </table>
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Tensorflow/Keras style forward method. Sets up the computation graph used by
-this model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>tensorflow.python.framework.ops.Tensor</em><em>]</em>) – Observation input to the model. Consists of a dictionary
-including key ‘obs’ which stores the raw observation from the process.</p></li>
-<li><p><strong>state</strong> (<em>List</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>]</em>) – Tensor of current states. Passes through this function untouched.</p></li>
-<li><p><strong>seq_lens</strong> (<em>tensorflow.python.framework.ops.Tensor</em>) – Unused. Required by API.</p></li>
+<li><p><strong>num_messages</strong> (<em>int</em>) – </p></li>
+<li><p><strong>embed_dim</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(action weights tensor, state)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[tensorflow.python.framework.ops.Tensor, <em>List</em>[tensorflow.python.framework.ops.Tensor]]</p>
-</dd>
 </dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward_vertex">
 <span class="sig-name descname"><span class="pre">forward_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/tsp_nfp_model.html#BaseTSPGNNModel.forward_vertex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.forward_vertex" title="Permalink to this definition"></a></dt>
@@ -222,16 +181,6 @@ observed via input_dict (a dict of tensors for each vertex property)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><em>Tuple</em>[tensorflow.python.framework.ops.Tensor, tensorflow.python.framework.ops.Tensor]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.value_function">
-<span class="sig-name descname"><span class="pre">value_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_nfp_model.BaseTSPGNNModel.value_function" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A tensor of current state values.</p>
 </dd>
 </dl>
 </dd></dl>

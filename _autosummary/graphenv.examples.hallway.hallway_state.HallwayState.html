@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.hallway.hallway_state.HallwayState &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.hallway.hallway_state.HallwayState &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -74,12 +73,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -143,7 +136,6 @@
 The hallway graph is a simple bidirectional chain of verticies. The root
 vertex is on one end of the chain and the terminal goal vertex is on the
 opposite end. The length is configurable.</p>
-<p>Initializes this HallwayState.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -174,13 +166,13 @@ opposite end. The length is configurable.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.children" title="graphenv.examples.hallway.hallway_state.HallwayState.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></p></td>
 <td><p>Gets the child verticies of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.info" title="graphenv.examples.hallway.hallway_state.HallwayState.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
 <td><p>Debugging information compiled and returned by the environment step() method about verticies passed through or considered.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.observation" title="graphenv.examples.hallway.hallway_state.HallwayState.observation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></p></td>
 <td><p>Gets the observation of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.observation_space" title="graphenv.examples.hallway.hallway_state.HallwayState.observation_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation_space</span></code></a></p></td>
@@ -192,28 +184,11 @@ opposite end. The length is configurable.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.root" title="graphenv.examples.hallway.hallway_state.HallwayState.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a></p></td>
 <td><p>Returns: HallwayState: initial state (vertex at index 0)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.terminal" title="graphenv.examples.hallway.hallway_state.HallwayState.terminal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal</span></code></p></td>
 <td><p>Returns: True if this is a terminal vertex in the graph.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_state.HallwayState.children">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState.children" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the child verticies of this vertex.
-Acts as a wrapper that memoizes calls to _get_children() and
-ensures that it is a list. If you would like a different behavior,
-such as stochastic child verticies, override this property.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of child verticies</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>List[N]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_state.HallwayState.info">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState.info" title="Permalink to this definition"></a></dt>
@@ -242,20 +217,6 @@ method about verticies passed through or considered.</p>
 </dd>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>cur_pos</strong> (<em>int</em>) – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_state.HallwayState.observation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></em><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState.observation" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the observation of this vertex.
-Acts as a wrapper that memoizes calls to _make_observation().
-If you would like a different behavior,
-such as stochastic observations, override this property.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Observation of this vertex.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -299,13 +260,6 @@ indicating the index of the vertex.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState" title="graphenv.examples.hallway.hallway_state.HallwayState"><span class="pre">graphenv.examples.hallway.hallway_state.HallwayState</span></a></em><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState.root" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 HallwayState: initial state (vertex at index 0)</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_state.HallwayState.terminal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">terminal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState.terminal" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-True if this is a terminal vertex in the graph.</p>
 </dd></dl>
 
 </dd></dl>

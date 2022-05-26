@@ -6,7 +6,6 @@ graphenv.examples.tsp.tsp\_model.TSPModel
 .. autoclass:: TSPModel
    :members:
    :show-inheritance:
-   :inherited-members:
    :special-members: __call__, __add__, __mul__
 
    

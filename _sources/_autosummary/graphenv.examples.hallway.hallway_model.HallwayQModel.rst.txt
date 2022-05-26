@@ -6,7 +6,6 @@ graphenv.examples.hallway.hallway\_model.HallwayQModel
 .. autoclass:: HallwayQModel
    :members:
    :show-inheritance:
-   :inherited-members:
    :special-members: __call__, __add__, __mul__
 
    

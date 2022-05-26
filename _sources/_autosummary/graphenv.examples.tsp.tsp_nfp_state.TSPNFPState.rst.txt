@@ -6,7 +6,6 @@ graphenv.examples.tsp.tsp\_nfp\_state.TSPNFPState
 .. autoclass:: TSPNFPState
    :members:
    :show-inheritance:
-   :inherited-members:
    :special-members: __call__, __add__, __mul__
 
    

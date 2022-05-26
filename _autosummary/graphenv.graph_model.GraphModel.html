@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -69,12 +68,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -132,51 +125,7 @@
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_model.html#GraphModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_model.GraphModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Defines a RLLib compatible model for using RL algorithms on a
-GraphEnv.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">_action_mask_key</span> <span class="pre">observation</span></span></dt>
-<dd><p>space key for the action mask</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_model.GraphModel._vertex_observation_key">
-<span class="sig-name descname"><span class="pre">_vertex_observation_key</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel._vertex_observation_key" title="Permalink to this definition"></a></dt>
-<dd><p>observation space key for the vertex observations</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_mask">
-<span class="sig-name descname"><span class="pre">action_mask</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_mask" title="Permalink to this definition"></a></dt>
-<dd><p>bool tensor of valid next children</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.current_vertex_value">
-<span class="sig-name descname"><span class="pre">current_vertex_value</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.current_vertex_value" title="Permalink to this definition"></a></dt>
-<dd><p>value of current vertex</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_values">
-<span class="sig-name descname"><span class="pre">action_values</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_values" title="Permalink to this definition"></a></dt>
-<dd><p>values of each action vertex</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.current_vertex_weight">
-<span class="sig-name descname"><span class="pre">current_vertex_weight</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.current_vertex_weight" title="Permalink to this definition"></a></dt>
-<dd><p>weight of current vertex</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="graphenv.graph_model.GraphModel.action_weights">
-<span class="sig-name descname"><span class="pre">action_weights</span></span><a class="headerlink" href="#graphenv.graph_model.GraphModel.action_weights" title="Permalink to this definition"></a></dt>
-<dd><p>action weights of each action vertex</p>
-</dd></dl>
-
-<p>Initializes a GraphModel instance.</p>
+<p>Defines a RLLib compatible model for using RL algorithms on a GraphEnv.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_model.TSPModel &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.tsp_model.TSPModel &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -78,12 +77,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -143,26 +136,19 @@
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TSPModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/tsp_model.html#TSPModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="graphenv.examples.tsp.tsp_model.BaseTSPModel.html#graphenv.examples.tsp.tsp_model.BaseTSPModel" title="graphenv.examples.tsp.tsp_model.BaseTSPModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.examples.tsp.tsp_model.BaseTSPModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ray.rllib.models.tf.tf_modelv2.TFModelV2</span></code></p>
-<p>Initializes a GraphModel instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obs_space</strong> – The observation space to use.</p></li>
-<li><p><strong>action_space</strong> – The action space to use.</p></li>
-<li><p><strong>num_outputs</strong> – The number of scalar outputs per state to produce.</p></li>
-<li><p><strong>model_config</strong> – Config forwarded to TFModelV2.__init()__.</p></li>
-<li><p><strong>name</strong> – Config forwarded to TFModelV2.__init()__.</p></li>
-<li><p><strong>action_mask_key</strong> – Key used to retrieve the action mask from the observation
-space dictionary. Defaults to “action_mask”.</p></li>
-<li><p><strong>vertex_observation_key</strong> – Key used to retrieve the per-action vertex
-observations from the observation space dictionary. Defaults to
-“vertex_observations”.</p></li>
-<li><p><strong>num_nodes</strong> (<em>int</em>) – </p></li>
-<li><p><strong>hidden_dim</strong> (<em>int</em>) – </p></li>
-<li><p><strong>embed_dim</strong> (<em>int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
+<p>Initializes a TFModelV2 instance.</p>
+<p>Here is an example implementation for a subclass
+<code class="docutils literal notranslate"><span class="pre">MyModelClass(TFModelV2)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">MyModelClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">input_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">hidden_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="o">...</span><span class="p">)(</span><span class="n">input_layer</span><span class="p">)</span>
+    <span class="n">output_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="o">...</span><span class="p">)(</span><span class="n">hidden_layer</span><span class="p">)</span>
+    <span class="n">value_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="o">...</span><span class="p">)(</span><span class="n">hidden_layer</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span>
+        <span class="n">input_layer</span><span class="p">,</span> <span class="p">[</span><span class="n">output_layer</span><span class="p">,</span> <span class="n">value_layer</span><span class="p">])</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -170,46 +156,46 @@ observations from the observation space dictionary. Defaults to
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.context" title="graphenv.examples.tsp.tsp_model.TSPModel.context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">context</span></code></p></td>
 <td><p>Returns a contextmanager for the current TF graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.custom_loss" title="graphenv.examples.tsp.tsp_model.TSPModel.custom_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_loss</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_loss</span></code></p></td>
 <td><p>Override to customize the loss function used to optimize this model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.forward" title="graphenv.examples.tsp.tsp_model.TSPModel.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></p></td>
 <td><p>Tensorflow/Keras style forward method.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.forward_vertex" title="graphenv.examples.tsp.tsp_model.TSPModel.forward_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_vertex</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_vertex</span></code></p></td>
 <td><p>Forward function returning a value and weight tensor for the verticies observed via input_dict (a dict of tensors for each vertex property)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_batch</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.get_initial_state" title="graphenv.examples.tsp.tsp_model.TSPModel.get_initial_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_state</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_state</span></code></p></td>
 <td><p>Get the initial recurrent state values for the model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.import_from_h5" title="graphenv.examples.tsp.tsp_model.TSPModel.import_from_h5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_from_h5</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_from_h5</span></code></p></td>
 <td><p>Imports weights from an h5 file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.is_time_major" title="graphenv.examples.tsp.tsp_model.TSPModel.is_time_major"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_time_major</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_time_major</span></code></p></td>
 <td><p>If True, data for calling this ModelV2 must be in time-major format.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.last_output" title="graphenv.examples.tsp.tsp_model.TSPModel.last_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_output</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_output</span></code></p></td>
 <td><p>Returns the last output returned from calling the model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.metrics" title="graphenv.examples.tsp.tsp_model.TSPModel.metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></p></td>
 <td><p>Override to return custom metrics from your model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.register_variables" title="graphenv.examples.tsp.tsp_model.TSPModel.register_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_variables</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_variables</span></code></p></td>
 <td><p>Register the given list of variables with this model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.trainable_variables" title="graphenv.examples.tsp.tsp_model.TSPModel.trainable_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></p></td>
 <td><p>Returns the list of trainable variables for this model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.update_ops" title="graphenv.examples.tsp.tsp_model.TSPModel.update_ops"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_ops</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_ops</span></code></p></td>
 <td><p>Return the list of update ops for this model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.value_function" title="graphenv.examples.tsp.tsp_model.TSPModel.value_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_function</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_function</span></code></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">returns</dt>
 <dd class="field-odd"><p>A tensor of current state values.</p>
@@ -217,281 +203,20 @@ observations from the observation space dictionary. Defaults to
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_model.TSPModel.variables" title="graphenv.examples.tsp.tsp_model.TSPModel.variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></p></td>
 <td><p>Returns the list (or a dict) of variables for this model.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.__call__" title="Permalink to this definition"></a></dt>
-<dd><p>Call the model with the given input tensors and state.</p>
-<p>This is the method used by RLlib to execute the forward pass. It calls
-forward() internally after unpacking nested observation tensors.</p>
-<p>Custom models should override forward() instead of __call__.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>Union</em><em>[</em><em>ray.rllib.policy.sample_batch.SampleBatch</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Dictionary of input tensors.</p></li>
-<li><p><strong>state</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em>) – list of state tensors with sizes matching those
-returned by get_initial_state + the batch dimension</p></li>
-<li><p><strong>seq_lens</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em>) – 1D tensor holding input sequence lengths.</p></li>
+<li><p><strong>num_nodes</strong> (<em>int</em>) – </p></li>
+<li><p><strong>hidden_dim</strong> (<em>int</em>) – </p></li>
+<li><p><strong>embed_dim</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>A tuple consisting of the model output tensor of size</dt><dd><p>[BATCH, output_spec.size] or a list of tensors corresponding to
-output_spec.shape_list, and a list of state tensors of
-[BATCH, state_size_i] if any.</p>
-</dd>
 </dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<em>Any</em>, <em>List</em>[<em>Any</em>])</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.context">
-<span class="sig-name descname"><span class="pre">context</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.context" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a contextmanager for the current TF graph.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>contextlib.AbstractContextManager</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.custom_loss">
-<span class="sig-name descname"><span class="pre">custom_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy_loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.custom_loss" title="Permalink to this definition"></a></dt>
-<dd><p>Override to customize the loss function used to optimize this model.</p>
-<p>This can be used to incorporate self-supervised losses (by defining
-a loss over existing input and output tensors of this model), and
-supervised losses (by defining losses over a variable-sharing copy of
-this model’s layers).</p>
-<p>You can find an runnable example in examples/custom_loss.py.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>policy_loss</strong> (<em>Any</em>) – List of or single policy loss(es) from the policy.</p></li>
-<li><p><strong>loss_inputs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – map of input placeholders for rollout data.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of or scalar tensor for the customized loss(es) for this
-model.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Union</em>[<em>List</em>[<em>Any</em>], <em>Any</em>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Tensorflow/Keras style forward method. Sets up the computation graph used by
-this model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>tensorflow.python.framework.ops.Tensor</em><em>]</em>) – Observation input to the model. Consists of a dictionary
-including key ‘obs’ which stores the raw observation from the process.</p></li>
-<li><p><strong>state</strong> (<em>List</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>]</em>) – Tensor of current states. Passes through this function untouched.</p></li>
-<li><p><strong>seq_lens</strong> (<em>tensorflow.python.framework.ops.Tensor</em>) – Unused. Required by API.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(action weights tensor, state)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[tensorflow.python.framework.ops.Tensor, <em>List</em>[tensorflow.python.framework.ops.Tensor]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.forward_vertex">
-<span class="sig-name descname"><span class="pre">forward_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.forward_vertex" title="Permalink to this definition"></a></dt>
-<dd><p>Forward function returning a value and weight tensor for the verticies
-observed via input_dict (a dict of tensors for each vertex property)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_dict</strong> (<em>Union</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>Iterable</em><em>[</em><em>GraphModelObservation</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>GraphModelObservation</em><em>]</em><em>]</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>Iterable</em><em>[</em><em>GraphModelObservation</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>GraphModelObservation</em><em>]</em><em>]</em><em>]</em><em>]</em>) – per-vertex observations</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(value tensor, weight tensor) for the given observations</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[tensorflow.python.framework.ops.Tensor, tensorflow.python.framework.ops.Tensor]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.get_initial_state">
-<span class="sig-name descname"><span class="pre">get_initial_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.get_initial_state" title="Permalink to this definition"></a></dt>
-<dd><p>Get the initial recurrent state values for the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of np.array objects containing the initial hidden state
-of an RNN, if applicable.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>List</em>[numpy.ndarray]</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">get_initial_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>   <span class="k">return</span> <span class="p">[</span>
-<span class="gp">&gt;&gt;&gt; </span>       <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>       <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>   <span class="p">]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.import_from_h5">
-<span class="sig-name descname"><span class="pre">import_from_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.import_from_h5" title="Permalink to this definition"></a></dt>
-<dd><p>Imports weights from an h5 file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>h5_file</strong> (<em>str</em>) – The h5 file name to import weights from.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span> <span class="o">=</span> <span class="n">MyTrainer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span><span class="o">.</span><span class="n">import_policy_model_from_h5</span><span class="p">(</span><span class="s2">&quot;/tmp/weights.h5&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.is_time_major">
-<span class="sig-name descname"><span class="pre">is_time_major</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.is_time_major" title="Permalink to this definition"></a></dt>
-<dd><p>If True, data for calling this ModelV2 must be in time-major format.</p>
-<dl class="simple">
-<dt>Returns</dt><dd><p>Whether this ModelV2 requires a time-major (TxBx…) data
-format.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.last_output">
-<span class="sig-name descname"><span class="pre">last_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.last_output" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the last output returned from calling the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Any</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.metrics">
-<span class="sig-name descname"><span class="pre">metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.metrics" title="Permalink to this definition"></a></dt>
-<dd><p>Override to return custom metrics from your model.</p>
-<p>The stats will be reported as part of the learner stats, i.e.,
-info.learner.[policy_id, e.g. “default_policy”].model.key1=metric1</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The custom metrics for this model.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Dict</em>[str, <em>Any</em>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.register_variables">
-<span class="sig-name descname"><span class="pre">register_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.register_variables" title="Permalink to this definition"></a></dt>
-<dd><p>Register the given list of variables with this model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>variables</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.trainable_variables">
-<span class="sig-name descname"><span class="pre">trainable_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.trainable_variables" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the list of trainable variables for this model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>as_dict</strong> (<em>bool</em>) – Whether variables should be returned as dict-values
-(using descriptive keys).</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The list (or dict if <cite>as_dict</cite> is True) of all trainable
-(tf)/requires_grad (torch) variables of this ModelV2.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Union</em>[<em>List</em>[<em>Any</em>], <em>Dict</em>[str, <em>Any</em>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.update_ops">
-<span class="sig-name descname"><span class="pre">update_ops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.update_ops" title="Permalink to this definition"></a></dt>
-<dd><p>Return the list of update ops for this model.</p>
-<p>For example, this should include any BatchNorm update ops.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>List</em>[<em>Any</em>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.value_function">
-<span class="sig-name descname"><span class="pre">value_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.value_function" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A tensor of current state values.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_model.TSPModel.variables">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_model.TSPModel.variables" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the list (or a dict) of variables for this model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>as_dict</strong> (<em>bool</em>) – Whether variables should be returned as dict-values
-(using descriptive str keys).</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The list (or dict if <cite>as_dict</cite> is True) of all variables of this
-ModelV2.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Union</em>[<em>List</em>[<em>Any</em>], <em>Dict</em>[str, <em>Any</em>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>

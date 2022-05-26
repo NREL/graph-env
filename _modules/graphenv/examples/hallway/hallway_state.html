@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.hallway.hallway_state &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.hallway.hallway_state &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -55,12 +54,6 @@
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/graphenv.html">graphenv</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -104,6 +97,10 @@
 <span class="sd">    The hallway graph is a simple bidirectional chain of verticies. The root</span>
 <span class="sd">    vertex is on one end of the chain and the terminal goal vertex is on the</span>
 <span class="sd">    opposite end. The length is configurable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        corridor_length (int): length of the vertex chain</span>
+<span class="sd">        cur_pos (int, optional): initial vertex index. Defaults to 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -111,12 +108,6 @@
         <span class="n">corridor_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">cur_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Initializes this HallwayState.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            corridor_length (int): length of the vertex chain</span>
-<span class="sd">            cur_pos (int, optional): initial vertex index. Defaults to 0.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span> <span class="o">=</span> <span class="n">corridor_length</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">=</span> <span class="n">cur_pos</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor &mdash; graphenv 0+untagged.1.ga896cde documentation</title>
+  <title>graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor &mdash; graphenv 0+untagged.1.ga4ba668 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -40,8 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../background/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../background/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
 <ul>
@@ -78,12 +77,6 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">About</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#principal-investigator">Principal Investigator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about/about.html#team">Team</a></li>
 </ul>
 
         </div>
@@ -150,7 +143,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.construct_feature_matrices" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.construct_feature_matrices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">construct_feature_matrices</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">construct_feature_matrices</span></code></p></td>
 <td><p><div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 0.3.0.</span></p>
 </div>
@@ -159,10 +152,10 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.create_nx_graph" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.create_nx_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_nx_graph</span></code></a></p></td>
 <td><p>Given an input structure object, convert it to a networkx digraph with node, edge, and graph features assigned.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.from_json" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></p></td>
 <td><p>Set's the class's data with attributes taken from the save file</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_connectivity" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_connectivity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_connectivity</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_connectivity</span></code></p></td>
 <td><p>Get the graph connectivity from the networkx graph</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_edge_features" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_edge_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_features</span></code></a></p></td>
@@ -174,7 +167,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_node_features" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_node_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_node_features</span></code></a></p></td>
 <td><p>Given a list of node features from the nx.Graph, processes and concatenates them to an array.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.to_json" title="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></p></td>
 <td><p>Serialize the classes's data to a json file</p></td>
 </tr>
 </tbody>
@@ -203,48 +196,6 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.__call__" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Convert an input graph structure into a featurized set of node, edge,</dt><dd><p>and graph-level features.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>structure</strong> (<em>Any</em>) – An input graph structure (i.e., molecule, crystal, etc.)</p></li>
-<li><p><strong>train</strong> (<em>bool</em>) – A training flag passed to <cite>Tokenizer</cite> member attributes</p></li>
-<li><p><strong>max_num_nodes</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – A size attribute passed to <cite>get_node_features</cite>, defaults to the
-number of nodes in the current graph</p></li>
-<li><p><strong>max_num_edges</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – A size attribute passed to <cite>get_edge_features</cite>, defaults to the
-number of edges in the current graph</p></li>
-<li><p><strong>kwargs</strong> – Additional features or parameters passed to <cite>construct_nx_graph</cite></p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of key, array pairs as a single sample.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Dict[str, np.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.construct_feature_matrices">
-<span class="sig-name descname"><span class="pre">construct_feature_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.construct_feature_matrices" title="Permalink to this definition"></a></dt>
-<dd><div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 0.3.0: </span><cite>construct_feature_matrices</cite> will be removed in 0.4.0, use
-<cite>__call__</cite> instead</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Dict</em>[str, numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.create_nx_graph">
 <span class="sig-name descname"><span class="pre">create_nx_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/tsp/tsp_preprocessor.html#TSPPreprocessor.create_nx_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.create_nx_graph" title="Permalink to this definition"></a></dt>
 <dd><p>Given an input structure object, convert it to a networkx digraph
@@ -263,42 +214,6 @@ additional features in addition to the graph object.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>nx.DiGraph</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.from_json">
-<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.from_json" title="Permalink to this definition"></a></dt>
-<dd><p>Set’s the class’s data with attributes taken from the save file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_connectivity">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_connectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.get_connectivity" title="Permalink to this definition"></a></dt>
-<dd><p>Get the graph connectivity from the networkx graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<em>networkx.classes.digraph.DiGraph</em>) – The input graph</p></li>
-<li><p><strong>max_num_edges</strong> (<em>int</em>) – len(graph.edges), or the specified maximum number of graph edges</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of with the single ‘connectivity’ key, containing an (n,2)
-array of (node_index, node_index) pairs indicating the start and end
-nodes for each edge.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Dict[str, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -370,20 +285,6 @@ all nodes in the graph.</p>
 <dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.tfrecord_features">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tfrecord_features</span></span><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.tfrecord_features" title="Permalink to this definition"></a></dt>
 <dd><p>Useful feature for storing preprocessed outputs in tfrecord files</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#graphenv.examples.tsp.tsp_preprocessor.TSPPreprocessor.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Serialize the classes’s data to a json file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
