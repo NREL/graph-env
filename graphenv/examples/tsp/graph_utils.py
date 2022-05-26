@@ -4,6 +4,10 @@ from typing import Tuple
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+from networkx.algorithms.approximation.traveling_salesman import (
+    greedy_tsp,
+    traveling_salesman_problem,
+)
 from scipy.spatial import distance_matrix
 
 
@@ -109,3 +113,17 @@ def random_tsp(G, weight="weight", source=None, seed=None):
         nodeset.remove(next_node)
     cycle.append(cycle[0])
     return cycle
+
+
+def calc_greedy_dist(G: nx.Graph) -> float:
+    """Calculate the distance for a greedy search tour over the given graph.
+    Parameters:
+        G: The Graph should be a complete weighted undirected graph.
+
+    Returns:
+        dist: a positive distance for the resulting search
+    """
+    path = traveling_salesman_problem(G, cycle=True, method=greedy_tsp)
+    return sum(
+        [G[path[i]][path[i + 1]]["weight"] for i in range(0, G.number_of_nodes())]
+    )

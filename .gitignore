@@ -146,4 +146,6 @@ Untitled*.ipynb
 *.out
 *.code-workspace
 .DS_Store
+
+experiments/tsp/env.sh
 docs/source/_autosummary

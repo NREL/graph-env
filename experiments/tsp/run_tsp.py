@@ -1,5 +1,7 @@
 import argparse
 import logging
+import os
+from pathlib import Path
 
 import ray
 from graphenv.examples.tsp.graph_utils import make_complete_planar_graph
@@ -123,17 +125,20 @@ if __name__ == "__main__":
     # Define custom_model, config, and state based on GNN yes/no
     if args.use_gnn:
         custom_model = "TSPGNNModel"
-        custom_model_config = {"num_messages": 1, "embed_dim": 32}
+        custom_model_config = {"num_messages": 3, "embed_dim": 32}
         ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
         _tag = "gnn"
-        state = TSPNFPState(G, max_num_neighbors=args.max_num_neighbors)
+        state = TSPNFPState(
+            lambda: make_complete_planar_graph(N=N),
+            max_num_neighbors=args.max_num_neighbors,
+        )
     else:
         custom_model_config = {"hidden_dim": 256, "embed_dim": 256, "num_nodes": N}
         custom_model = "TSPModel"
         Model = TSPQModel if args.run in ["DQN", "R2D2"] else TSPModel
         ModelCatalog.register_custom_model(custom_model, Model)
         _tag = f"basic{args.run}"
-        state = TSPState(G)
+        state = TSPState(lambda: make_complete_planar_graph(N=N))
 
     # Register env name with hyperparams that will help tracking experiments
     # via tensorboard
@@ -142,10 +147,7 @@ if __name__ == "__main__":
 
     config = {
         "env": env_name,
-        "env_config": {
-            "state": state,
-            "max_num_children": G.number_of_nodes(),
-        },
+        "env_config": {"state": state, "max_num_children": G.number_of_nodes()},
         "model": {
             "custom_model": custom_model,
             "custom_model_config": custom_model_config,
@@ -153,14 +155,14 @@ if __name__ == "__main__":
         "num_workers": args.num_workers,  # parallelism
         "num_gpus": args.num_gpus,
         "framework": "tf2",
-        "eager_tracing": False,
+        "eager_tracing": True,
         "rollout_fragment_length": N,  # a multiple of N (collect whole episodes)
         "train_batch_size": args.rollouts_per_worker * N * args.num_workers,
         "lr": args.lr,
         "log_level": args.log_level,
         "evaluation_config": {"explore": False},
         "evaluation_interval": 1,
-        "evaluation_duration": 1,
+        "evaluation_duration": 100,
     }
     run_config.update(config)
 
@@ -174,7 +176,7 @@ if __name__ == "__main__":
         args.run,
         config=run_config,
         stop=stop,
-        local_dir="/scratch/dbiagion/ray_results",
+        local_dir=Path("/scratch", os.environ["USER"], "ray_results"),
     )
 
     ray.shutdown()
