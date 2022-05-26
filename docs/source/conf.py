@@ -80,5 +80,5 @@ html_show_sourcelink = (
 autodoc_inherit_docstrings = True  # If no docstring, inherit from base class
 set_type_checking_flag = True  # Enable 'expensive' imports for sphinx_autodoc_typehints
 nbsphinx_allow_errors = True  # Continue through Jupyter errors
-# autodoc_typehints = "description" # Sphinx-native method. Not as good as sphinx_autodoc_typehints
+autodoc_typehints = "description"
 add_module_names = False  # Remove namespaces from class/method signatures

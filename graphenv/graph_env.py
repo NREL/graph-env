@@ -35,18 +35,20 @@ class GraphEnv(gym.Env):
     _vertex_observation_key: str
 
     def __init__(self, env_config: EnvContext) -> None:
-        """Initializes a GraphEnv instance.
+        """Initializes a GraphEnv instance. The `env_config` dictionary should contain
+        the following keys:
+
+        state (N): Current vertex
+        max_num_children (int): maximum number of children considered at a time
+        action_mask_key (str, optional): key under which the action mask is
+            stored in the root observation space dict. Defaults to "action_mask"
+        vertex_observation_key (str, optional): key under which the per-action
+            vertex observations are stored in the root observation space dict.
+            Defaults to "vertex_observations".
 
         Args:
             env_config (dict): A dictionary of parameters, required to conform with
-                rllib's environment initialization. Should contain the following keys:
-                state (N): Current vertex
-                max_num_children (int): maximum number of children considered at a time
-                action_mask_key (str, optional): key under which the action mask is
-                    stored in the root observation space dict. Defaults to "action_mask"
-                vertex_observation_key (str, optional): key under which the per-action
-                    vertex observations are stored in the root observation space dict.
-                    Defaults to "vertex_observations".
+                rllib's environment initialization.
         """
         super().__init__()
 
