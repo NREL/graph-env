@@ -29,12 +29,13 @@ Tutorials
    :caption: TSP Example
 
    examples/tsp-env
+   cloud/tsp_on_aws
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Package Reference
+   :hidden:
+   :caption: API reference
 
-   graphenv
+   _autosummary/graphenv
 
 .. toctree::
    :maxdepth: 1

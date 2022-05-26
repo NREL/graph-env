@@ -148,3 +148,4 @@ Untitled*.ipynb
 .DS_Store
 
 experiments/tsp/env.sh
+docs/source/_autosummary

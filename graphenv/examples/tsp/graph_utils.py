@@ -107,7 +107,6 @@ def random_tsp(G, weight="weight", source=None, seed=None):
     nodeset = set(G)
     nodeset.remove(source)
     cycle = [source]
-    next_node = source
     while nodeset:
         next_node = random.choice(list(nodeset))
         cycle.append(next_node)
