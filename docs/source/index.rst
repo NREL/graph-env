@@ -31,10 +31,10 @@ Tutorials
    examples/tsp-env
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Package Reference
+   :hidden:
+   :caption: API reference
 
-   graphenv
+   _autosummary/graphenv
 
 .. toctree::
    :maxdepth: 1
