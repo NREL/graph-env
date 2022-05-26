@@ -29,6 +29,7 @@ Tutorials
    :caption: TSP Example
 
    examples/tsp-env
+   cloud/tsp_on_aws
 
 .. toctree::
    :maxdepth: 2
