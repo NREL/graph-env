@@ -16,8 +16,8 @@ class BaseHallwayModel(GraphModel):
         hidden_dim (int, optional): The number of hidden layers to use. Defaults to 1.
     """
 
-    #: tf.keras.Model: The Keras model used to evaluate vertex observations
-    base_model: tf.keras.Model
+    # #: tf.keras.Model: The Keras model used to evaluate vertex observations
+    # base_model: "tf.keras.Model"
 
     def __init__(
         self,
