@@ -170,6 +170,10 @@ class GraphEnv(gym.Env):
         action_mask = np.zeros(num_children, dtype=bool)
         action_observations = [self.state.observation] * num_children
 
+        assert (
+            len(self.state.children) <= self.max_num_children
+        ), f"{self.state} exceeds the maximum number of children"
+
         for i, successor in enumerate(self.state.children):
             action_observations[i + 1] = successor.observation
             action_mask[i + 1] = True
