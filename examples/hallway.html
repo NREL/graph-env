@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hallway Environment Example &mdash; graphenv 0+untagged.1.g9241ca8 documentation</title>
+  <title>Hallway Environment Example &mdash; graphenv 0+untagged.1.gef60e5f documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -60,7 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#HallwayModel">HallwayModel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#HallwayEnv">HallwayEnv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#GraphEnv">GraphEnv</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#HallwayEnv-Demo">HallwayEnv Demo</a><ul>
@@ -562,24 +562,9 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 </pre></div>
 </div>
 </section>
-<section id="HallwayEnv">
-<h2>HallwayEnv<a class="headerlink" href="#HallwayEnv" title="Permalink to this headline"></a></h2>
-<p>(See <code class="docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_env</span></code> for the full implementation).</p>
+<section id="GraphEnv">
+<h2>GraphEnv<a class="headerlink" href="#GraphEnv" title="Permalink to this headline"></a></h2>
 <p>The final step in implementing the hallway problem with graphenv is the creation of the environment itself. This requires only an instance of the HallwayState as well as a <code class="docutils literal notranslate"><span class="pre">max_num_actions</span></code> argument that limits the maximum number of next states that we expect to confront during the search. As we’ll demonstrate below, the graphenv library takes care of masking invalid actions.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HallwayEnv</span><span class="p">(</span><span class="n">GraphEnv</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convience class of a GraphEnv using a HallwayState as the vertex state.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">EnvContext</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">HallwayState</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;corridor_length&quot;</span><span class="p">]),</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="n">max_num_actions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="HallwayEnv-Demo">
@@ -590,14 +575,14 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <h2>Env creation<a class="headerlink" href="#Env-creation" title="Permalink to this headline"></a></h2>
 <p>First, we create the environment with any needed configuration – here, just the corridor length.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">graphenv.examples.hallway.hallway_env</span> <span class="kn">import</span> <span class="n">HallwayEnv</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">graphenv.examples.hallway.hallway_state</span> <span class="kn">import</span> <span class="n">HallwayState</span>
+<span class="kn">from</span> <span class="nn">graphenv.graph_env</span> <span class="kn">import</span> <span class="n">GraphEnv</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;corridor_length&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-
-<span class="n">env</span> <span class="o">=</span> <span class="n">HallwayEnv</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">HallwayState</span><span class="p">(</span><span class="n">corridor_length</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GraphEnv</span><span class="p">({</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="n">state</span><span class="p">,</span> <span class="s1">&#39;max_num_children&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -606,7 +591,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <h2>Reset<a class="headerlink" href="#Reset" title="Permalink to this headline"></a></h2>
 <p>Next, let’s call reset and examine the returned observation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -634,7 +619,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <p>Unlike the observation data which are 1-indexed w.r.t. the child vertices, the action space is 0-indexed.</p>
 <p>To step the environment, we need to select a valid action. Because only the first child vertex is valid, the only valid action is 0. If we pass 1, we get an error.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Not a valid action</span>
@@ -648,13 +633,14 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area docutils container">
+<div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-oops, not a valid action!
+/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:128: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
+  warnings.warn(
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># A valid action</span>
@@ -664,7 +650,7 @@ oops, not a valid action!
 </div>
 <p>Let’s take a look at the output from step.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
@@ -683,7 +669,7 @@ oops, not a valid action!
 </div>
 <p>Recall that, from the middle hallway position (<span class="math notranslate nohighlight">\(i=1\)</span>), there are two valid actions. Accordingly, the <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> for both child vertices, and <code class="docutils literal notranslate"><span class="pre">cur_pos</span></code> have their index values, <span class="math notranslate nohighlight">\(i=0\)</span> and <span class="math notranslate nohighlight">\(i=2\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step reward for non-terminal state.</span>
@@ -700,7 +686,7 @@ oops, not a valid action!
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Not a terminal state.</span>
@@ -717,7 +703,7 @@ False
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata here indicates the cur_pos of the current state.</span>
@@ -726,7 +712,7 @@ False
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -739,7 +725,7 @@ False
 <h2>Step to the terminal vertex<a class="headerlink" href="#Step-to-the-terminal-vertex" title="Permalink to this headline"></a></h2>
 <p>We now have two valid actions – let’s choose the one that solves the problem.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -747,7 +733,7 @@ False
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
@@ -766,7 +752,7 @@ False
 </div>
 <p>Notice that, now, all <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> values are <code class="docutils literal notranslate"><span class="pre">False</span></code> because there are no child vertices from the terminal vertex.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># It is a terminal state.</span>
@@ -783,7 +769,7 @@ True
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Positive, random reward for terminal state.</span>
@@ -796,24 +782,8 @@ True
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-1.3339214623078812
+0.9481703475936902
 </pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
 </div>
 </section>
 </section>
