@@ -52,9 +52,8 @@ def test_reward(hallway_state: HallwayState):
 
 
 def test_graphenv_reset(hallway_env: GraphEnv):
-    obs = hallway_env.reset()
-    assert len(obs["action_mask"]) == 3
-    assert obs["action_mask"].sum() == 1
+    _ = hallway_env.reset()
+    assert hallway_env.state.cur_pos == 0
 
 
 def test_graphenv_step(hallway_env: GraphEnv):
