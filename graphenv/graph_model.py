@@ -1,9 +1,9 @@
 import logging
-import math
 from abc import abstractmethod
-from typing import Any, Dict, Iterable, List, Mapping, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 import gym
+import numpy as np
 from ray.rllib.models.repeated_values import RepeatedValues
 from ray.rllib.utils.typing import TensorStructType
 
@@ -157,7 +157,7 @@ def _stack_batch_dim(obs: TensorStructType, tensorlib: Any = tf):
         else:
             batch_dims = list(obs.shape[:2])
 
-        flat_batch_dim = math.prod(batch_dims)
+        flat_batch_dim = np.prod(batch_dims)
         return tensorlib.reshape(obs, [flat_batch_dim] + list(obs.shape[2:]))
 
 
