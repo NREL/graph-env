@@ -1,21 +1,12 @@
 import logging
 from abc import abstractmethod
-from typing import Dict, Iterable, List, Mapping, Tuple, Union
+from typing import Dict, List, Tuple
 
 import gym
 
-import graphenv.space_util as space_util
 from graphenv import tf
 
 logger = logging.getLogger(__file__)
-
-
-# Type defining the contents of vertex observations as passed to forward()
-GraphModelObservation = Union[
-    tf.Tensor,
-    Iterable["GraphModelObservation"],
-    Mapping[str, "GraphModelObservation"],
-]
 
 
 class GraphModel:
@@ -43,8 +34,6 @@ class GraphModel:
         model_config: Dict,
         name: str,
         *args,
-        action_mask_key: str = "action_mask",
-        vertex_observation_key: str = "vertex_observations",
         **kwargs,
     ):
 
@@ -57,8 +46,6 @@ class GraphModel:
             *args,
             **kwargs,
         )
-        self._action_mask_key = action_mask_key
-        self._vertex_observation_key = vertex_observation_key
         self.current_vertex_value = None
         self.action_values = None
         self.current_vertex_weight = None
@@ -85,47 +72,79 @@ class GraphModel:
         Returns:
             (action weights tensor, state)
         """
-        # Extract the available children tensor from the observation.
-        observation = input_dict["obs"]
-
-        vertex_observations = observation[self._vertex_observation_key]
-        flattened_observations = space_util.flatten_first_dim(vertex_observations)
-
         # flat_values is structured like this: (vertex values, vertex weights)
-        flat_values = self.forward_vertex(flattened_observations)
+        # flat_values = self.forward_vertex(input_dict["obs_flat"])
+        # print()
+        # print("The unpacked input tensors:", input_dict["obs"], flush=True)
+        # print()
+        # print("Unbatched repeat dim", input_dict["obs"].unbatch_repeat_dim())
+        # print()
+        # print("outer repetition", input_dict["obs"].lengths)
+        # print()
+        # print("The flattened input tensors:", input_dict["obs_flat"], flush=True)
 
-        action_mask = observation[self._action_mask_key]
+        unbatched = input_dict["obs"].unbatch_repeat_dim()
+        if isinstance(unbatched, dict):
+            unbatched = [
+                {key: unbatched[key][i] for key in unbatched.keys()}
+                for i in range(input_dict["obs"].max_len)
+            ]
 
-        # Ray likes to make bool arrays into floats, so we undo it here.
-        if action_mask.dtype != tf.dtypes.bool:
-            action_mask = tf.equal(action_mask, 1.0)
+        current_vertex_inputs, *action_inputs = unbatched
 
-        # mask out invalid children and get current vertex value
-        def mask_values(values):
-            """Returns the value for the current vertex (index 0 of values),
-            and the masked values of the action verticies.
-
-            Args:
-                values: Tensor to apply the action mask to.
-
-            Returns:
-                (a current state value tensor, a masked action values tensor)
-            """
-
-            values = tf.reshape(values, tf.shape(action_mask))
-            current_value = values[:, 0]
-            masked_action_values = tf.where(
-                action_mask[:, 1:], values[:, 1:], values.dtype.min
+        action_weights = []
+        for i, input in enumerate(action_inputs):
+            _, action_weight = self.forward_vertex(input)
+            # print(f"length test {i + 1}: ", input_dict["obs"].lengths > i + 1)
+            action_weight = tf.where(
+                input_dict["obs"].lengths > i + 1,
+                action_weight,
+                action_weight.dtype.min,
             )
-            return current_value, masked_action_values
+            action_weights += [action_weight]
 
-        (self.current_vertex_value, self.action_values), (
-            self.current_vertex_weight,
-            self.action_weights,
-        ) = tuple((mask_values(v) for v in flat_values))
+        action_weights = tf.concat(action_weights, -1)
+        # print("action weights: ", action_weights)
 
+        self.current_vertex_value, _ = self.forward_vertex(current_vertex_inputs)
+        self.current_vertex_value = tf.squeeze(self.current_vertex_value, [-1])
         self.total_value = self._forward_total_value()
-        return self.action_weights, state
+
+        # _, action_weights = zip(
+        #     *
+
+        # print("action weights: ", action_weights)
+
+        return action_weights, state
+
+        # return self.forward_vertex(input_dict)
+
+        # # mask out invalid children and get current vertex value
+        # def mask_values(values):
+        #     """Returns the value for the current vertex (index 0 of values),
+        #     and the masked values of the action verticies.
+
+        #     Args:
+        #         values: Tensor to apply the action mask to.
+
+        #     Returns:
+        #         (a current state value tensor, a masked action values tensor)
+        #     """
+
+        #     values = tf.reshape(values, tf.shape(action_mask))
+        #     current_value = values[:, 0]
+        #     masked_action_values = tf.where(
+        #         action_mask[:, 1:], values[:, 1:], values.dtype.min
+        #     )
+        #     return current_value, masked_action_values
+
+        # (self.current_vertex_value, self.action_values), (
+        #     self.current_vertex_weight,
+        #     self.action_weights,
+        # ) = tuple((mask_values(v) for v in flat_values))
+
+        # self.total_value = self._forward_total_value()
+        # return self.action_weights, state
 
     def value_function(self):
         """
@@ -138,7 +157,7 @@ class GraphModel:
     @abstractmethod
     def forward_vertex(
         self,
-        input_dict: GraphModelObservation,
+        input_dict,
     ) -> Tuple[tf.Tensor, tf.Tensor]:
         """Forward function returning a value and weight tensor for the verticies
         observed via input_dict (a dict of tensors for each vertex property)
@@ -164,4 +183,5 @@ class GraphModel:
         Returns:
             current value tensor
         """
+        # print("value: ", self.current_vertex_value)
         return self.current_vertex_value
