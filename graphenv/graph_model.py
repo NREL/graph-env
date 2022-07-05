@@ -12,14 +12,6 @@ from graphenv import tf
 logger = logging.getLogger(__file__)
 
 
-# Type defining the contents of vertex observations as passed to forward()
-GraphModelObservation = Union[
-    tf.Tensor,
-    Iterable["GraphModelObservation"],
-    Mapping[str, "GraphModelObservation"],
-]
-
-
 class GraphModel:
     """Defines a RLLib compatible model for using RL algorithms on a GraphEnv.
 

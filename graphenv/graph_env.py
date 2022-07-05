@@ -7,7 +7,6 @@ import numpy as np
 from ray.rllib.env.env_context import EnvContext
 from ray.rllib.utils.spaces.repeated import Repeated
 
-# import graphenv.space_util as space_util
 from graphenv.vertex import V
 
 logger = logging.getLogger(__name__)
