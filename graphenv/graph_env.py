@@ -5,8 +5,8 @@ from typing import Dict, Tuple
 import gym
 import numpy as np
 from ray.rllib.env.env_context import EnvContext
+from ray.rllib.utils.spaces.repeated import Repeated
 
-import graphenv.space_util as space_util
 from graphenv.vertex import V
 
 logger = logging.getLogger(__name__)
@@ -47,9 +47,6 @@ class GraphEnv(gym.Env):
     #: the action space, a Discrete space over `max_num_children`
     action_space: gym.Space
 
-    _action_mask_key: str
-    _vertex_observation_key: str
-
     def __init__(self, env_config: EnvContext) -> None:
         super().__init__()
 
@@ -57,25 +54,11 @@ class GraphEnv(gym.Env):
         self.state = env_config["state"]
         self.max_num_children = env_config["max_num_children"]
 
-        try:
-            self._action_mask_key = env_config["action_mask_key"]
-        except KeyError:
-            self._action_mask_key = "action_mask"
-
-        try:
-            self._vertex_observation_key = env_config["vertex_observation_key"]
-        except KeyError:
-            self._vertex_observation_key = "vertex_observations"
-
         num_vertex_observations = 1 + self.max_num_children
-        self.observation_space = gym.spaces.Dict(
-            {
-                self._action_mask_key: gym.spaces.MultiBinary(num_vertex_observations),
-                self._vertex_observation_key: space_util.broadcast_space(
-                    self.state.observation_space, (num_vertex_observations,)
-                ),
-            }
+        self.observation_space = Repeated(
+            self.state.observation_space, num_vertex_observations
         )
+
         self.action_space = gym.spaces.Discrete(self.max_num_children)
         logger.debug("leaving graphenv construction")
 
@@ -166,22 +149,8 @@ class GraphEnv(gym.Env):
 
         """
 
-        num_children = 1 + self.max_num_children
-        action_mask = np.zeros(num_children, dtype=bool)
-        action_observations = [self.state.observation] * num_children
-
         assert (
             len(self.state.children) <= self.max_num_children
         ), f"{self.state} exceeds the maximum number of children"
 
-        for i, successor in enumerate(self.state.children):
-            action_observations[i + 1] = successor.observation
-            action_mask[i + 1] = True
-
-        return {
-            self._action_mask_key: action_mask,
-            self._vertex_observation_key: space_util.stack_observations(
-                self.observation_space[self._vertex_observation_key],
-                action_observations,
-            ),
-        }
+        return [state.observation for state in (self.state, *self.state.children)]

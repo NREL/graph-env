@@ -1,21 +1,14 @@
 import logging
 from abc import abstractmethod
-from typing import Dict, Iterable, List, Mapping, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 import gym
+from ray.rllib.models.repeated_values import RepeatedValues
+from ray.rllib.utils.typing import TensorStructType, TensorType
 
-import graphenv.space_util as space_util
 from graphenv import tf
 
 logger = logging.getLogger(__file__)
-
-
-# Type defining the contents of vertex observations as passed to forward()
-GraphModelObservation = Union[
-    tf.Tensor,
-    Iterable["GraphModelObservation"],
-    Mapping[str, "GraphModelObservation"],
-]
 
 
 class GraphModel:
@@ -43,8 +36,6 @@ class GraphModel:
         model_config: Dict,
         name: str,
         *args,
-        action_mask_key: str = "action_mask",
-        vertex_observation_key: str = "vertex_observations",
         **kwargs,
     ):
 
@@ -57,8 +48,6 @@ class GraphModel:
             *args,
             **kwargs,
         )
-        self._action_mask_key = action_mask_key
-        self._vertex_observation_key = vertex_observation_key
         self.current_vertex_value = None
         self.action_values = None
         self.current_vertex_weight = None
@@ -68,10 +57,10 @@ class GraphModel:
 
     def forward(
         self,
-        input_dict: Dict[str, tf.Tensor],
-        state: List[tf.Tensor],
-        seq_lens: tf.Tensor,
-    ) -> Tuple[tf.Tensor, List[tf.Tensor]]:
+        input_dict: Dict[str, TensorType],
+        state: List[TensorType],
+        seq_lens: TensorType,
+    ) -> Tuple[TensorType, List[TensorType]]:
         """
         Tensorflow/Keras style forward method. Sets up the computation graph used by
         this model.
@@ -85,47 +74,19 @@ class GraphModel:
         Returns:
             (action weights tensor, state)
         """
-        # Extract the available children tensor from the observation.
-        observation = input_dict["obs"]
 
-        vertex_observations = observation[self._vertex_observation_key]
-        flattened_observations = space_util.flatten_first_dim(vertex_observations)
-
-        # flat_values is structured like this: (vertex values, vertex weights)
-        flat_values = self.forward_vertex(flattened_observations)
-
-        action_mask = observation[self._action_mask_key]
-
-        # Ray likes to make bool arrays into floats, so we undo it here.
-        if action_mask.dtype != tf.dtypes.bool:
-            action_mask = tf.equal(action_mask, 1.0)
+        mask = _create_action_mask(input_dict["obs"], tf)
+        flattened_observations = _stack_batch_dim(input_dict["obs"], mask, tf)
+        flat_values, flat_weights = self.forward_vertex(flattened_observations)
 
         # mask out invalid children and get current vertex value
-        def mask_values(values):
-            """Returns the value for the current vertex (index 0 of values),
-            and the masked values of the action verticies.
-
-            Args:
-                values: Tensor to apply the action mask to.
-
-            Returns:
-                (a current state value tensor, a masked action values tensor)
-            """
-
-            values = tf.reshape(values, tf.shape(action_mask))
-            current_value = values[:, 0]
-            masked_action_values = tf.where(
-                action_mask[:, 1:], values[:, 1:], values.dtype.min
-            )
-            return current_value, masked_action_values
-
-        (self.current_vertex_value, self.action_values), (
-            self.current_vertex_weight,
-            self.action_weights,
-        ) = tuple((mask_values(v) for v in flat_values))
+        self.current_vertex_value, _ = _mask_and_split_values(
+            flat_values, input_dict["obs"], tf
+        )
+        _, action_weights = _mask_and_split_values(flat_weights, input_dict["obs"], tf)
 
         self.total_value = self._forward_total_value()
-        return self.action_weights, state
+        return action_weights, state
 
     def value_function(self):
         """
@@ -138,8 +99,8 @@ class GraphModel:
     @abstractmethod
     def forward_vertex(
         self,
-        input_dict: GraphModelObservation,
-    ) -> Tuple[tf.Tensor, tf.Tensor]:
+        input_dict,
+    ) -> Tuple[TensorType, TensorType]:
         """Forward function returning a value and weight tensor for the verticies
         observed via input_dict (a dict of tensors for each vertex property)
 
@@ -165,3 +126,89 @@ class GraphModel:
             current value tensor
         """
         return self.current_vertex_value
+
+
+def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
+    """Create an action mask array of valid actions from a given RepeatedValues tensor.
+
+    Args:
+        obs (RepeatedValues): The input observations
+        tensorlib (Any, optional): A reference to the current framework. Defaults to tf.
+
+    Raises:
+        NotImplementedError: if the given framework is not supported
+
+    Returns:
+        TensorType: The boolean mask for valid actions (includes the current state as
+        the first index).
+    """
+    if tensorlib == tf:
+        # the "dummy batch" rllib provides to initialize the policy model is a matrix of
+        # all zeros, which ends with a batch size of zero provided to the policy model.
+        # We can assume that at least the input state is valid, and clip the row_lengths
+        # vector to a minimum of 1 per (state, *actions) entry.
+        row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
+        num_elements = tf.reduce_sum(row_lengths)
+        action_mask = tf.RaggedTensor.from_row_lengths(
+            tf.ones(num_elements, dtype=tf.bool),
+            row_lengths,
+        ).to_tensor(shape=(None, obs.max_len))
+
+    else:
+        raise NotImplementedError
+
+    return action_mask
+
+
+def _apply_mask(
+    values: TensorType, action_mask: TensorType, tensorlib: Any = tf
+) -> TensorType:
+    if tensorlib == tf:
+
+        return tf.boolean_mask(values, action_mask)
+    else:
+        raise NotImplementedError
+
+
+def _stack_batch_dim(
+    obs: TensorStructType, mask: TensorType, tensorlib: Any = tf
+) -> TensorType:
+    if isinstance(obs, dict):
+        return {k: _stack_batch_dim(v, mask, tensorlib) for k, v in obs.items()}
+
+    elif isinstance(obs, tuple):
+        return tuple(_stack_batch_dim(u, mask, tensorlib) for u in obs)
+
+    elif isinstance(obs, RepeatedValues):
+        return _stack_batch_dim(obs.values, mask, tensorlib)
+
+    else:
+        return _apply_mask(obs, mask, tensorlib)
+
+
+def _mask_and_split_values(
+    flat_values: TensorType, obs: RepeatedValues, tensorlib: Any = tf
+) -> Tuple[TensorType]:
+    """Returns the value for the current vertex (index 0 of values),
+    and the masked values of the action verticies.
+    Args:
+        values: Tensor to apply the action mask to.
+    Returns:
+        (a current state value tensor, a masked action values tensor)
+    """
+
+    if tensorlib == tf:
+        row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
+        flat_values = tf.squeeze(flat_values, axis=[-1])
+        values = tf.RaggedTensor.from_row_lengths(flat_values, row_lengths)
+        values = values.to_tensor(
+            default_value=values.dtype.min,
+            shape=(None, obs.max_len),
+        )
+        current_value = values[:, 0]
+        masked_action_values = values[:, 1:]
+
+    else:
+        raise NotImplementedError
+
+    return current_value, masked_action_values
