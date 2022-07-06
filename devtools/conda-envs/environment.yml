@@ -11,3 +11,6 @@ dependencies:
   - pip:
     - nfp >= 0.3.11
     - "ray[tune,rllib]"
+    - torch
+    - torchaudio
+    - torchvision
