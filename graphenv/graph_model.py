@@ -3,6 +3,7 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
 
 import gym
+import numpy as np
 from ray.rllib.models.repeated_values import RepeatedValues
 from ray.rllib.utils.typing import TensorStructType, TensorType
 
@@ -143,7 +144,11 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
         the first index).
     """
     if tensorlib == tf:
-        row_lengths = tf.cast(obs.lengths, tf.int32)
+        # the "dummy batch" rllib provides to initialize the policy model is a matrix of
+        # all zeros, which ends with a batch size of zero provided to the policy model.
+        # We can assume that at least the input state is valid, and clip the row_lengths
+        # vector to a minimum of 1 per (state, *actions) entry.
+        row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
         num_elements = tf.reduce_sum(row_lengths)
         action_mask = tf.RaggedTensor.from_row_lengths(
             tf.ones(num_elements, dtype=tf.bool),
@@ -194,7 +199,7 @@ def _mask_and_split_values(
     """
 
     if tensorlib == tf:
-        row_lengths = tf.cast(obs.lengths, tf.int32)
+        row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
         flat_values = tf.squeeze(flat_values, axis=[-1])
         values = tf.RaggedTensor.from_row_lengths(flat_values, row_lengths)
         values = values.to_tensor(
