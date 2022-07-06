@@ -166,9 +166,18 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
 def _apply_mask(
     values: TensorType, action_mask: TensorType, tensorlib: Any = tf
 ) -> TensorType:
-    if tensorlib == tf:
 
+    if tensorlib == tf:
         return tf.boolean_mask(values, action_mask)
+
+    elif tensorlib == torch:
+        # masked_select returns a 1D tensor so needs reshaping. Pretty sure the last
+        # dimension will always be the feature dim -- will action_mask always be 2d?
+        # The .view(-1, feature_dim) call will fail if more than 2d.
+        feature_dim = values.shape[-1]
+        values = torch.masked_select(values, action_mask.view(*action_mask.shape, 1))
+        return values.view(-1, feature_dim)
+
     else:
         raise NotImplementedError
 
@@ -211,6 +220,16 @@ def _mask_and_split_values(
         current_value = values[:, 0]
         masked_action_values = values[:, 1:]
 
+    elif tensorlib == torch:
+        row_lengths = torch.clip(obs.lengths, 1, torch.iinfo(torch.long).max)
+        flat_values = flat_values.squeeze(dim=-1)
+        value_index = torch.LongTensor(
+            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])])
+        _fmin = torch.finfo(flat_values.dtype).min
+        values = _fmin * torch.ones(len(row_lengths), obs.max_len, dtype=flat_values.dtype)
+        values.index_put_(tuple(value_index.t()), flat_values)
+        current_value = values[:, 0]
+        masked_action_values = values[:, 1:]
     else:
         raise NotImplementedError
 

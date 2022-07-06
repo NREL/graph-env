@@ -60,6 +60,13 @@ def test_stack_batch_dim_tf(obs_tf):
     assert stacked_obs["key2"].shape == (19, 4)
 
 
+def test_stack_batch_dim_torch(obs_torch):
+    mask = _create_action_mask(obs_torch, torch)
+    stacked_obs = _stack_batch_dim(obs_torch, mask, torch)
+    assert stacked_obs["key1"].shape == (19, 2)
+    assert stacked_obs["key2"].shape == (19, 4)
+
+
 def test_mask_and_split_values_tf(vals_tf, obs_tf):
     state_vals, action_vals = _mask_and_split_values(vals_tf, obs_tf, tf)
     assert state_vals.numpy().shape == (5,)
@@ -68,3 +75,13 @@ def test_mask_and_split_values_tf(vals_tf, obs_tf):
 
     for length, val_row in zip([1, 4, 8, 2, 4], action_vals.numpy()):
         assert np.allclose(val_row[length - 1 :], action_vals.dtype.min)
+
+
+def test_mask_and_split_values_torch(vals_torch, obs_torch):
+    state_vals, action_vals = _mask_and_split_values(vals_torch, obs_torch, torch)
+    assert state_vals.numpy().shape == (5,)
+    assert action_vals.numpy().shape == (5, 9)
+    assert state_vals.numpy().min() >= 0  # make sure these don't get masked
+
+    for length, val_row in zip([1, 4, 8, 2, 4], action_vals.numpy()):
+        assert np.allclose(val_row[length - 1 :], torch.finfo(action_vals.dtype).min)
