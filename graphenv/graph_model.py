@@ -3,7 +3,6 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
 
 import gym
-import numpy as np
 from ray.rllib.models.repeated_values import RepeatedValues
 from ray.rllib.utils.typing import TensorStructType, TensorType
 
