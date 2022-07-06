@@ -3,9 +3,8 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
 
 import gym
-import numpy as np
 from ray.rllib.models.repeated_values import RepeatedValues
-from ray.rllib.utils.typing import TensorStructType
+from ray.rllib.utils.typing import TensorStructType, TensorType
 
 from graphenv import tf
 
@@ -76,15 +75,15 @@ class GraphModel:
             (action weights tensor, state)
         """
 
-        flattened_observations = _stack_batch_dim(input_dict["obs"], tf)
+        mask = _create_action_mask(input_dict["obs"], tf)
+        flattened_observations = _stack_batch_dim(input_dict["obs"], mask, tf)
         flat_values, flat_weights = self.forward_vertex(flattened_observations)
 
-        # Create the action mask array from the `lengths` keyword
-        mask = _create_action_mask(input_dict["obs"], tf)
-
         # mask out invalid children and get current vertex value
-        self.current_vertex_value, _ = _mask_and_split_values(flat_values, mask, tf)
-        _, action_weights = _mask_and_split_values(flat_weights, mask, tf)
+        self.current_vertex_value, _ = _mask_and_split_values(
+            flat_values, input_dict["obs"], tf
+        )
+        _, action_weights = _mask_and_split_values(flat_weights, input_dict["obs"], tf)
 
         self.total_value = self._forward_total_value()
         return action_weights, state
@@ -126,42 +125,66 @@ class GraphModel:
         Returns:
             current value tensor
         """
-        # print("value: ", self.current_vertex_value)
         return self.current_vertex_value
 
 
-def _stack_batch_dim(obs: TensorStructType, tensorlib: Any = tf):
-    if isinstance(obs, dict):
-        return {k: _stack_batch_dim(v, tensorlib) for k, v in obs.items()}
+def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
+    """Create an action mask array of valid actions from a given RepeatedValues tensor.
 
-    elif isinstance(obs, tuple):
-        return tuple(_stack_batch_dim(u, tensorlib) for u in obs)
+    Args:
+        obs (RepeatedValues): The input observations
+        tensorlib (Any, optional): A reference to the current framework. Defaults to tf.
 
-    elif isinstance(obs, RepeatedValues):
-        return _stack_batch_dim(obs.values, tensorlib)
+    Raises:
+        NotImplementedError: if the given framework is not supported
+
+    Returns:
+        TensorType: The boolean mask for valid actions (includes the current state as
+        the first index).
+    """
+    if tensorlib == tf:
+        row_lengths = tf.cast(obs.lengths, tf.int32)
+        num_elements = tf.reduce_sum(row_lengths)
+        action_mask = tf.RaggedTensor.from_row_lengths(
+            tf.ones(num_elements, dtype=tf.bool),
+            row_lengths,
+        ).to_tensor(shape=(None, obs.max_len))
 
     else:
-        if tensorlib == tf:
+        raise NotImplementedError
 
-            def get_value(v):
-                if v is None:
-                    return -1
-                elif isinstance(v, int):
-                    return v
-                elif v.value is None:
-                    return -1
-                else:
-                    return v.value
-
-            batch_dims = [get_value(v) for v in obs.shape[:2]]
-        else:
-            batch_dims = list(obs.shape[:2])
-
-        flat_batch_dim = np.prod(batch_dims)
-        return tensorlib.reshape(obs, [flat_batch_dim] + list(obs.shape[2:]))
+    return action_mask
 
 
-def _mask_and_split_values(values, action_mask, tensorlib: Any = tf):
+def _apply_mask(
+    values: TensorType, action_mask: TensorType, tensorlib: Any = tf
+) -> TensorType:
+    if tensorlib == tf:
+
+        return tf.boolean_mask(values, action_mask)
+    else:
+        raise NotImplementedError
+
+
+def _stack_batch_dim(
+    obs: TensorStructType, mask: TensorType, tensorlib: Any = tf
+) -> TensorType:
+    if isinstance(obs, dict):
+        return {k: _stack_batch_dim(v, mask, tensorlib) for k, v in obs.items()}
+
+    elif isinstance(obs, tuple):
+        return tuple(_stack_batch_dim(u, mask, tensorlib) for u in obs)
+
+    elif isinstance(obs, RepeatedValues):
+        return _stack_batch_dim(obs.values, mask, tensorlib)
+
+    else:
+        return _apply_mask(obs, mask, tensorlib)
+
+
+def _mask_and_split_values(
+    flat_values: TensorType, obs: RepeatedValues, tensorlib: Any = tf
+) -> Tuple[TensorType]:
     """Returns the value for the current vertex (index 0 of values),
     and the masked values of the action verticies.
     Args:
@@ -171,26 +194,17 @@ def _mask_and_split_values(values, action_mask, tensorlib: Any = tf):
     """
 
     if tensorlib == tf:
-        values = tf.reshape(values, tf.shape(action_mask))
-        current_value = values[:, 0]
-        masked_action_values = tf.where(
-            action_mask[:, 1:], values[:, 1:], values.dtype.min
+        row_lengths = tf.cast(obs.lengths, tf.int32)
+        flat_values = tf.squeeze(flat_values, axis=[-1])
+        values = tf.RaggedTensor.from_row_lengths(flat_values, row_lengths)
+        values = values.to_tensor(
+            default_value=values.dtype.min,
+            shape=(None, obs.max_len),
         )
+        current_value = values[:, 0]
+        masked_action_values = values[:, 1:]
+
     else:
         raise NotImplementedError
 
     return current_value, masked_action_values
-
-
-def _create_action_mask(obs, tensorlib: Any = tf):
-    if tensorlib == tf:
-        row_lengths = tf.cast(obs.lengths, tf.int32)
-        num_elements = tf.reduce_sum(row_lengths)
-        action_mask = tf.RaggedTensor.from_row_lengths(
-            tf.ones(num_elements, dtype=tf.bool),
-            row_lengths,
-        ).to_tensor(shape=(None, obs.max_len))
-    else:
-        raise NotImplementedError
-
-    return action_mask
