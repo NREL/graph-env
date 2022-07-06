@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0+untagged.1.gef60e5f documentation</title>
+  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0+untagged.1.g2596885 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -64,7 +64,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphenv.space_util.html">graphenv.space_util</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
 </li>
@@ -123,7 +122,7 @@
 <h1>graphenv.graph_model.GraphModel<a class="headerlink" href="#graphenv-graph-model-graphmodel" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.graph_model.GraphModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'action_mask'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_observation_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vertex_observations'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_model.html#GraphModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_model.GraphModel" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_model.html#GraphModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_model.GraphModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Defines a RLLib compatible model for using RL algorithms on a GraphEnv.</p>
 <dl class="field-list simple">
@@ -134,9 +133,9 @@
 <li><p><strong>num_outputs</strong> (<em>int</em>) – The number of scalar outputs per state to produce.</p></li>
 <li><p><strong>model_config</strong> (<em>Dict</em>) – Config forwarded to TFModelV2.__init()__.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – Config forwarded to TFModelV2.__init()__.</p></li>
-<li><p><strong>action_mask_key</strong> (<em>str</em>) – Key used to retrieve the action mask from the observation
+<li><p><strong>action_mask_key</strong> – Key used to retrieve the action mask from the observation
 space dictionary. Defaults to “action_mask”.</p></li>
-<li><p><strong>vertex_observation_key</strong> (<em>str</em>) – Key used to retrieve the per-action vertex
+<li><p><strong>vertex_observation_key</strong> – Key used to retrieve the per-action vertex
 observations from the observation space dictionary. Defaults to
 “vertex_observations”.</p></li>
 </ul>
@@ -173,17 +172,17 @@ this model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>tensorflow.python.framework.ops.Tensor</em><em>]</em>) – Observation input to the model. Consists of a dictionary
+<li><p><strong>input_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Observation input to the model. Consists of a dictionary
 including key ‘obs’ which stores the raw observation from the process.</p></li>
-<li><p><strong>state</strong> (<em>List</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>]</em>) – Tensor of current states. Passes through this function untouched.</p></li>
-<li><p><strong>seq_lens</strong> (<em>tensorflow.python.framework.ops.Tensor</em>) – Unused. Required by API.</p></li>
+<li><p><strong>state</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – Tensor of current states. Passes through this function untouched.</p></li>
+<li><p><strong>seq_lens</strong> (<em>Any</em>) – Unused. Required by API.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(action weights tensor, state)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[tensorflow.python.framework.ops.Tensor, <em>List</em>[tensorflow.python.framework.ops.Tensor]]</p>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Any</em>, <em>List</em>[<em>Any</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,13 +194,13 @@ including key ‘obs’ which stores the raw observation from the process.</p></
 observed via input_dict (a dict of tensors for each vertex property)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_dict</strong> (<em>Union</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>Iterable</em><em>[</em><em>GraphModelObservation</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>GraphModelObservation</em><em>]</em><em>]</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>Iterable</em><em>[</em><em>GraphModelObservation</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>GraphModelObservation</em><em>]</em><em>]</em><em>]</em><em>]</em>) – per-vertex observations</p>
+<dd class="field-odd"><p><strong>input_dict</strong> – per-vertex observations</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(value tensor, weight tensor) for the given observations</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[tensorflow.python.framework.ops.Tensor, tensorflow.python.framework.ops.Tensor]</p>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Any</em>, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>

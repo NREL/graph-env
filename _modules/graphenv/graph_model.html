@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.gef60e5f documentation</title>
+  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.g2596885 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -83,22 +83,15 @@
   <h1>Source code for graphenv.graph_model</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.models.repeated_values</span> <span class="kn">import</span> <span class="n">RepeatedValues</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.utils.typing</span> <span class="kn">import</span> <span class="n">TensorStructType</span><span class="p">,</span> <span class="n">TensorType</span>
 
-<span class="kn">import</span> <span class="nn">graphenv.space_util</span> <span class="k">as</span> <span class="nn">space_util</span>
 <span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-
-
-<span class="c1"># Type defining the contents of vertex observations as passed to forward()</span>
-<span class="n">GraphModelObservation</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
-    <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">Iterable</span><span class="p">[</span><span class="s2">&quot;GraphModelObservation&quot;</span><span class="p">],</span>
-    <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;GraphModelObservation&quot;</span><span class="p">],</span>
-<span class="p">]</span>
 
 
 <div class="viewcode-block" id="GraphModel"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel">[docs]</a><span class="k">class</span> <span class="nc">GraphModel</span><span class="p">:</span>
@@ -126,8 +119,6 @@
         <span class="n">model_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-        <span class="n">action_mask_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;action_mask&quot;</span><span class="p">,</span>
-        <span class="n">vertex_observation_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;vertex_observations&quot;</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
 
@@ -140,8 +131,6 @@
             <span class="o">*</span><span class="n">args</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_action_mask_key</span> <span class="o">=</span> <span class="n">action_mask_key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_vertex_observation_key</span> <span class="o">=</span> <span class="n">vertex_observation_key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_values</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_weight</span> <span class="o">=</span> <span class="kc">None</span>
@@ -151,10 +140,10 @@
 
 <div class="viewcode-block" id="GraphModel.forward"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">input_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
-        <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
-        <span class="n">seq_lens</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="n">input_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TensorType</span><span class="p">],</span>
+        <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TensorType</span><span class="p">],</span>
+        <span class="n">seq_lens</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TensorType</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tensorflow/Keras style forward method. Sets up the computation graph used by</span>
 <span class="sd">        this model.</span>
@@ -168,47 +157,19 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            (action weights tensor, state)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Extract the available children tensor from the observation.</span>
-        <span class="n">observation</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">]</span>
 
-        <span class="n">vertex_observations</span> <span class="o">=</span> <span class="n">observation</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertex_observation_key</span><span class="p">]</span>
-        <span class="n">flattened_observations</span> <span class="o">=</span> <span class="n">space_util</span><span class="o">.</span><span class="n">flatten_first_dim</span><span class="p">(</span><span class="n">vertex_observations</span><span class="p">)</span>
-
-        <span class="c1"># flat_values is structured like this: (vertex values, vertex weights)</span>
-        <span class="n">flat_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_vertex</span><span class="p">(</span><span class="n">flattened_observations</span><span class="p">)</span>
-
-        <span class="n">action_mask</span> <span class="o">=</span> <span class="n">observation</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_mask_key</span><span class="p">]</span>
-
-        <span class="c1"># Ray likes to make bool arrays into floats, so we undo it here.</span>
-        <span class="k">if</span> <span class="n">action_mask</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">tf</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">bool</span><span class="p">:</span>
-            <span class="n">action_mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">action_mask</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">_create_action_mask</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">tf</span><span class="p">)</span>
+        <span class="n">flattened_observations</span> <span class="o">=</span> <span class="n">_stack_batch_dim</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tf</span><span class="p">)</span>
+        <span class="n">flat_values</span><span class="p">,</span> <span class="n">flat_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_vertex</span><span class="p">(</span><span class="n">flattened_observations</span><span class="p">)</span>
 
         <span class="c1"># mask out invalid children and get current vertex value</span>
-        <span class="k">def</span> <span class="nf">mask_values</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
-<span class="sd">            and the masked values of the action verticies.</span>
-
-<span class="sd">            Args:</span>
-<span class="sd">                values: Tensor to apply the action mask to.</span>
-
-<span class="sd">            Returns:</span>
-<span class="sd">                (a current state value tensor, a masked action values tensor)</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-
-            <span class="n">values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">action_mask</span><span class="p">))</span>
-            <span class="n">current_value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-            <span class="n">masked_action_values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-                <span class="n">action_mask</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">min</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="n">current_value</span><span class="p">,</span> <span class="n">masked_action_values</span>
-
-        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_values</span><span class="p">),</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_weight</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">action_weights</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">mask_values</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">flat_values</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_mask_and_split_values</span><span class="p">(</span>
+            <span class="n">flat_values</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">tf</span>
+        <span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">action_weights</span> <span class="o">=</span> <span class="n">_mask_and_split_values</span><span class="p">(</span><span class="n">flat_weights</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">tf</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">total_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_total_value</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_weights</span><span class="p">,</span> <span class="n">state</span></div>
+        <span class="k">return</span> <span class="n">action_weights</span><span class="p">,</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="GraphModel.value_function"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.value_function">[docs]</a>    <span class="k">def</span> <span class="nf">value_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -221,8 +182,8 @@
 <div class="viewcode-block" id="GraphModel.forward_vertex"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.forward_vertex">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">forward_vertex</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">input_dict</span><span class="p">:</span> <span class="n">GraphModelObservation</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="n">input_dict</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">,</span> <span class="n">TensorType</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Forward function returning a value and weight tensor for the verticies</span>
 <span class="sd">        observed via input_dict (a dict of tensors for each vertex property)</span>
 
@@ -248,6 +209,92 @@
 <span class="sd">            current value tensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_action_mask</span><span class="p">(</span><span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create an action mask array of valid actions from a given RepeatedValues tensor.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obs (RepeatedValues): The input observations</span>
+<span class="sd">        tensorlib (Any, optional): A reference to the current framework. Defaults to tf.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError: if the given framework is not supported</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        TensorType: The boolean mask for valid actions (includes the current state as</span>
+<span class="sd">        the first index).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="n">tf</span><span class="p">:</span>
+        <span class="c1"># the &quot;dummy batch&quot; rllib provides to initialize the policy model is a matrix of</span>
+        <span class="c1"># all zeros, which ends with a batch size of zero provided to the policy model.</span>
+        <span class="c1"># We can assume that at least the input state is valid, and clip the row_lengths</span>
+        <span class="c1"># vector to a minimum of 1 per (state, *actions) entry.</span>
+        <span class="n">row_lengths</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">lengths</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+        <span class="n">num_elements</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">)</span>
+        <span class="n">action_mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_row_lengths</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_elements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span>
+            <span class="n">row_lengths</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">to_tensor</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">max_len</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">return</span> <span class="n">action_mask</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_mask</span><span class="p">(</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">action_mask</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="n">tf</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">boolean_mask</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">action_mask</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">def</span> <span class="nf">_stack_batch_dim</span><span class="p">(</span>
+    <span class="n">obs</span><span class="p">:</span> <span class="n">TensorStructType</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_stack_batch_dim</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_stack_batch_dim</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">RepeatedValues</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_stack_batch_dim</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_apply_mask</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_mask_and_split_values</span><span class="p">(</span>
+    <span class="n">flat_values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
+<span class="sd">    and the masked values of the action verticies.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        values: Tensor to apply the action mask to.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (a current state value tensor, a masked action values tensor)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="n">tf</span><span class="p">:</span>
+        <span class="n">row_lengths</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">lengths</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+        <span class="n">flat_values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">flat_values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_row_lengths</span><span class="p">(</span><span class="n">flat_values</span><span class="p">,</span> <span class="n">row_lengths</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">to_tensor</span><span class="p">(</span>
+            <span class="n">default_value</span><span class="o">=</span><span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">max_len</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">current_value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">masked_action_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">return</span> <span class="n">current_value</span><span class="p">,</span> <span class="n">masked_action_values</span>
 </pre></div>
 
            </div>

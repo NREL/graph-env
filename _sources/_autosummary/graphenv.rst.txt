@@ -30,6 +30,5 @@
    graphenv.graph_env
    graphenv.graph_model
    graphenv.graph_model_bellman_mixin
-   graphenv.space_util
    graphenv.vertex
 
