@@ -57,10 +57,10 @@ class GraphModel:
 
     def forward(
         self,
-        input_dict: Dict[str, tf.Tensor],
-        state: List[tf.Tensor],
-        seq_lens: tf.Tensor,
-    ) -> Tuple[tf.Tensor, List[tf.Tensor]]:
+        input_dict: Dict[str, TensorType],
+        state: List[TensorType],
+        seq_lens: TensorType,
+    ) -> Tuple[TensorType, List[TensorType]]:
         """
         Tensorflow/Keras style forward method. Sets up the computation graph used by
         this model.
@@ -100,7 +100,7 @@ class GraphModel:
     def forward_vertex(
         self,
         input_dict,
-    ) -> Tuple[tf.Tensor, tf.Tensor]:
+    ) -> Tuple[TensorType, TensorType]:
         """Forward function returning a value and weight tensor for the verticies
         observed via input_dict (a dict of tensors for each vertex property)
 

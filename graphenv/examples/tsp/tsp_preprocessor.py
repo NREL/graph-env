@@ -3,7 +3,6 @@ from typing import Dict, Optional
 import networkx as nx
 import nfp
 import numpy as np
-from graphenv import tf
 
 
 class TSPPreprocessor(nfp.Preprocessor):
@@ -44,11 +43,11 @@ class TSPPreprocessor(nfp.Preprocessor):
         return {}
 
     @property
-    def output_signature(self) -> Dict[str, tf.TensorSpec]:
+    def output_signature(self):
         pass
 
     @property
-    def padding_values(self) -> Dict[str, tf.constant]:
+    def padding_values(self):
         pass
 
     @property

@@ -4,7 +4,7 @@ from graphenv import tf
 from graphenv.graph_model import GraphModel
 from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
-from ray.rllib.utils.typing import TensorStructType
+from ray.rllib.utils.typing import TensorStructType, TensorType
 
 layers = tf.keras.layers
 
@@ -47,14 +47,14 @@ class BaseHallwayModel(GraphModel):
     def forward_vertex(
         self,
         input_dict: TensorStructType,
-    ) -> Tuple[tf.Tensor, tf.Tensor]:
+    ) -> Tuple[TensorType, TensorType]:
         """Forward function computing the evaluation of vertex observations.
 
         Args:
             input_dict (TensorStructType): vertex observations
 
         Returns:
-            Tuple[tf.Tensor, tf.Tensor]: Tensor of value and weights for each
+            Tuple[TensorType, TensorType]: Tensor of value and weights for each
                 input observation.
         """
         return tuple(self.base_model(input_dict))

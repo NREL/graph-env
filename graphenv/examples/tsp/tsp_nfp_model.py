@@ -6,7 +6,7 @@ from graphenv.graph_model import GraphModel
 from graphenv.graph_model_bellman_mixin import GraphModelBellmanMixin
 from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
-from ray.rllib.utils.typing import TensorStructType
+from ray.rllib.utils.typing import TensorStructType, TensorType
 
 layers = tf.keras.layers
 
@@ -95,7 +95,7 @@ class BaseTSPGNNModel(GraphModel):
     def forward_vertex(
         self,
         input_dict: TensorStructType,
-    ) -> Tuple[tf.Tensor, tf.Tensor]:
+    ) -> Tuple[TensorType, TensorType]:
         return tuple(self.base_model(input_dict))
 
 
