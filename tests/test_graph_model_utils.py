@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from graphenv import tf
+from graphenv import tf, torch
 from graphenv.graph_model import (
     _create_action_mask,
     _mask_and_split_values,
@@ -22,12 +22,34 @@ def obs_tf():
 
 
 @pytest.fixture
+def obs_torch():
+    return RepeatedValues(
+        {
+            "key1": torch.rand(5, 10, 2),
+            "key2": torch.rand(5, 10, 4),
+        },
+        lengths=torch.LongTensor([1, 4, 8, 2, 4]),
+        max_len=10,
+    )
+
+
+@pytest.fixture
 def vals_tf():
     return tf.constant(np.random.rand(19, 1))
 
 
+@pytest.fixture
+def vals_torch():
+    return torch.rand(19, 1)
+
+
 def test_create_action_mask_tf(obs_tf):
     mask = _create_action_mask(obs_tf, tf)
+    assert np.alltrue(mask.numpy().sum(1) == np.array([1, 4, 8, 2, 4]))
+
+
+def test_create_action_mask_torch(obs_torch):
+    mask = _create_action_mask(obs_torch, torch)
     assert np.alltrue(mask.numpy().sum(1) == np.array([1, 4, 8, 2, 4]))
 
 

@@ -1,6 +1,6 @@
 import logging
 import warnings
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 
 import gym
 import numpy as np
@@ -23,12 +23,7 @@ class GraphEnv(gym.Env):
     The `env_config` dictionary should contain the following keys::
 
         state (N): Current vertex
-        max_num_children (int): maximum number of children considered at a time
-        action_mask_key (str, optional): key under which the action mask is
-            stored in the root observation space dict. Defaults to "action_mask"
-        vertex_observation_key (str, optional): key under which the per-action
-            vertex observations are stored in the root observation space dict.
-            Defaults to "vertex_observations".
+        max_num_children (int): maximum number of children considered at a time.
 
     Args:
         env_config (dict): A dictionary of parameters, required to conform with
@@ -128,7 +123,7 @@ class GraphEnv(gym.Env):
         )
         return result
 
-    def make_observation(self) -> Dict[str, any]:
+    def make_observation(self) -> List[any]:
         """
         Makes an observation for this state which includes observations of
         each possible action, and the current state.
@@ -143,9 +138,8 @@ class GraphEnv(gym.Env):
         are offset by one index to accomodate that.
 
         Returns:
-            Dict[str, any] : Dictionary consisting of {self._action_mask_key : bool
-                action mask Numpy array, self._vertex_observation_key : stacked vertex
-                observations}
+
+            List[any]: A list of next state observations.
 
         """
 

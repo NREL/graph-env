@@ -6,7 +6,7 @@ import gym
 from ray.rllib.models.repeated_values import RepeatedValues
 from ray.rllib.utils.typing import TensorStructType, TensorType
 
-from graphenv import tf
+from graphenv import tf, torch
 
 logger = logging.getLogger(__file__)
 
@@ -20,12 +20,6 @@ class GraphModel:
         num_outputs: The number of scalar outputs per state to produce.
         model_config: Config forwarded to TFModelV2.__init()__.
         name: Config forwarded to TFModelV2.__init()__.
-        action_mask_key: Key used to retrieve the action mask from the observation
-            space dictionary. Defaults to "action_mask".
-        vertex_observation_key: Key used to retrieve the per-action vertex
-            observations from the observation space dictionary. Defaults to
-            "vertex_observations".
-
     """
 
     def __init__(
@@ -153,6 +147,15 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
             tf.ones(num_elements, dtype=tf.bool),
             row_lengths,
         ).to_tensor(shape=(None, obs.max_len))
+
+    elif tensorlib == torch:
+        # Integer torch index tensors must be long type
+        row_lengths = torch.clip(obs.lengths, 1, torch.iinfo(torch.long).max)
+        num_elements = row_lengths.sum().item()
+        action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=bool)
+        mask_index = torch.LongTensor(
+            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])])
+        action_mask.index_put_(tuple(mask_index.t()), torch.ones(num_elements, dtype=bool))
 
     else:
         raise NotImplementedError
