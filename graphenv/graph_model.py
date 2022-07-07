@@ -1,6 +1,6 @@
 import logging
 from abc import abstractmethod
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List, Tuple
 
 import gym
 from ray.rllib.models.repeated_values import RepeatedValues
@@ -21,6 +21,8 @@ class GraphModel:
         model_config: Config forwarded to TFModelV2.__init()__.
         name: Config forwarded to TFModelV2.__init()__.
     """
+
+    _tensorlib = "tf"
 
     def __init__(
         self,
@@ -48,6 +50,7 @@ class GraphModel:
         self.action_weights = None
         self.num_outputs = num_outputs
         logger.debug(f"num_outputs: {num_outputs}")
+        assert self._tensorlib is not None
 
     def forward(
         self,
@@ -69,15 +72,19 @@ class GraphModel:
             (action weights tensor, state)
         """
 
-        mask = _create_action_mask(input_dict["obs"], tf)
-        flattened_observations = _stack_batch_dim(input_dict["obs"], mask, tf)
+        mask = _create_action_mask(input_dict["obs"], self.framework)
+        flattened_observations = _stack_batch_dim(
+            input_dict["obs"], mask, self._tensorlib
+        )
         flat_values, flat_weights = self.forward_vertex(flattened_observations)
 
         # mask out invalid children and get current vertex value
         self.current_vertex_value, _ = _mask_and_split_values(
-            flat_values, input_dict["obs"], tf
+            flat_values, input_dict["obs"], self._tensorlib
         )
-        _, action_weights = _mask_and_split_values(flat_weights, input_dict["obs"], tf)
+        _, action_weights = _mask_and_split_values(
+            flat_weights, input_dict["obs"], self._tensorlib
+        )
 
         self.total_value = self._forward_total_value()
         return action_weights, state
@@ -122,7 +129,11 @@ class GraphModel:
         return self.current_vertex_value
 
 
-def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
+class TorchGraphModel(GraphModel):
+    _tensorlib = "torch"
+
+
+def _create_action_mask(obs: RepeatedValues, tensorlib: str = "tf") -> TensorType:
     """Create an action mask array of valid actions from a given RepeatedValues tensor.
 
     Args:
@@ -136,7 +147,7 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
         TensorType: The boolean mask for valid actions (includes the current state as
         the first index).
     """
-    if tensorlib == tf:
+    if tensorlib == "tf":
         # the "dummy batch" rllib provides to initialize the policy model is a matrix of
         # all zeros, which ends with a batch size of zero provided to the policy model.
         # We can assume that at least the input state is valid, and clip the row_lengths
@@ -148,32 +159,32 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
             row_lengths,
         ).to_tensor(shape=(None, obs.max_len))
 
-    elif tensorlib == torch:
+    elif tensorlib == "torch":
         # Integer torch index tensors must be long type
-        row_lengths = torch.clip(obs.lengths, 1, torch.iinfo(torch.long).max)
+        row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
         num_elements = row_lengths.sum().item()
         action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=bool)
         mask_index = torch.LongTensor(
-            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])]
+            [(i, j) for i in range(len(row_lengths)) for j in range(row_lengths[i])]
         )
         action_mask.index_put_(
             tuple(mask_index.t()), torch.ones(num_elements, dtype=bool)
         )
 
     else:
-        raise NotImplementedError
+        raise NotImplementedError(f"tensorlib {tensorlib} not implemented")
 
     return action_mask
 
 
 def _apply_mask(
-    values: TensorType, action_mask: TensorType, tensorlib: Any = tf
+    values: TensorType, action_mask: TensorType, tensorlib: str = "tf"
 ) -> TensorType:
 
-    if tensorlib == tf:
+    if tensorlib == "tf":
         return tf.boolean_mask(values, action_mask)
 
-    elif tensorlib == torch:
+    elif tensorlib == "torch":
         # masked_select returns a 1D tensor so needs reshaping. Pretty sure the last
         # dimension will always be the feature dim -- will action_mask always be 2d?
         # The .view(-1, feature_dim) call will fail if more than 2d.
@@ -182,11 +193,11 @@ def _apply_mask(
         return values.view(-1, feature_dim)
 
     else:
-        raise NotImplementedError
+        raise NotImplementedError(f"tensorlib {tensorlib} not implemented")
 
 
 def _stack_batch_dim(
-    obs: TensorStructType, mask: TensorType, tensorlib: Any = tf
+    obs: TensorStructType, mask: TensorType, tensorlib: str = "tf"
 ) -> TensorType:
     if isinstance(obs, dict):
         return {k: _stack_batch_dim(v, mask, tensorlib) for k, v in obs.items()}
@@ -202,7 +213,7 @@ def _stack_batch_dim(
 
 
 def _mask_and_split_values(
-    flat_values: TensorType, obs: RepeatedValues, tensorlib: Any = tf
+    flat_values: TensorType, obs: RepeatedValues, tensorlib: str = "tf"
 ) -> Tuple[TensorType]:
     """Returns the value for the current vertex (index 0 of values),
     and the masked values of the action verticies.
@@ -212,7 +223,7 @@ def _mask_and_split_values(
         (a current state value tensor, a masked action values tensor)
     """
 
-    if tensorlib == tf:
+    if tensorlib == "tf":
         row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
         flat_values = tf.squeeze(flat_values, axis=[-1])
         values = tf.RaggedTensor.from_row_lengths(flat_values, row_lengths)
@@ -223,11 +234,11 @@ def _mask_and_split_values(
         current_value = values[:, 0]
         masked_action_values = values[:, 1:]
 
-    elif tensorlib == torch:
-        row_lengths = torch.clip(obs.lengths, 1, torch.iinfo(torch.long).max)
+    elif tensorlib == "torch":
+        row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
         flat_values = flat_values.squeeze(dim=-1)
         value_index = torch.LongTensor(
-            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])]
+            [(i, j) for i in range(len(row_lengths)) for j in range(row_lengths[i])]
         )
         _fmin = torch.finfo(flat_values.dtype).min
         values = _fmin * torch.ones(
@@ -237,6 +248,6 @@ def _mask_and_split_values(
         current_value = values[:, 0]
         masked_action_values = values[:, 1:]
     else:
-        raise NotImplementedError
+        raise NotImplementedError(f"tensorlib {tensorlib} not implemented")
 
     return current_value, masked_action_values
