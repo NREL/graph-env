@@ -7,6 +7,7 @@ dependencies:
   - pytest
   - tensorflow
   - networkx
+  - pytorch
   - pip
   - pip:
     - nfp >= 0.3.11
