@@ -1,6 +1,6 @@
 import logging
 import warnings
-from typing import Dict, Tuple, List
+from typing import Dict, List, Tuple
 
 import gym
 import numpy as np

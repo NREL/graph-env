@@ -154,8 +154,11 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: Any = tf) -> TensorType:
         num_elements = row_lengths.sum().item()
         action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=bool)
         mask_index = torch.LongTensor(
-            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])])
-        action_mask.index_put_(tuple(mask_index.t()), torch.ones(num_elements, dtype=bool))
+            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])]
+        )
+        action_mask.index_put_(
+            tuple(mask_index.t()), torch.ones(num_elements, dtype=bool)
+        )
 
     else:
         raise NotImplementedError
@@ -224,9 +227,12 @@ def _mask_and_split_values(
         row_lengths = torch.clip(obs.lengths, 1, torch.iinfo(torch.long).max)
         flat_values = flat_values.squeeze(dim=-1)
         value_index = torch.LongTensor(
-            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])])
+            [(i, j) for i in range(len(obs.lengths)) for j in range(obs.lengths[i])]
+        )
         _fmin = torch.finfo(flat_values.dtype).min
-        values = _fmin * torch.ones(len(row_lengths), obs.max_len, dtype=flat_values.dtype)
+        values = _fmin * torch.ones(
+            len(row_lengths), obs.max_len, dtype=flat_values.dtype
+        )
         values.index_put_(tuple(value_index.t()), flat_values)
         current_value = values[:, 0]
         masked_action_values = values[:, 1:]
