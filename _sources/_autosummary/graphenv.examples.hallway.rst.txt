@@ -27,5 +27,6 @@ graphenv.examples.hallway
    :recursive:
 
    graphenv.examples.hallway.hallway_model
+   graphenv.examples.hallway.hallway_model_torch
    graphenv.examples.hallway.hallway_state
 

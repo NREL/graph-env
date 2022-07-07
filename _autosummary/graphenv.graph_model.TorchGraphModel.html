@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv &mdash; graphenv 0+untagged.1.g1d91bf3 documentation</title>
+  <title>graphenv.graph_model.TorchGraphModel &mdash; graphenv 0+untagged.1.g1d91bf3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="graphenv.examples" href="graphenv.examples.html" />
-    <link rel="prev" title="Running TSP on AWS" href="../cloud/tsp_on_aws.html" /> 
+    <link rel="next" title="graphenv.graph_model_bellman_mixin" href="graphenv.graph_model_bellman_mixin.html" />
+    <link rel="prev" title="graphenv.graph_model.GraphModel" href="graphenv.graph_model.GraphModel.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,10 +56,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">graphenv</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="graphenv.html">graphenv</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="graphenv.examples.html">graphenv.examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.graph_env.html">graphenv.graph_env</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model.html">graphenv.graph_model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="graphenv.graph_model.html">graphenv.graph_model</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="graphenv.graph_model.GraphModel.html">graphenv.graph_model.GraphModel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">graphenv.graph_model.TorchGraphModel</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
 </ul>
@@ -80,7 +84,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>graphenv</li>
+          <li><a href="graphenv.html">graphenv</a> &raquo;</li>
+          <li><a href="graphenv.graph_model.html">graphenv.graph_model</a> &raquo;</li>
+      <li>graphenv.graph_model.TorchGraphModel</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -113,39 +119,56 @@
     text-align: unset;
 }
 </style>
-<section id="module-graphenv">
-<span id="graphenv"></span><h1>graphenv<a class="headerlink" href="#module-graphenv" title="Permalink to this headline"></a></h1>
+<section id="graphenv-graph-model-torchgraphmodel">
+<h1>graphenv.graph_model.TorchGraphModel<a class="headerlink" href="#graphenv-graph-model-torchgraphmodel" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="graphenv.graph_model.TorchGraphModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TorchGraphModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_model.html#TorchGraphModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_model.TorchGraphModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel" title="graphenv.graph_model.GraphModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.graph_model.GraphModel</span></code></a></p>
+<p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="graphenv.examples.html#module-graphenv.examples" title="graphenv.examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphenv.examples</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></p></td>
+<td><p>Tensorflow/Keras style forward method.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="graphenv.graph_env.html#module-graphenv.graph_env" title="graphenv.graph_env"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphenv.graph_env</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_vertex</span></code></p></td>
+<td><p>Forward function returning a value and weight tensor for the verticies observed via input_dict (a dict of tensors for each vertex property)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="graphenv.graph_model.html#module-graphenv.graph_model" title="graphenv.graph_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphenv.graph_model</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html#module-graphenv.graph_model_bellman_mixin" title="graphenv.graph_model_bellman_mixin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphenv.graph_model_bellman_mixin</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="graphenv.vertex.html#module-graphenv.vertex" title="graphenv.vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphenv.vertex</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_function</span></code></p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p>A tensor of current state values.</p>
+</dd>
+</dl>
+</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obs_space</strong> (<em>gym.spaces.space.Space</em>) – </p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.space.Space</em>) – </p></li>
+<li><p><strong>num_outputs</strong> (<em>int</em>) – </p></li>
+<li><p><strong>model_config</strong> (<em>Dict</em>) – </p></li>
+<li><p><strong>name</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../cloud/tsp_on_aws.html" class="btn btn-neutral float-left" title="Running TSP on AWS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="graphenv.examples.html" class="btn btn-neutral float-right" title="graphenv.examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="graphenv.graph_model.GraphModel.html" class="btn btn-neutral float-left" title="graphenv.graph_model.GraphModel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="graphenv.graph_model_bellman_mixin.html" class="btn btn-neutral float-right" title="graphenv.graph_model_bellman_mixin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

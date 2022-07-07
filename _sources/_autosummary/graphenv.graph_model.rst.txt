@@ -21,6 +21,7 @@ graphenv.graph\_model
       :nosignatures:
    
       GraphModel
+      TorchGraphModel
    
    
 

@@ -1,0 +1,26 @@
+graphenv.graph\_model.TorchGraphModel
+=====================================
+
+.. currentmodule:: graphenv.graph_model
+
+.. autoclass:: TorchGraphModel
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TorchGraphModel.forward
+      ~TorchGraphModel.forward_vertex
+      ~TorchGraphModel.value_function
+   
+   
+
+   
+   
+   

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env &mdash; graphenv 0+untagged.1.g2596885 documentation</title>
+  <title>graphenv.graph_env &mdash; graphenv 0+untagged.1.g1d91bf3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -83,7 +83,7 @@
   <h1>Source code for graphenv.graph_env</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -106,12 +106,7 @@
 <span class="sd">    The `env_config` dictionary should contain the following keys::</span>
 
 <span class="sd">        state (N): Current vertex</span>
-<span class="sd">        max_num_children (int): maximum number of children considered at a time</span>
-<span class="sd">        action_mask_key (str, optional): key under which the action mask is</span>
-<span class="sd">            stored in the root observation space dict. Defaults to &quot;action_mask&quot;</span>
-<span class="sd">        vertex_observation_key (str, optional): key under which the per-action</span>
-<span class="sd">            vertex observations are stored in the root observation space dict.</span>
-<span class="sd">            Defaults to &quot;vertex_observations&quot;.</span>
+<span class="sd">        max_num_children (int): maximum number of children considered at a time.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        env_config (dict): A dictionary of parameters, required to conform with</span>
@@ -211,7 +206,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="GraphEnv.make_observation"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.make_observation">[docs]</a>    <span class="k">def</span> <span class="nf">make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+<div class="viewcode-block" id="GraphEnv.make_observation"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.make_observation">[docs]</a>    <span class="k">def</span> <span class="nf">make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Makes an observation for this state which includes observations of</span>
 <span class="sd">        each possible action, and the current state.</span>
@@ -226,9 +221,8 @@
 <span class="sd">        are offset by one index to accomodate that.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, any] : Dictionary consisting of {self._action_mask_key : bool</span>
-<span class="sd">                action mask Numpy array, self._vertex_observation_key : stacked vertex</span>
-<span class="sd">                observations}</span>
+
+<span class="sd">            List[any]: A list of next state observations.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 

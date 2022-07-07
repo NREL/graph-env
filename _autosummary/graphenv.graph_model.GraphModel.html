@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0+untagged.1.g2596885 documentation</title>
+  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0+untagged.1.g1d91bf3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="graphenv.graph_model_bellman_mixin" href="graphenv.graph_model_bellman_mixin.html" />
+    <link rel="next" title="graphenv.graph_model.TorchGraphModel" href="graphenv.graph_model.TorchGraphModel.html" />
     <link rel="prev" title="graphenv.graph_model" href="graphenv.graph_model.html" /> 
 </head>
 
@@ -61,6 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="graphenv.graph_env.html">graphenv.graph_env</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="graphenv.graph_model.html">graphenv.graph_model</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">graphenv.graph_model.GraphModel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphenv.graph_model.TorchGraphModel.html">graphenv.graph_model.TorchGraphModel</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a></li>
@@ -133,11 +134,6 @@
 <li><p><strong>num_outputs</strong> (<em>int</em>) – The number of scalar outputs per state to produce.</p></li>
 <li><p><strong>model_config</strong> (<em>Dict</em>) – Config forwarded to TFModelV2.__init()__.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – Config forwarded to TFModelV2.__init()__.</p></li>
-<li><p><strong>action_mask_key</strong> – Key used to retrieve the action mask from the observation
-space dictionary. Defaults to “action_mask”.</p></li>
-<li><p><strong>vertex_observation_key</strong> – Key used to retrieve the per-action vertex
-observations from the observation space dictionary. Defaults to
-“vertex_observations”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -224,7 +220,7 @@ observed via input_dict (a dict of tensors for each vertex property)</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="graphenv.graph_model.html" class="btn btn-neutral float-left" title="graphenv.graph_model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="graphenv.graph_model_bellman_mixin.html" class="btn btn-neutral float-right" title="graphenv.graph_model_bellman_mixin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="graphenv.graph_model.TorchGraphModel.html" class="btn btn-neutral float-right" title="graphenv.graph_model.TorchGraphModel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

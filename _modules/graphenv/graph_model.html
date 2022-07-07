@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.g2596885 documentation</title>
+  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.g1d91bf3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -83,13 +83,13 @@
   <h1>Source code for graphenv.graph_model</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">from</span> <span class="nn">ray.rllib.models.repeated_values</span> <span class="kn">import</span> <span class="n">RepeatedValues</span>
 <span class="kn">from</span> <span class="nn">ray.rllib.utils.typing</span> <span class="kn">import</span> <span class="n">TensorStructType</span><span class="p">,</span> <span class="n">TensorType</span>
 
-<span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span>
+<span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span><span class="p">,</span> <span class="n">torch</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 
@@ -103,13 +103,9 @@
 <span class="sd">        num_outputs: The number of scalar outputs per state to produce.</span>
 <span class="sd">        model_config: Config forwarded to TFModelV2.__init()__.</span>
 <span class="sd">        name: Config forwarded to TFModelV2.__init()__.</span>
-<span class="sd">        action_mask_key: Key used to retrieve the action mask from the observation</span>
-<span class="sd">            space dictionary. Defaults to &quot;action_mask&quot;.</span>
-<span class="sd">        vertex_observation_key: Key used to retrieve the per-action vertex</span>
-<span class="sd">            observations from the observation space dictionary. Defaults to</span>
-<span class="sd">            &quot;vertex_observations&quot;.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_tensorlib</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -137,6 +133,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">action_weights</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_outputs</span> <span class="o">=</span> <span class="n">num_outputs</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_outputs: </span><span class="si">{</span><span class="n">num_outputs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensorlib</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="GraphModel.forward"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -158,15 +155,19 @@
 <span class="sd">            (action weights tensor, state)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">_create_action_mask</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">tf</span><span class="p">)</span>
-        <span class="n">flattened_observations</span> <span class="o">=</span> <span class="n">_stack_batch_dim</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tf</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">_create_action_mask</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">framework</span><span class="p">)</span>
+        <span class="n">flattened_observations</span> <span class="o">=</span> <span class="n">_stack_batch_dim</span><span class="p">(</span>
+            <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensorlib</span>
+        <span class="p">)</span>
         <span class="n">flat_values</span><span class="p">,</span> <span class="n">flat_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_vertex</span><span class="p">(</span><span class="n">flattened_observations</span><span class="p">)</span>
 
         <span class="c1"># mask out invalid children and get current vertex value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_mask_and_split_values</span><span class="p">(</span>
-            <span class="n">flat_values</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">tf</span>
+            <span class="n">flat_values</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensorlib</span>
         <span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">action_weights</span> <span class="o">=</span> <span class="n">_mask_and_split_values</span><span class="p">(</span><span class="n">flat_weights</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">tf</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">action_weights</span> <span class="o">=</span> <span class="n">_mask_and_split_values</span><span class="p">(</span>
+            <span class="n">flat_weights</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensorlib</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">total_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_total_value</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">action_weights</span><span class="p">,</span> <span class="n">state</span></div>
@@ -211,7 +212,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_vertex_value</span></div>
 
 
-<span class="k">def</span> <span class="nf">_create_action_mask</span><span class="p">(</span><span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
+<div class="viewcode-block" id="TorchGraphModel"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.TorchGraphModel.html#graphenv.graph_model.TorchGraphModel">[docs]</a><span class="k">class</span> <span class="nc">TorchGraphModel</span><span class="p">(</span><span class="n">GraphModel</span><span class="p">):</span>
+    <span class="n">_tensorlib</span> <span class="o">=</span> <span class="s2">&quot;torch&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_action_mask</span><span class="p">(</span><span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create an action mask array of valid actions from a given RepeatedValues tensor.</span>
 
 <span class="sd">    Args:</span>
@@ -225,7 +230,7 @@
 <span class="sd">        TensorType: The boolean mask for valid actions (includes the current state as</span>
 <span class="sd">        the first index).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="n">tf</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="s2">&quot;tf&quot;</span><span class="p">:</span>
         <span class="c1"># the &quot;dummy batch&quot; rllib provides to initialize the policy model is a matrix of</span>
         <span class="c1"># all zeros, which ends with a batch size of zero provided to the policy model.</span>
         <span class="c1"># We can assume that at least the input state is valid, and clip the row_lengths</span>
@@ -237,24 +242,45 @@
             <span class="n">row_lengths</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">to_tensor</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">max_len</span><span class="p">))</span>
 
+    <span class="k">elif</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="s2">&quot;torch&quot;</span><span class="p">:</span>
+        <span class="c1"># Integer torch index tensors must be long type</span>
+        <span class="n">row_lengths</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">lengths</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+        <span class="n">num_elements</span> <span class="o">=</span> <span class="n">row_lengths</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">action_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">),</span> <span class="n">obs</span><span class="o">.</span><span class="n">max_len</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">mask_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span>
+            <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+        <span class="p">)</span>
+        <span class="n">action_mask</span><span class="o">.</span><span class="n">index_put_</span><span class="p">(</span>
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">mask_index</span><span class="o">.</span><span class="n">t</span><span class="p">()),</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_elements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tensorlib </span><span class="si">{</span><span class="n">tensorlib</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">action_mask</span>
 
 
 <span class="k">def</span> <span class="nf">_apply_mask</span><span class="p">(</span>
-    <span class="n">values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">action_mask</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">action_mask</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="n">tf</span><span class="p">:</span>
 
+    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="s2">&quot;tf&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">boolean_mask</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">action_mask</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="s2">&quot;torch&quot;</span><span class="p">:</span>
+        <span class="c1"># masked_select returns a 1D tensor so needs reshaping. Pretty sure the last</span>
+        <span class="c1"># dimension will always be the feature dim -- will action_mask always be 2d?</span>
+        <span class="c1"># The .view(-1, feature_dim) call will fail if more than 2d.</span>
+        <span class="n">feature_dim</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">masked_select</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">action_mask</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">action_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">feature_dim</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tensorlib </span><span class="si">{</span><span class="n">tensorlib</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_stack_batch_dim</span><span class="p">(</span>
-    <span class="n">obs</span><span class="p">:</span> <span class="n">TensorStructType</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span>
+    <span class="n">obs</span><span class="p">:</span> <span class="n">TensorStructType</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_stack_batch_dim</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -270,7 +296,7 @@
 
 
 <span class="k">def</span> <span class="nf">_mask_and_split_values</span><span class="p">(</span>
-    <span class="n">flat_values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">tf</span>
+    <span class="n">flat_values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
 <span class="sd">    and the masked values of the action verticies.</span>
@@ -280,7 +306,7 @@
 <span class="sd">        (a current state value tensor, a masked action values tensor)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="n">tf</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="s2">&quot;tf&quot;</span><span class="p">:</span>
         <span class="n">row_lengths</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">lengths</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
         <span class="n">flat_values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">flat_values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_row_lengths</span><span class="p">(</span><span class="n">flat_values</span><span class="p">,</span> <span class="n">row_lengths</span><span class="p">)</span>
@@ -291,8 +317,21 @@
         <span class="n">current_value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">masked_action_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
 
+    <span class="k">elif</span> <span class="n">tensorlib</span> <span class="o">==</span> <span class="s2">&quot;torch&quot;</span><span class="p">:</span>
+        <span class="n">row_lengths</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">lengths</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+        <span class="n">flat_values</span> <span class="o">=</span> <span class="n">flat_values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">value_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span>
+            <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+        <span class="p">)</span>
+        <span class="n">_fmin</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">flat_values</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">min</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">_fmin</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">row_lengths</span><span class="p">),</span> <span class="n">obs</span><span class="o">.</span><span class="n">max_len</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">flat_values</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="p">)</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">index_put_</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">value_index</span><span class="o">.</span><span class="n">t</span><span class="p">()),</span> <span class="n">flat_values</span><span class="p">)</span>
+        <span class="n">current_value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">masked_action_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tensorlib </span><span class="si">{</span><span class="n">tensorlib</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">current_value</span><span class="p">,</span> <span class="n">masked_action_values</span>
 </pre></div>
