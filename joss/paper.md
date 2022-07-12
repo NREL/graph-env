@@ -13,19 +13,21 @@ authors:
   #   affiliation: 2
   # - name: Author with no affiliation^[Corresponding author]
   #   affiliation: 3
-  - name: Peter St. John
-    orcid: 0000-0002-7928-3722
-    affiliation: 1
   - name: Charles Edison Tripp
     orcid: 0000-0002-5867-3561
     affiliation: 2
   - name: Jeffrey Law
     affiliation: 1
+    orcid: 0000-0003-2828-1273
   - name: Struan Clark
     affiliation: 2
   - name: David Biagioni
     orcid: 0000-0001-6140-1957
     affiliation: 2
+  - name: Peter St. John^[Corresponding author]
+    orcid: 0000-0002-7928-3722
+    corresponding: true # (This is how to denote the corresponding author)    
+    affiliation: 1    
 affiliations:
  - name: Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA
    index: 1
@@ -48,15 +50,14 @@ bibliography: paper.bib
 # Summary
 
 Many important and challenging problems in combinatorial optimization (CO) can be
-expressed as graph search problems in which graph vertices represent full or partial
-solutions and edges represent decisions that connect them.  Graph structure not only
-introduces strong _relational inductive biases_ for learning [@battaglia2018relational],
-but lends itself to problems both with and without clearly defined algebraic structure.
+expressed as graph search problems, in which graph vertices represent full or partial
+solutions and edges represent decisions that connect them. 
+Graph structure not only introduces strong _relational inductive biases_ for learning [@battaglia2018relational], but lends itself to problems both with and without clearly defined algebraic structure.
 For example, classic CO problems on graphs such as the traveling salesman problem (TSP)
 can be expressed as either pure graph search _or_ integer program with well defined
 linear objective function and linear constraints.  Other problems, however, such as
 molecular optimization, do no have concise algebraic formulations and yet are readily
-implemented as graph search [@sv2021multi].  In recent  years, reinforcement learning
+implemented as a graph search [Zhou_2019,@sv2021multi].  In recent  years, reinforcement learning
 (RL) has emerged as an effective paradigm for optimizing searches over graphs and led to
 state-of-the-art heuristics for games like Go and chess, as well as for classical CO
 problems such as the Traveling Salesman Problem (TSP).  This combination of graph search
@@ -77,6 +78,8 @@ _choices_ change for each state is challenging to implement in a computationally
 efficient fashion. The `graphenv` library provides utility classes that simplify the
 flattening and masking of action observations for choosing from a set of successor
 states at every node in a graph search.
+
+Related software efforts have addressed parts of the above need. OpenGraphGym [@Zheng_2020] implements RL-based stragies for common graph optimization challenges such as minimum vertex cover or maximum cut, but does not interface with external RL libraries and has minimal documentation. Ecole [@prouvost2020ecole] provides an OpenAI-like gym environment for combinatorial optimization, but intends to operate in concert with traditional mixed integer solvers rather than directly exposing the environment to an RL agent.
 
 
 # Examples of usage
