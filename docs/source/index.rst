@@ -16,12 +16,12 @@ Tutorials
    :caption: Hallway Example
 
    examples/hallway
+   examples/tune
 
 .. toctree::
    :maxdepth: 2
    :caption: TSP Example
 
-   examples/tsp-env
    cloud/tsp_on_aws
 
 .. toctree::
