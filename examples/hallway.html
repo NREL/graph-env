@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hallway Environment Example &mdash; graphenv 0+untagged.1.g1d91bf3 documentation</title>
+  <title>Hallway Environment Example &mdash; graphenv 0+untagged.1.g612b1d9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Create and visualize simple network" href="tsp-env.html" />
+    <link rel="next" title="Running GraphEnv with ray.tune" href="tune.html" />
     <link rel="prev" title="graph-env" href="../index.html" /> 
 </head>
 
@@ -70,11 +70,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#Step-to-the-terminal-vertex">Step to the terminal vertex</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Running <code class="docutils literal notranslate"><span class="pre">GraphEnv</span></code> with <code class="docutils literal notranslate"><span class="pre">ray.tune</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tsp-env.html">Create and visualize simple network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tsp-env.html#Solve-TSP-using-nx-heuristics">Solve TSP using nx heuristics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -604,29 +603,23 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;action_mask&#39;: array([False,  True, False]), &#39;vertex_observations&#39;: {&#39;cur_pos&#39;: array([[0],
-       [1],
-       [0]])}}
+[{&#39;cur_pos&#39;: array([0])}, {&#39;cur_pos&#39;: array([1])}]
 </pre></div></div>
 </div>
-<p>Note, the obs data is a dictionary with two keys, <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> and <code class="docutils literal notranslate"><span class="pre">vertex_observations</span></code>. The <code class="docutils literal notranslate"><span class="pre">vertex_observations</span></code> value contains all of the vertex data that the graphenv library has conveniently concatenated into a single data structure (here, another dictionary as specified in the <code class="docutils literal notranslate"><span class="pre">HallwayState</span></code>). Because the number of valid actions can change from one state to the next, graphenv also returns an <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> indicating which of the actions are valid: <code class="docutils literal notranslate"><span class="pre">True</span></code> for valid actions and
-<code class="docutils literal notranslate"><span class="pre">False</span></code> for invalid.</p>
-<p>Notice that, even though <code class="docutils literal notranslate"><span class="pre">max_num_actions=2</span></code> for this environment, the observation data here contains 3 elements. This is because the parent vertex data is needed by the policy model and thus is always returned at index 0, while the children appear at indices <code class="docutils literal notranslate"><span class="pre">[1:max_num_actions]</span></code>.</p>
-<p>Let’s now interpret the obs data in full. First, the <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> has a single <code class="docutils literal notranslate"><span class="pre">True</span></code> value – the first child with index 1 – because there is only a single, valid next state from the starting position. Similarly, the <code class="docutils literal notranslate"><span class="pre">cur_pos</span> <span class="pre">=</span> <span class="pre">1</span></code> at index 1 because this is the position of the child vertex.</p>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">ray.rllib.utils.spaces.repeated.Repeated</span></code> action space for the variable-length observations that naturally arise from a graph-based environment. Ray automatically handles the batching and padding of input observations to a maximum length, and the <code class="docutils literal notranslate"><span class="pre">graphenv.graph_model.GraphModel</span></code> object handles the masking of invalid actions automatically.</p>
+<p>Notice that the current state, with <code class="docutils literal notranslate"><span class="pre">cur_pos=0</span></code>, is returned as the first item in the list of observations. This is because the parent vertex data is needed by the policy model and thus is always returned at index 0, while the children appear at indices <code class="docutils literal notranslate"><span class="pre">[1:max_num_actions]</span></code>.</p>
+<p>For the child observations, notice that only <code class="docutils literal notranslate"><span class="pre">cur_pos=1</span></code> appears as an entry, as a backwards step from the starting location is not allowed.</p>
 </section>
 <section id="Step">
 <h2>Step<a class="headerlink" href="#Step" title="Permalink to this headline"></a></h2>
 <p>Unlike the observation data which are 1-indexed w.r.t. the child vertices, the action space is 0-indexed.</p>
-<p>To step the environment, we need to select a valid action. Because only the first child vertex is valid, the only valid action is 0. If we pass 1, we get an error.</p>
+<p>To step the environment, we need to select a valid action. Because only the first child vertex is valid, the only valid action is 0. If we pass 1, we see an error. Note that because rllib often passes invalid actions to initialize the environment, this only returns a warning.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Not a valid action</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;oops, not a valid action!&quot;</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -635,7 +628,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:128: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
+/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:106: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
   warnings.warn(
 </pre></div></div>
 </div>
@@ -662,12 +655,10 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;action_mask&#39;: array([False,  True,  True]), &#39;vertex_observations&#39;: {&#39;cur_pos&#39;: array([[1],
-       [0],
-       [2]])}}
+[{&#39;cur_pos&#39;: array([1])}, {&#39;cur_pos&#39;: array([0])}, {&#39;cur_pos&#39;: array([2])}]
 </pre></div></div>
 </div>
-<p>Recall that, from the middle hallway position (<span class="math notranslate nohighlight">\(i=1\)</span>), there are two valid actions. Accordingly, the <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> for both child vertices, and <code class="docutils literal notranslate"><span class="pre">cur_pos</span></code> have their index values, <span class="math notranslate nohighlight">\(i=0\)</span> and <span class="math notranslate nohighlight">\(i=2\)</span>.</p>
+<p>Recall that, from the middle hallway position (<span class="math notranslate nohighlight">\(i=1\)</span>), there are two valid actions. Accordingly, the length of the observation space is 3 (the current state and both actions), and <code class="docutils literal notranslate"><span class="pre">cur_pos</span></code> have their index values, <span class="math notranslate nohighlight">\(i=0\)</span> and <span class="math notranslate nohighlight">\(i=2\)</span>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -745,12 +736,10 @@ False
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;action_mask&#39;: array([False, False, False]), &#39;vertex_observations&#39;: {&#39;cur_pos&#39;: array([[2],
-       [2],
-       [2]])}}
+[{&#39;cur_pos&#39;: array([2])}]
 </pre></div></div>
 </div>
-<p>Notice that, now, all <code class="docutils literal notranslate"><span class="pre">action_mask</span></code> values are <code class="docutils literal notranslate"><span class="pre">False</span></code> because there are no child vertices from the terminal vertex.</p>
+<p>Notice that, now, the observation only includes the current state, as there are no valid actions to take</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
@@ -782,7 +771,7 @@ True
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.9481703475936902
+1.5406029933376866
 </pre></div></div>
 </div>
 </section>
@@ -793,7 +782,7 @@ True
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="graph-env" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tsp-env.html" class="btn btn-neutral float-right" title="Create and visualize simple network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tune.html" class="btn btn-neutral float-right" title="Running GraphEnv with ray.tune" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
