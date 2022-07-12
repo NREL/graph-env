@@ -13,6 +13,9 @@ authors:
   #   affiliation: 2
   # - name: Author with no affiliation^[Corresponding author]
   #   affiliation: 3
+  - name: David Biagioni
+    orcid: 0000-0001-6140-1957
+    affiliation: 2
   - name: Charles Edison Tripp
     orcid: 0000-0002-5867-3561
     affiliation: 2
@@ -20,9 +23,6 @@ authors:
     affiliation: 1
     orcid: 0000-0003-2828-1273
   - name: Struan Clark
-    affiliation: 2
-  - name: David Biagioni
-    orcid: 0000-0001-6140-1957
     affiliation: 2
   - name: Peter St. John^[Corresponding author]
     orcid: 0000-0002-7928-3722
