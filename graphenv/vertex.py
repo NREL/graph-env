@@ -20,12 +20,12 @@ class Vertex(Generic[V]):
 
     @property
     @abstractmethod
-    def observation_space(self) -> gym.spaces.Space:
+    def observation_space(self) -> gym.Space:
         """Gets the vertex observation space, used to define the structure of
         the data returned when observing a vertex.
 
         Returns:
-            gym.spaces.Space: Vertex observation space
+            gym.Space: Vertex observation space
         """
         raise NotImplementedError
 

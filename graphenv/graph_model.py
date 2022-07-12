@@ -1,6 +1,6 @@
 import logging
 from abc import abstractmethod
-from typing import Dict, List, Tuple
+from typing import Dict, List, Protocol, Tuple
 
 import gym
 from ray.rllib.models.repeated_values import RepeatedValues
@@ -11,7 +11,7 @@ from graphenv import tf, torch
 logger = logging.getLogger(__file__)
 
 
-class GraphModel:
+class GraphModel(Protocol):
     """Defines a RLLib compatible model for using RL algorithms on a GraphEnv.
 
     Args:
@@ -22,12 +22,12 @@ class GraphModel:
         name: Config forwarded to TFModelV2.__init()__.
     """
 
-    _tensorlib = "tf"
+    _tensorlib: str = "tf"
 
     def __init__(
         self,
-        obs_space: gym.spaces.Space,
-        action_space: gym.spaces.Space,
+        obs_space: gym.Space,
+        action_space: gym.Space,
         num_outputs: int,
         model_config: Dict,
         name: str,
@@ -35,15 +35,6 @@ class GraphModel:
         **kwargs,
     ):
 
-        super().__init__(
-            obs_space,
-            action_space,
-            num_outputs,
-            model_config,
-            name,
-            *args,
-            **kwargs,
-        )
         self.current_vertex_value = None
         self.action_values = None
         self.current_vertex_weight = None
@@ -72,7 +63,7 @@ class GraphModel:
             (action weights tensor, state)
         """
 
-        mask = _create_action_mask(input_dict["obs"], self.framework)
+        mask = _create_action_mask(input_dict["obs"], self._tensorlib)
         flattened_observations = _stack_batch_dim(
             input_dict["obs"], mask, self._tensorlib
         )
@@ -148,6 +139,7 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: str = "tf") -> TensorTyp
         the first index).
     """
     if tensorlib == "tf":
+        assert tf is not None
         # the "dummy batch" rllib provides to initialize the policy model is a matrix of
         # all zeros, which ends with a batch size of zero provided to the policy model.
         # We can assume that at least the input state is valid, and clip the row_lengths
@@ -160,15 +152,18 @@ def _create_action_mask(obs: RepeatedValues, tensorlib: str = "tf") -> TensorTyp
         ).to_tensor(shape=(None, obs.max_len))
 
     elif tensorlib == "torch":
+        assert torch is not None
         # Integer torch index tensors must be long type
-        row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
-        num_elements = row_lengths.sum().item()
-        action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=bool)
+        row_lengths = torch.as_tensor(obs.lengths, dtype=torch.long)
+        row_lengths = torch.clip(row_lengths, 1, torch.iinfo(torch.long).max)
+        num_elements = row_lengths.sum()
+        action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=torch.bool)
         mask_index = torch.LongTensor(
             [(i, j) for i in range(len(row_lengths)) for j in range(row_lengths[i])]
         )
         action_mask.index_put_(
-            tuple(mask_index.t()), torch.ones(num_elements, dtype=bool)
+            tuple(mask_index.t()),
+            torch.ones(int(num_elements.item()), dtype=torch.bool),
         )
 
     else:
@@ -182,9 +177,11 @@ def _apply_mask(
 ) -> TensorType:
 
     if tensorlib == "tf":
+        assert tf is not None
         return tf.boolean_mask(values, action_mask)
 
     elif tensorlib == "torch":
+        assert torch is not None
         # masked_select returns a 1D tensor so needs reshaping. Pretty sure the last
         # dimension will always be the feature dim -- will action_mask always be 2d?
         # The .view(-1, feature_dim) call will fail if more than 2d.
@@ -214,7 +211,7 @@ def _stack_batch_dim(
 
 def _mask_and_split_values(
     flat_values: TensorType, obs: RepeatedValues, tensorlib: str = "tf"
-) -> Tuple[TensorType]:
+) -> Tuple[TensorType, TensorType]:
     """Returns the value for the current vertex (index 0 of values),
     and the masked values of the action verticies.
     Args:
@@ -224,6 +221,7 @@ def _mask_and_split_values(
     """
 
     if tensorlib == "tf":
+        assert tf is not None
         row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
         flat_values = tf.squeeze(flat_values, axis=[-1])
         values = tf.RaggedTensor.from_row_lengths(flat_values, row_lengths)
@@ -235,7 +233,9 @@ def _mask_and_split_values(
         masked_action_values = values[:, 1:]
 
     elif tensorlib == "torch":
-        row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
+        assert torch is not None
+        row_lengths = torch.as_tensor(obs.lengths, dtype=torch.long)
+        row_lengths = torch.clip(row_lengths, 1, torch.iinfo(torch.long).max)
         flat_values = flat_values.squeeze(dim=-1)
         value_index = torch.LongTensor(
             [(i, j) for i in range(len(row_lengths)) for j in range(row_lengths[i])]
