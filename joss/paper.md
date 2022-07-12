@@ -24,6 +24,7 @@ authors:
     orcid: 0000-0003-2828-1273
   - name: Struan Clark
     affiliation: 2
+    orcid:  0000-0003-0078-6560
   - name: Peter St. John^[Corresponding author]
     orcid: 0000-0002-7928-3722
     corresponding: true # (This is how to denote the corresponding author)    
