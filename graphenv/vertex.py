@@ -2,6 +2,7 @@ from abc import abstractmethod
 from typing import Dict, Generic, List, Optional, Sequence, TypeVar
 
 import gym
+from ray.rllib.utils.typing import TensorStructType
 
 V = TypeVar("V")
 
@@ -16,7 +17,9 @@ class Vertex(Generic[V]):
 
     def __init__(self) -> None:
         self._children: Optional[List] = None  #: memoized list of child vertices
-        self._observation: Optional[any] = None  #: memoized observation of this vertex
+        self._observation: Optional[
+            TensorStructType
+        ] = None  #: memoized observation of this vertex
 
     @property
     @abstractmethod
@@ -60,7 +63,7 @@ class Vertex(Generic[V]):
         raise NotImplementedError
 
     @abstractmethod
-    def _make_observation(self) -> any:
+    def _make_observation(self) -> TensorStructType:
         """Gets an observation of this vertex. This observation should have
         the same shape as described by the vertex observation space.
 
@@ -86,7 +89,7 @@ class Vertex(Generic[V]):
         return self._children
 
     @property
-    def observation(self) -> any:
+    def observation(self) -> TensorStructType:
         """
         Gets the observation of this vertex.
         Acts as a wrapper that memoizes calls to _make_observation().
