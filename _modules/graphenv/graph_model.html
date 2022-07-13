@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.g612b1d9 documentation</title>
+  <title>graphenv.graph_model &mdash; graphenv 0+untagged.1.g4b98470 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -154,7 +154,7 @@
 <span class="sd">            (action weights tensor, state)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">_create_action_mask</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">framework</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">_create_action_mask</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensorlib</span><span class="p">)</span>
         <span class="n">flattened_observations</span> <span class="o">=</span> <span class="n">_stack_batch_dim</span><span class="p">(</span>
             <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensorlib</span>
         <span class="p">)</span>
