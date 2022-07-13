@@ -72,7 +72,7 @@ class GraphModel:
             (action weights tensor, state)
         """
 
-        mask = _create_action_mask(input_dict["obs"], self.framework)
+        mask = _create_action_mask(input_dict["obs"], self._tensorlib)
         flattened_observations = _stack_batch_dim(
             input_dict["obs"], mask, self._tensorlib
         )
