@@ -21,8 +21,8 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = "graphenv"
-copyright = "2022, TODO"
-author = "TODO"
+copyright = "2022, Alliance for Sustainable Energy, LLC"
+author = "David Biagioni, Charles Edison Tripp, Jeffrey Law, Struan Clark, and Peter St. John"
 
 # The full version, including alpha/beta/rc tags
 release = graphenv.__version__
