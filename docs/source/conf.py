@@ -25,7 +25,8 @@ copyright = "2022, Alliance for Sustainable Energy, LLC"
 author = "David Biagioni, Charles Edison Tripp, Jeffrey Law, Struan Clark, and Peter St. John"
 
 # The full version, including alpha/beta/rc tags
-release = graphenv.__version__
+version = graphenv.__version__
+release = version
 
 # -- General configuration ---------------------------------------------------
 
