@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from graphenv import tf
-from graphenv.graph_model import GraphModel
+from graphenv.graph_model import GraphModel, GraphModelTF
 from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.utils.typing import TensorStructType, TensorType
@@ -9,7 +9,7 @@ from ray.rllib.utils.typing import TensorStructType, TensorType
 layers = tf.keras.layers
 
 
-class BaseHallwayModel(GraphModel):
+class BaseHallwayModel(GraphModelTF):
     """An example GraphModel implementation for the HallwayEnv and HallwayState
     Graph. Uses a dense fully connected Keras network.
 
@@ -26,6 +26,7 @@ class BaseHallwayModel(GraphModel):
         hidden_dim: int = 1,
         **kwargs,
     ):
+        assert tf is not None
         super().__init__(*args, **kwargs)
 
         cur_pos = layers.Input(shape=(1,), name="cur_pos", dtype=tf.float32)
