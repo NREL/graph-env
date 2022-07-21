@@ -1,0 +1,58 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "0000-0002-7928-3722",
+      "@type": "Person",
+      "email": "peter.stjohn@nrel.gov",
+      "name": "Peter St. John",
+      "affiliation": "Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "@id": "0000-0001-6140-1957",
+      "@type": "Person",
+      "email": "Dave.Biagioni@nrel.gov",
+      "name": "Dave Biagioni",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "@id": "0000-0003-0078-6560",
+      "@type": "Person",
+      "email": "Struan.Clark@nrel.gov",
+      "name": "Struan Clark",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "@id": "0000-0002-5867-3561",
+      "@type": "Person",
+      "email": "Charles.Tripp@nrel.gov",
+      "name": "Charles Tripp",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "@id": "0000-0001-5132-0168",
+      "@type": "Person",
+      "email": "Dmitry.Duplyakin@nrel.gov",
+      "name": "Dmitry Duplyakin",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "@id": "0000-0003-2828-1273",
+      "@type": "Person",
+      "email": "Jeffrey.Law@nrel.gov",
+      "name": "Jeffrey Law",
+      "affiliation": "Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    }    
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/NREL/graph-env",
+  "datePublished": "2022-07-21",
+  "dateModified": "2022-07-21",
+  "dateCreated": "2022-07-21",
+  "description": "Reinforcement learning on directed graphs",
+  "keywords": "reinforcement learning, combinatorial optimization",
+  "license": "BSD 3-Clause License",
+  "title": "graph-env",
+  "version": "v0.0.6"
+}

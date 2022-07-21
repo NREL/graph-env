@@ -148,4 +148,7 @@ Untitled*.ipynb
 .DS_Store
 
 experiments/tsp/env.sh
+
 docs/source/_autosummary
+joss/paper.jats
+joss/paper.pdf
