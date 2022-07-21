@@ -19,13 +19,16 @@ authors:
   - name: Charles Edison Tripp
     orcid: 0000-0002-5867-3561
     affiliation: 2
-  - name: Jeffrey Law
-    affiliation: 1
-    orcid: 0000-0003-2828-1273
   - name: Struan Clark
     affiliation: 2
+    orcid:  0000-0001-5132-0168
+  - name: Dmitry Duplyakin
+    affiliation: 2
     orcid:  0000-0003-0078-6560
-  - name: Peter St. John^[Corresponding author]
+  - name: Jeffrey Law
+    affiliation: 1
+    orcid: 0000-0003-2828-1273    
+  - name: Peter St. John #^[Corresponding author]
     orcid: 0000-0002-7928-3722
     corresponding: true # (This is how to denote the corresponding author)    
     affiliation: 1    
