@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graph-env &mdash; graphenv v0.0.5 documentation</title>
+  <title>graph-env &mdash; graphenv v0.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="#" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                v0.0.5
+                v0.0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -53,6 +53,11 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html">Traveling Salesperson Problem (TSP) Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#TSPState">TSPState</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#TSPModel">TSPModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -184,6 +189,26 @@ random walk down a 1D corridor:</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html">Traveling Salesperson Problem (TSP) Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#Problem-statement">Problem statement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#graphenv-formulation"><code class="docutils literal notranslate"><span class="pre">graphenv</span></code> formulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#TSPState">TSPState</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#__init__"><code class="docutils literal notranslate"><span class="pre">__init__</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#_make_observation"><code class="docutils literal notranslate"><span class="pre">_make_observation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#reward"><code class="docutils literal notranslate"><span class="pre">reward</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#_get_children"><code class="docutils literal notranslate"><span class="pre">_get_children</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#TSPModel">TSPModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#Solution-Method:-Random-Tour">Solution Method: Random Tour</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#Solution-Method:-Greedy-Search">Solution Method: Greedy Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tsp_docs.html#Solution-Method:-networkx-heuristics">Solution Method: networkx heuristics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cloud/tsp_on_aws.html">Running TSP on AWS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cloud/tsp_on_aws.html#Getting-Started">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cloud/tsp_on_aws.html#Deploy-Ray-cluster">Deploy Ray cluster</a></li>

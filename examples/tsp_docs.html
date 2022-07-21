@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traveling Salesperson Problem (TSP) Environment &mdash; graphenv v0.0.6 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Running TSP on AWS" href="../cloud/tsp_on_aws.html" />
+    <link rel="prev" title="Running GraphEnv with ray.tune" href="tune.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> graphenv
+          </a>
+              <div class="version">
+                v0.0.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hallway.html">Hallway Environment Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hallway.html#The-hallway-problem-as-graphenv-problem">The hallway problem as graphenv problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hallway.html#HallwayEnv-Demo">HallwayEnv Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Running <code class="docutils literal notranslate"><span class="pre">GraphEnv</span></code> with <code class="docutils literal notranslate"><span class="pre">ray.tune</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Traveling Salesperson Problem (TSP) Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Problem-statement">Problem statement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graphenv-formulation"><code class="docutils literal notranslate"><span class="pre">graphenv</span></code> formulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#TSPState">TSPState</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#__init__"><code class="docutils literal notranslate"><span class="pre">__init__</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#_make_observation"><code class="docutils literal notranslate"><span class="pre">_make_observation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reward"><code class="docutils literal notranslate"><span class="pre">reward</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#_get_children"><code class="docutils literal notranslate"><span class="pre">_get_children</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#TSPModel">TSPModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#TSPEnv-Demo">TSPEnv Demo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Solution-Method:-Random-Tour">Solution Method: Random Tour</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Solution-Method:-Greedy-Search">Solution Method: Greedy Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Solution-Method:-networkx-heuristics">Solution Method: networkx heuristics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/graphenv.html">graphenv</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">graphenv</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Traveling Salesperson Problem (TSP) Environment</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Traveling-Salesperson-Problem-(TSP)-Environment">
+<h1>Traveling Salesperson Problem (TSP) Environment<a class="headerlink" href="#Traveling-Salesperson-Problem-(TSP)-Environment" title="Permalink to this headline"></a></h1>
+<p>The TSP is a classical, NP-hard combinatorial optimization problem that admits a graph search formulation. The application of RL for solving large-scale TSP problems is an active research area, and we do not claim to provide state-of-the-art RL solutions as part of this library. Instead, we demonstrate how to implement the TSP as a <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> so that researchers interested in RL-based solutions can leverage RLLib as a scalable framework upon which their custom algorithms can be implemented and
+trained.</p>
+<section id="Problem-statement">
+<h2>Problem statement<a class="headerlink" href="#Problem-statement" title="Permalink to this headline"></a></h2>
+<p>In the version of the TSP we consider, one is given <span class="math notranslate nohighlight">\(N\)</span> nodes (cities) in the unit square, and <span class="math notranslate nohighlight">\(N(N-1)/2\)</span> (<span class="math notranslate nohighlight">\(N\)</span> choose <span class="math notranslate nohighlight">\(2\)</span>) edges (highways) that connect each pair of nodes. Each edge is weighted by the Euclidean distance between its endpoints. The objective of the TSP is to determine a tour of minimum distance, i.e., to find the shortest path that visits each node exactly one time while starting and ending at the same node.</p>
+<p>Below is an example of a NetworkX TSP problem with <span class="math notranslate nohighlight">\(N=20\)</span>. Even for problem of this modest size, the number of TSP solutions is <span class="math notranslate nohighlight">\(N! = 2,432,902,008,176,640,000 \approx 2 \times 10^{18}\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">graphenv.examples.tsp.graph_utils</span> <span class="kn">import</span> <span class="n">make_complete_planar_graph</span><span class="p">,</span> <span class="n">plot_network</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">make_complete_planar_graph</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_network</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_tsp_docs_2_0.png" src="../_images/examples_tsp_docs_2_0.png" />
+</div>
+</div>
+</section>
+<section id="graphenv-formulation">
+<h2><code class="docutils literal notranslate"><span class="pre">graphenv</span></code> formulation<a class="headerlink" href="#graphenv-formulation" title="Permalink to this headline"></a></h2>
+<p><strong>Note:</strong> In what follows, we assume the reader has already read and understood the <code class="docutils literal notranslate"><span class="pre">HallwayEnv</span></code> example as many of the basic <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> concepts described in that example also apply here.</p>
+<p>At a basic level, the TSP is readily modeled as a sequential decision-making problem where, at any point in the partial tour (solution), the agent decides which node to move to next. The action space is of variable length – in particular, the number of valid nodes decreases by 1 with each step because nodes can only be visited once – with an instantaneous step reward associated with each action, namely, the edge weight (distance) associated with moving from the current to the next node.</p>
+<p>The figure below illustrates the decision-making process for a small instance (<span class="math notranslate nohighlight">\(N=5\)</span>) after an initial action has moved the agent from the originating node to a second node (blue circles). We denote this state of the graph search by <span class="math notranslate nohighlight">\(s_1\)</span>. From this state, there are 3 remaining nodes (black circles) and associated edges (dashed lines) to choose from. By visual inspection, we can intuit that the action <span class="math notranslate nohighlight">\(a_0(s_1)\)</span> is better than either of the other actions, and would like our
+state representation to somehow encode this intuition so that the RL policy can learn to select it.</p>
+<p><img alt="graphenv" class="no-scaled-link" src="../_images/tsp-graph.png" style="width: 400px;" /></p>
+<p>As in the hallway example, the key to representing the TSP problem as a <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> is to define the state representation (inheriting from the <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> class) and an RL policy model that can ingest this representation. We walk through a very simple implementation here for the purpose of illustration, noting that getting SoTA performance will likely require a much more sophisticated state.</p>
+</section>
+</section>
+<section id="TSPState">
+<h1>TSPState<a class="headerlink" href="#TSPState" title="Permalink to this headline"></a></h1>
+<p>(See <code class="docutils literal notranslate"><span class="pre">graphenv.examples.tsp.tsp_state</span></code> for the full implementation. A more advanced state implementation that uses graph neural network structure can be found in <code class="docutils literal notranslate"><span class="pre">graphenv.examples.tsp.tsp_nfp_state</span></code>).</p>
+<section id="__init__">
+<h2><code class="docutils literal notranslate"><span class="pre">__init__</span></code><a class="headerlink" href="#__init__" title="Permalink to this headline"></a></h2>
+<p>Because the TSP problem has natural graph structure, our implementation utilizes a networkx graph to encode the problem instance. This is simply an implementation choice – any suitable data structure could be used here. The only required argument here is a graph generator, i.e., a callable function that returns a networkx graph. This is helpful when you want to solve the problem over a distribution of problem instances, e.g., with nodes distributed uniformly at random on the unit square. The
+init method also takes an optional graph instance, <code class="docutils literal notranslate"><span class="pre">G</span></code> (needed when creating child nodes), and list of previous visited nodes for when the TSPState represents an intermediate search state.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TSPState</span><span class="p">(</span><span class="n">Vertex</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        generator: a function that creates a networkx graph</span>
+<span class="sd">        G: A fully connected networkx graph.</span>
+<span class="sd">        tour: A list of nodes in visitation order that led to this</span>
+<span class="sd">            state. Defaults to [0] which begins the tour at node 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph_generator</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span>
+        <span class="n">G</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tour</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span> <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">graph_generator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tour</span> <span class="o">=</span> <span class="n">tour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph_generator</span> <span class="o">=</span> <span class="n">graph_generator</span>
+</pre></div>
+</div>
+</section>
+<section id="_make_observation">
+<h2><code class="docutils literal notranslate"><span class="pre">_make_observation</span></code><a class="headerlink" href="#_make_observation" title="Permalink to this headline"></a></h2>
+<p>Next, we implement a simple observation space (not shown) and associated <code class="docutils literal notranslate"><span class="pre">_make_observation</span></code> method that defines the input features for the RL policy model. We emphasize that such a simple observation space is not likely to be competitive with SOTA methods for solving the TSP and serves only as illustration. The state dictionary consists of 4 features: the <code class="docutils literal notranslate"><span class="pre">xy</span></code>-position of the current node, its index, its distance to the previous node (if any), and the minimum distance to any available next
+node. Presumably, given a list of such child states, an RL policy could learn a greedy strategy that picks the child with, e.g., the shortest distance to its parent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Return an observation.  The dict returned here needs to match</span>
+<span class="sd">    both the self.observation_space in this class, as well as the input</span>
+<span class="sd">    layer in tsp_model.TSPModel</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Observation dict.  We define the node_obs to be the degree of the</span>
+<span class="sd">        current node.  This is a placeholder for a more meaningful feature!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cur_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cur_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">cur_node</span><span class="p">][</span><span class="s2">&quot;pos&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+    <span class="c1"># Compute distance to parent node, or 0 if this is the root.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">parent_dist</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parent_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">cur_node</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Get list of all neighbors that are unvisited.  If none, then the only</span>
+    <span class="c1"># remaining neighbor is the root so dist is 0.</span>
+    <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">cur_node</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">]</span>
+    <span class="n">nbr_dist</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">nbr_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">cur_node</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;node_obs&quot;</span><span class="p">:</span> <span class="n">cur_pos</span><span class="p">,</span>
+        <span class="s2">&quot;node_idx&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cur_node</span><span class="p">]),</span>
+        <span class="s2">&quot;parent_dist&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">parent_dist</span><span class="p">]),</span>
+        <span class="s2">&quot;nbr_dist&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">nbr_dist</span><span class="p">]),</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="reward">
+<h2><code class="docutils literal notranslate"><span class="pre">reward</span></code><a class="headerlink" href="#reward" title="Permalink to this headline"></a></h2>
+<p>We implement a reward for the TSP as the negative distance between the current and next nodes, offset by the greedy reward, i.e., the total reward found using greedy search. As a result, tours that perform worse than greedy have negative total rewards, and those that perform better have positive total rewards.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Returns the graph env reward.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Negative distance between last two nodes in the tour.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># This should never be called</span>
+        <span class="n">rew</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Otherwise, reward is negative distance between last two nodes.</span>
+        <span class="n">src</span><span class="p">,</span> <span class="n">dst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">rew</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">src</span><span class="p">][</span><span class="n">dst</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid tour: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># If this is the final leg of the tour, offset by the greedy distance</span>
+        <span class="n">rew</span> <span class="o">+=</span> <span class="n">calc_greedy_dist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rew</span>
+</pre></div>
+</div>
+</section>
+<section id="_get_children">
+<h2><code class="docutils literal notranslate"><span class="pre">_get_children</span></code><a class="headerlink" href="#_get_children" title="Permalink to this headline"></a></h2>
+<p>Finally, our <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> implementation requires that, for a given state, we can return a list of its children. There are two checks needed here:</p>
+<ol class="arabic simple">
+<li><p>The children should not include any previously visited states.</p></li>
+<li><p>Whether we are at the next-to-last state, in which case our only option is to return to the starting state.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;TSPState&quot;</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Yields a sequence of TSPState instances associated with the next</span>
+<span class="sd">    accessible nodes.</span>
+<span class="sd">    Yields:</span>
+<span class="sd">        New instance of the TSPState with the next node added to</span>
+<span class="sd">        the tour.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span>
+    <span class="n">cur_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Look at neighbors not already on the path.</span>
+    <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">cur_node</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">]</span>
+
+    <span class="c1"># Go back to the first node if we&#39;ve visited every other already.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">:</span>
+        <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+    <span class="c1"># Conditions for completing the circuit.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Loop over the neighbors and update paths.</span>
+    <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">:</span>
+
+        <span class="c1"># Update the node path with next node.</span>
+        <span class="n">tour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">tour</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">tour</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="TSPModel">
+<h1>TSPModel<a class="headerlink" href="#TSPModel" title="Permalink to this headline"></a></h1>
+<p>A simple Keras policy model for TSP is implemented here: <code class="docutils literal notranslate"><span class="pre">graphenv.examples.tsp.tsp_model</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BaseTSPModel</span><span class="p">(</span><span class="n">GraphModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">embed_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_base_model</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_base_model</span><span class="p">(</span>
+        <span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
+
+        <span class="n">node_obs</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;node_obs&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">node_idx</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;node_idx&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">parent_dist</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;parent_dist&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">nbr_dist</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nbr_dist&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">embed_layer</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+            <span class="n">num_nodes</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;embed_layer&quot;</span><span class="p">,</span> <span class="n">input_length</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">hidden_layer_1</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;hidden_layer_1&quot;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span>
+        <span class="p">)</span>
+        <span class="n">hidden_layer_2</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;hidden_layer_2&quot;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span>
+        <span class="p">)</span>
+        <span class="n">action_value_output</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;action_value_output&quot;</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s2">&quot;ones&quot;</span>
+        <span class="p">)</span>
+        <span class="n">action_weight_output</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;action_weight_output&quot;</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s2">&quot;ones&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Process the positional node data.  Here we need to expand the</span>
+        <span class="c1"># middle axis to match the embedding output dimension.</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Concatenate</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)([</span><span class="n">node_obs</span><span class="p">,</span> <span class="n">parent_dist</span><span class="p">,</span> <span class="n">nbr_dist</span><span class="p">])</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">))(</span><span class="n">hidden_layer_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="c1"># Process the embedding.</span>
+        <span class="n">embed</span> <span class="o">=</span> <span class="n">embed_layer</span><span class="p">(</span><span class="n">node_idx</span><span class="p">)</span>
+
+        <span class="c1"># Concatenate and flatten for dense output layers.</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Concatenate</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)([</span><span class="n">hidden</span><span class="p">,</span> <span class="n">embed</span><span class="p">])</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">hidden_layer_2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="c1"># Action values and weights for RLLib algorithms</span>
+        <span class="n">action_values</span> <span class="o">=</span> <span class="n">action_value_output</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">action_weights</span> <span class="o">=</span> <span class="n">action_weight_output</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">node_obs</span><span class="p">,</span> <span class="n">node_idx</span><span class="p">,</span> <span class="n">parent_dist</span><span class="p">,</span> <span class="n">nbr_dist</span><span class="p">],</span> <span class="p">[</span><span class="n">action_values</span><span class="p">,</span> <span class="n">action_weights</span><span class="p">]</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="TSPEnv-Demo">
+<h1>TSPEnv Demo<a class="headerlink" href="#TSPEnv-Demo" title="Permalink to this headline"></a></h1>
+<p>Let’s look at a quick demo of creating and running the TSP environment. We’ll use the graph <code class="docutils literal notranslate"><span class="pre">G</span></code> from above as the problem instance, and compare a few baseline solution methods.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">graphenv.graph_env</span> <span class="kn">import</span> <span class="n">GraphEnv</span>
+<span class="kn">from</span> <span class="nn">graphenv.examples.tsp.tsp_state</span> <span class="kn">import</span> <span class="n">TSPState</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">TSPState</span><span class="p">(</span><span class="n">graph_generator</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">G</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GraphEnv</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">,</span> <span class="s2">&quot;max_num_children&quot;</span><span class="p">:</span> <span class="n">N</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<section id="Solution-Method:-Random-Tour">
+<h2>Solution Method: Random Tour<a class="headerlink" href="#Solution-Method:-Random-Tour" title="Permalink to this headline"></a></h2>
+<p>Recall that the reward here is how much <em>worse</em> than greedy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">rand_rew</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+    <span class="n">rand_rew</span> <span class="o">+=</span> <span class="n">rew</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Random reward = </span><span class="si">{</span><span class="n">rand_rew</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tour</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_network</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Random reward = -20.021949858850093
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/dbiagion/gitrepos/graph-env-public/graphenv/graph_env.py:107: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_tsp_docs_12_2.png" src="../_images/examples_tsp_docs_12_2.png" />
+</div>
+</div>
+</section>
+<section id="Solution-Method:-Greedy-Search">
+<h2>Solution Method: Greedy Search<a class="headerlink" href="#Solution-Method:-Greedy-Search" title="Permalink to this headline"></a></h2>
+<p>Better than random, but still clearly not great.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">greedy_rew</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+    <span class="c1"># Get the node with shortest distance to the parent (current) node</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;parent_dist&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    <span class="n">greedy_rew</span> <span class="o">+=</span> <span class="n">rew</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Greedy reward = </span><span class="si">{</span><span class="n">greedy_rew</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tour</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_network</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Greedy reward = 0.0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_tsp_docs_14_1.png" src="../_images/examples_tsp_docs_14_1.png" />
+</div>
+</div>
+</section>
+<section id="Solution-Method:-networkx-heuristics">
+<h2>Solution Method: networkx heuristics<a class="headerlink" href="#Solution-Method:-networkx-heuristics" title="Permalink to this headline"></a></h2>
+<p>Just for fun, because we implemented the problem instance in networkx, we can use the library’s built-in heuristics for solving TSP outsid of <code class="docutils literal notranslate"><span class="pre">graphenv</span></code>. Note there is no RL being applied here – you need <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> for that – but the heuristics provide strong benchmarks to compare against.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">traveling_salesman</span><span class="o">.</span><span class="n">christofides</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_network</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_tsp_docs_16_0.png" src="../_images/examples_tsp_docs_16_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Policy-Training">
+<h1>Policy Training<a class="headerlink" href="#Policy-Training" title="Permalink to this headline"></a></h1>
+<p>See <code class="docutils literal notranslate"><span class="pre">tests/test_tsp.py</span></code> for some simple examples of training the policy with RLLib.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tune.html" class="btn btn-neutral float-left" title="Running GraphEnv with ray.tune" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../cloud/tsp_on_aws.html" class="btn btn-neutral float-right" title="Running TSP on AWS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alliance for Sustainable Energy, LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

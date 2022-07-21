@@ -40,6 +40,7 @@ graphenv.examples.hallway.hallway\_model\_torch.TorchHallwayQModel
       ~TorchHallwayQModel.get_submodule
       ~TorchHallwayQModel.half
       ~TorchHallwayQModel.import_from_h5
+      ~TorchHallwayQModel.ipu
       ~TorchHallwayQModel.is_time_major
       ~TorchHallwayQModel.last_output
       ~TorchHallwayQModel.load_state_dict
@@ -55,6 +56,7 @@ graphenv.examples.hallway.hallway\_model\_torch.TorchHallwayQModel
       ~TorchHallwayQModel.register_forward_hook
       ~TorchHallwayQModel.register_forward_pre_hook
       ~TorchHallwayQModel.register_full_backward_hook
+      ~TorchHallwayQModel.register_load_state_dict_post_hook
       ~TorchHallwayQModel.register_module
       ~TorchHallwayQModel.register_parameter
       ~TorchHallwayQModel.requires_grad_
