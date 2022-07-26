@@ -1,17 +1,38 @@
+from functools import singledispatch, singledispatchmethod
 import logging
 from abc import abstractmethod
-from typing import Dict, List, Tuple
+from typing import Any, Dict, Generic, List, Protocol, Tuple, Type, TypeVar, Union
 
 import gym
+import gym.spaces
 from ray.rllib.models.repeated_values import RepeatedValues
 from ray.rllib.utils.typing import TensorStructType, TensorType
 
 from graphenv import tf, torch
 
+from ray.rllib.models.tf.tf_modelv2 import TFModelV2
+from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
+
 logger = logging.getLogger(__file__)
 
 
-class GraphModel:
+ModelSuperclass = TypeVar('ModelSuperclass', TFModelV2, TorchModelV2)
+
+'''
++ need different superclass
++ need to switch some method implementations
+
+'''
+
+
+class GraphModelInterface(Protocol):
+
+    @property
+    def action_values(self) -> Any:
+        pass
+
+
+class GraphModel(Generic[ModelSuperclass]):
     """Defines a RLLib compatible model for using RL algorithms on a GraphEnv.
 
     Args:
@@ -21,8 +42,6 @@ class GraphModel:
         model_config: Config forwarded to TFModelV2.__init()__.
         name: Config forwarded to TFModelV2.__init()__.
     """
-
-    _tensorlib = "tf"
 
     def __init__(
         self,
@@ -36,7 +55,7 @@ class GraphModel:
     ):
 
         super().__init__(
-            obs_space,
+            obs_space,  # type: ignore
             action_space,
             num_outputs,
             model_config,
@@ -50,7 +69,6 @@ class GraphModel:
         self.action_weights = None
         self.num_outputs = num_outputs
         logger.debug(f"num_outputs: {num_outputs}")
-        assert self._tensorlib is not None
 
     def forward(
         self,
@@ -72,18 +90,18 @@ class GraphModel:
             (action weights tensor, state)
         """
 
-        mask = _create_action_mask(input_dict["obs"], self._tensorlib)
-        flattened_observations = _stack_batch_dim(
-            input_dict["obs"], mask, self._tensorlib
+        mask = self._create_action_mask(input_dict["obs"])
+        flattened_observations = self._stack_batch_dim(
+            input_dict["obs"], mask,
         )
         flat_values, flat_weights = self.forward_vertex(flattened_observations)
 
         # mask out invalid children and get current vertex value
-        self.current_vertex_value, _ = _mask_and_split_values(
-            flat_values, input_dict["obs"], self._tensorlib
+        self.current_vertex_value, _ = self._mask_and_split_values(
+            flat_values, input_dict["obs"],
         )
-        _, action_weights = _mask_and_split_values(
-            flat_weights, input_dict["obs"], self._tensorlib
+        _, action_weights = self._mask_and_split_values(
+            flat_weights, input_dict["obs"],
         )
 
         self.total_value = self._forward_total_value()
@@ -128,102 +146,114 @@ class GraphModel:
         """
         return self.current_vertex_value
 
+    @singledispatchmethod
+    def _stack_batch_dim(
+        self,
+        obs: TensorStructType,
+        mask: TensorType,
+    ) -> TensorType:
+        return self._apply_mask(obs, mask)
 
-class TorchGraphModel(GraphModel):
-    _tensorlib = "torch"
+    @_stack_batch_dim.register
+    def _(
+        self,
+        obs: dict,
+        mask: TensorType,
+    ) -> TensorType:
+        return {k: self._stack_batch_dim(v, mask) for k, v in obs.items()}
+
+    @_stack_batch_dim.register
+    def _(
+        self,
+        obs: tuple,
+        mask: TensorType,
+    ) -> TensorType:
+        return tuple(self._stack_batch_dim(u, mask) for u in obs)
+
+    @_stack_batch_dim.register
+    def _(
+        self,
+        obs: RepeatedValues,
+        mask: TensorType,
+    ) -> TensorType:
+        return self._stack_batch_dim(obs.values, mask)
+
+    @abstractmethod
+    def _create_action_mask(self, obs: RepeatedValues) -> TensorType:
+        """Create an action mask array of valid actions from a given RepeatedValues tensor.
+
+        Args:
+            obs (RepeatedValues): The input observations
+            tensorlib (Any, optional): A reference to the current framework. Defaults to tf.
+
+        Raises:
+            NotImplementedError: if the given framework is not supported
+
+        Returns:
+            TensorType: The boolean mask for valid actions (includes the current state as
+            the first index).
+        """
+        pass
+
+    @abstractmethod
+    def _apply_mask(
+        self,
+        values: TensorType,
+        action_mask: TensorType,
+    ) -> TensorType:
+        pass
+
+    @abstractmethod
+    def _mask_and_split_values(
+        self,
+        flat_values: TensorType,
+        obs: RepeatedValues,
+    ) -> Tuple[TensorType, TensorType]:
+        """Returns the value for the current vertex (index 0 of values),
+        and the masked values of the action verticies.
+        Args:
+            values: Tensor to apply the action mask to.
+        Returns:
+            (a current state value tensor, a masked action values tensor)
+        """
+        pass
 
 
-def _create_action_mask(obs: RepeatedValues, tensorlib: str = "tf") -> TensorType:
-    """Create an action mask array of valid actions from a given RepeatedValues tensor.
-
-    Args:
-        obs (RepeatedValues): The input observations
-        tensorlib (Any, optional): A reference to the current framework. Defaults to tf.
-
-    Raises:
-        NotImplementedError: if the given framework is not supported
-
-    Returns:
-        TensorType: The boolean mask for valid actions (includes the current state as
-        the first index).
+class GraphModelTF(GraphModel[TFModelV2]):
+    """A GraphModel using Tensorflow and TFModelV2
     """
-    if tensorlib == "tf":
+
+    @abstractmethod
+    def _create_action_mask(self, obs: RepeatedValues) -> TensorType:
         # the "dummy batch" rllib provides to initialize the policy model is a matrix of
         # all zeros, which ends with a batch size of zero provided to the policy model.
         # We can assume that at least the input state is valid, and clip the row_lengths
         # vector to a minimum of 1 per (state, *actions) entry.
+        assert tf is not None
         row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
         num_elements = tf.reduce_sum(row_lengths)
         action_mask = tf.RaggedTensor.from_row_lengths(
             tf.ones(num_elements, dtype=tf.bool),
             row_lengths,
         ).to_tensor(shape=(None, obs.max_len))
+        return action_mask
 
-    elif tensorlib == "torch":
-        # Integer torch index tensors must be long type
-        row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
-        num_elements = row_lengths.sum().item()
-        action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=bool)
-        mask_index = torch.LongTensor(
-            [(i, j) for i in range(len(row_lengths)) for j in range(row_lengths[i])]
-        )
-        action_mask.index_put_(
-            tuple(mask_index.t()), torch.ones(num_elements, dtype=bool)
-        )
-
-    else:
-        raise NotImplementedError(f"tensorlib {tensorlib} not implemented")
-
-    return action_mask
-
-
-def _apply_mask(
-    values: TensorType, action_mask: TensorType, tensorlib: str = "tf"
-) -> TensorType:
-
-    if tensorlib == "tf":
+    @abstractmethod
+    def _apply_mask(
+        self,
+        values: TensorType,
+        action_mask: TensorType,
+    ) -> TensorType:
+        assert tf is not None
         return tf.boolean_mask(values, action_mask)
 
-    elif tensorlib == "torch":
-        # masked_select returns a 1D tensor so needs reshaping. Pretty sure the last
-        # dimension will always be the feature dim -- will action_mask always be 2d?
-        # The .view(-1, feature_dim) call will fail if more than 2d.
-        feature_dim = values.shape[-1]
-        values = torch.masked_select(values, action_mask.view(*action_mask.shape, 1))
-        return values.view(-1, feature_dim)
-
-    else:
-        raise NotImplementedError(f"tensorlib {tensorlib} not implemented")
-
-
-def _stack_batch_dim(
-    obs: TensorStructType, mask: TensorType, tensorlib: str = "tf"
-) -> TensorType:
-    if isinstance(obs, dict):
-        return {k: _stack_batch_dim(v, mask, tensorlib) for k, v in obs.items()}
-
-    elif isinstance(obs, tuple):
-        return tuple(_stack_batch_dim(u, mask, tensorlib) for u in obs)
-
-    elif isinstance(obs, RepeatedValues):
-        return _stack_batch_dim(obs.values, mask, tensorlib)
-
-    else:
-        return _apply_mask(obs, mask, tensorlib)
-
-
-def _mask_and_split_values(
-    flat_values: TensorType, obs: RepeatedValues, tensorlib: str = "tf"
-) -> Tuple[TensorType]:
-    """Returns the value for the current vertex (index 0 of values),
-    and the masked values of the action verticies.
-    Args:
-        values: Tensor to apply the action mask to.
-    Returns:
-        (a current state value tensor, a masked action values tensor)
-    """
-
-    if tensorlib == "tf":
+    @abstractmethod
+    def _mask_and_split_values(
+        self,
+        flat_values: TensorType,
+        obs: RepeatedValues,
+    ) -> Tuple[TensorType, TensorType]:
+        assert tf is not None
         row_lengths = tf.clip_by_value(tf.cast(obs.lengths, tf.int32), 1, tf.int32.max)
         flat_values = tf.squeeze(flat_values, axis=[-1])
         values = tf.RaggedTensor.from_row_lengths(flat_values, row_lengths)
@@ -233,8 +263,49 @@ def _mask_and_split_values(
         )
         current_value = values[:, 0]
         masked_action_values = values[:, 1:]
+        return current_value, masked_action_values
 
-    elif tensorlib == "torch":
+
+class GraphModelTorch(GraphModel[TorchModelV2]):
+    """A GraphModel using PyTorch and TorchModelV2
+    """
+
+    @abstractmethod
+    def _create_action_mask(self, obs: RepeatedValues) -> TensorType:
+        # Integer torch index tensors must be long type
+        assert torch is not None
+        row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
+        num_elements = row_lengths.sum().item()
+        action_mask = torch.zeros(len(row_lengths), obs.max_len, dtype=bool)
+        mask_index = torch.LongTensor(
+            [(i, j) for i in range(len(row_lengths)) for j in range(row_lengths[i])]
+        )
+        action_mask.index_put_(
+            tuple(mask_index.t()), torch.ones(num_elements, dtype=bool)
+        )
+        return action_mask
+
+    @abstractmethod
+    def _apply_mask(
+        self,
+        values: TensorType,
+        action_mask: TensorType,
+    ) -> TensorType:
+        # masked_select returns a 1D tensor so needs reshaping. Pretty sure the last
+        # dimension will always be the feature dim -- will action_mask always be 2d?
+        # The .view(-1, feature_dim) call will fail if more than 2d.
+        assert torch is not None
+        feature_dim = values.shape[-1]
+        values = torch.masked_select(values, action_mask.view(*action_mask.shape, 1))
+        return values.view(-1, feature_dim)
+
+    @abstractmethod
+    def _mask_and_split_values(
+        self,
+        flat_values: TensorType,
+        obs: RepeatedValues,
+    ) -> Tuple[TensorType, TensorType]:
+        assert torch is not None
         row_lengths = torch.clip(obs.lengths.long(), 1, torch.iinfo(torch.long).max)
         flat_values = flat_values.squeeze(dim=-1)
         value_index = torch.LongTensor(
@@ -247,7 +318,4 @@ def _mask_and_split_values(
         values.index_put_(tuple(value_index.t()), flat_values)
         current_value = values[:, 0]
         masked_action_values = values[:, 1:]
-    else:
-        raise NotImplementedError(f"tensorlib {tensorlib} not implemented")
-
-    return current_value, masked_action_values
+        return current_value, masked_action_values

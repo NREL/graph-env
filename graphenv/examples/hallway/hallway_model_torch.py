@@ -1,15 +1,14 @@
 from typing import Tuple
 
 from graphenv import nn
-from graphenv.graph_model import TorchGraphModel
+from graphenv.graph_model import GraphModel, GraphModelTorch
 from ray.rllib.agents.dqn.dqn_torch_model import DQNTorchModel
 from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from ray.rllib.utils.typing import TensorStructType, TensorType
 
 
 class TorchHallwayModel(
-    TorchGraphModel,
-    TorchModelV2,
+    GraphModelTorch,
     nn.Module,
 ):
     """An example GraphModel implementation for the HallwayEnv and HallwayState

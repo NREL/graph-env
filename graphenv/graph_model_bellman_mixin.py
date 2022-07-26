@@ -1,7 +1,8 @@
 from graphenv import tf
+from graphenv.graph_model import GraphModelInterface
 
 
-class GraphModelBellmanMixin:
+class GraphModelBellmanMixin(GraphModelInterface):
     """
     Mixin for use with GraphModel that evaluates the current state as the
     max of the successor state value assesments.
