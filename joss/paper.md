@@ -61,7 +61,7 @@ For example, classic CO problems on graphs such as the traveling salesman proble
 can be expressed as either pure graph search _or_ integer program with well defined
 linear objective function and linear constraints.  Other problems, however, such as
 molecular optimization, do no have concise algebraic formulations and yet are readily
-implemented as a graph search [Zhou_2019,@sv2021multi].  In recent  years, reinforcement learning
+implemented as a graph search [@Zhou_2019,@sv2021multi].  In recent  years, reinforcement learning
 (RL) has emerged as an effective paradigm for optimizing searches over graphs and led to
 state-of-the-art heuristics for games like Go and chess, as well as for classical CO
 problems such as the Traveling Salesman Problem (TSP).  This combination of graph search
@@ -89,7 +89,7 @@ Related software efforts have addressed parts of the above need. OpenGraphGym [@
 # Examples of usage
 
 This package is a generalization of methods employed in the optimization of molecular
-structure for energy storage applications, funded by DOE's Advanced Research Projects
+structure for energy storage applications, funded by US Department of Energy (DOE)'s Advanced Research Projects
 Agency - Energy [@sv2021multi]. Specifically, this package enables optimization against
 a surrogate objective function based on high-throughput density functional theory
 calculations [@Sowndarya_S_V_2021; @St_John_2020_a; @St_John_2020_b] by considering
