@@ -21,10 +21,10 @@ authors:
     affiliation: 2
   - name: Struan Clark
     affiliation: 2
-    orcid:  0000-0001-5132-0168
+    orcid:  0000-0003-0078-6560
   - name: Dmitry Duplyakin
     affiliation: 2
-    orcid:  0000-0003-0078-6560
+    orcid:  0000-0001-5132-0168
   - name: Jeffrey Law
     affiliation: 1
     orcid: 0000-0003-2828-1273    
