@@ -61,7 +61,7 @@ For example, classic CO problems on graphs such as the traveling salesman proble
 can be expressed as either pure graph search _or_ integer program with well defined
 linear objective function and linear constraints.  Other problems, however, such as
 molecular optimization, do no have concise algebraic formulations and yet are readily
-implemented as a graph search [@Zhou_2019,@sv2021multi].  In recent  years, reinforcement learning
+implemented as a graph search [@Zhou_2019;@sv2021multi].  In recent  years, reinforcement learning
 (RL) has emerged as an effective paradigm for optimizing searches over graphs and led to
 state-of-the-art heuristics for games like Go and chess, as well as for classical CO
 problems such as the Traveling Salesman Problem (TSP).  This combination of graph search
