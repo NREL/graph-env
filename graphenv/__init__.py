@@ -1,8 +1,10 @@
-from . import _version
-
-__version__ = _version.get_versions()["version"]
-
 from ray.rllib.utils.framework import try_import_tf, try_import_torch
+
+try:
+    from ._version import __version__, __version_tuple__
+except ImportError:
+    __version__ = "unknown version"
+    __version_tuple__ = (0, 0, "unknown version")
 
 tf1, tf, tfv = try_import_tf()
 assert tfv == 2
