@@ -1,6 +1,4 @@
-from . import _version
-
-__version__ = _version.get_versions()["version"]
+import * from _version
 
 from ray.rllib.utils.framework import try_import_tf, try_import_torch
 

@@ -152,3 +152,5 @@ experiments/tsp/env.sh
 docs/source/_autosummary
 joss/paper.jats
 joss/paper.pdf
+
+graphenv/_version.py
