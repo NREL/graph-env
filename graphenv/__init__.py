@@ -1,10 +1,10 @@
 from ray.rllib.utils.framework import try_import_tf, try_import_torch
 
 try:
-    from graphenv._version import __version__, __version_tuple__  # noqa: F401
-except ModuleNotFoundError:
-    __version__ = "package not installed"
-    __version_tuple__ = (None, None, None)
+    from ._version import __version__, __version_tuple__
+except ImportError:
+    __version__ = "unknown version"
+    __version_tuple__ = (0, 0, "unknown version")
 
 tf1, tf, tfv = try_import_tf()
 assert tfv == 2
