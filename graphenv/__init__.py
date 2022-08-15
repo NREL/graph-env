@@ -7,7 +7,9 @@ except ImportError:
     __version_tuple__ = (0, 0, "unknown version")
 
 tf1, tf, tfv = try_import_tf()
-assert tfv == 2
+
+if tf is not None:
+    assert tfv == 2, "GraphEnv only supports tensorflow 2.x"
 if not tf1.executing_eagerly():
     tf1.enable_eager_execution()
 
