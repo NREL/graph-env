@@ -11,7 +11,7 @@ layers = tf.keras.layers
 
 class HallwayState(Vertex):
     """Example Vertex implementation of a simple hallway process graph.
-    The hallway graph is a simple bidirectional chain of verticies. The root
+    The hallway graph is a simple bidirectional chain of vertices. The root
     vertex is on one end of the chain and the terminal goal vertex is on the
     opposite end. The length is configurable.
 
@@ -76,7 +76,7 @@ class HallwayState(Vertex):
     def info(self) -> Dict:
         """
         Debugging information compiled and returned by the environment step()
-        method about verticies passed through or considered.
+        method about vertices passed through or considered.
 
         Returns:
             Dict: Debugging information including the index of this vertex.
@@ -86,12 +86,12 @@ class HallwayState(Vertex):
         return info
 
     def _get_children(self) -> Sequence["HallwayState"]:
-        """Gets child verticies of this vertex. Each vertex has both larger
-        and smaller adjacent index verticies as children, except for the initial
-        and goal verticies.
+        """Gets child vertices of this vertex. Each vertex has both larger
+        and smaller adjacent index vertices as children, except for the initial
+        and goal vertices.
 
         Yields:
-            HallwayState: Child verticies of this vertex.
+            HallwayState: Child vertices of this vertex.
         """
         if self.cur_pos < self.end_pos:
             if self.cur_pos > 0:  # Stop the hallway from going negative

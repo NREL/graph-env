@@ -102,7 +102,7 @@ class GraphModel:
         self,
         input_dict,
     ) -> Tuple[TensorType, TensorType]:
-        """Forward function returning a value and weight tensor for the verticies
+        """Forward function returning a value and weight tensor for the vertices
         observed via input_dict (a dict of tensors for each vertex property)
 
         Args:
@@ -114,13 +114,13 @@ class GraphModel:
         pass
 
     def _forward_total_value(self):
-        """Forward method computing the value assesment of the current state,
+        """Forward method computing the value assessment of the current state,
         as returned by the value_function() method.
 
         The default implementation return the action value of the current state.
 
         Breaking this into a separate method allows subclasses to override the
-        state value assesment, for example with a Bellman backup returning
+        state value assessment, for example with a Bellman backup returning
         the max over all successor states's values.
 
         Returns:
@@ -216,7 +216,7 @@ def _mask_and_split_values(
     flat_values: TensorType, obs: RepeatedValues, tensorlib: str = "tf"
 ) -> Tuple[TensorType]:
     """Returns the value for the current vertex (index 0 of values),
-    and the masked values of the action verticies.
+    and the masked values of the action vertices.
     Args:
         values: Tensor to apply the action mask to.
     Returns:

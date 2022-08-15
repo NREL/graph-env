@@ -50,12 +50,16 @@ class Vertex(Generic[V]):
         """
         raise NotImplementedError
 
+    def render(self) -> None:
+        """Optional method for rendering the current state of the environment."""
+        raise NotImplementedError
+
     @abstractmethod
     def _get_children(self) -> Sequence[V]:
-        """Gets the child verticies of this vertex.
+        """Gets the child vertices of this vertex.
 
         Returns:
-            Sequence[N]: Sequence of child verticies.
+            Sequence[N]: Sequence of child vertices.
         """
         raise NotImplementedError
 
@@ -73,13 +77,13 @@ class Vertex(Generic[V]):
     @property
     def children(self) -> List[V]:
         """
-        Gets the child verticies of this vertex.
+        Gets the child vertices of this vertex.
         Acts as a wrapper that memoizes calls to _get_children() and
         ensures that it is a list. If you would like a different behavior,
-        such as stochastic child verticies, override this property.
+        such as stochastic child vertices, override this property.
 
         Returns:
-            List[N] : List of child verticies
+            List[N] : List of child vertices
         """
         if self._children is None:
             self._children = list(self._get_children())

@@ -4,7 +4,7 @@ import gym
 import networkx as nx
 import numpy as np
 from graphenv import tf
-from graphenv.examples.tsp.graph_utils import calc_greedy_dist
+from graphenv.examples.tsp.graph_utils import calc_greedy_dist, plot_network
 from graphenv.vertex import Vertex
 
 layers = tf.keras.layers
@@ -107,6 +107,9 @@ class TSPState(Vertex):
         """
         G = self.G if not new_graph else self.graph_generator()
         return self.__class__(self.graph_generator, G=G, tour=tour, **kwargs)
+
+    def render(self) -> None:
+        plot_network(self.G, self.tour)
 
     @property
     def info(self) -> Dict:

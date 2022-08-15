@@ -4,7 +4,7 @@ from graphenv import tf
 class GraphModelBellmanMixin:
     """
     Mixin for use with GraphModel that evaluates the current state as the
-    max of the successor state value assesments.
+    max of the successor state value assessments.
     """
 
     def _forward_total_value(self):

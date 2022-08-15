@@ -1,6 +1,6 @@
 import logging
 import warnings
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import gym
 import numpy as np
@@ -41,6 +41,10 @@ class GraphEnv(gym.Env):
 
     #: the action space, a Discrete space over `max_num_children`
     action_space: gym.Space
+
+    # For environment rendering
+    metadata: Dict[str, Any] = {"render_modes": ["human", None]}
+    render_mode: Optional[str] = None
 
     def __init__(self, env_config: EnvContext) -> None:
         super().__init__()
@@ -135,7 +139,7 @@ class GraphEnv(gym.Env):
         and every action's values for that key concatenated into numpy arrays.
 
         The current state is the 0th entry in these arrays, and the children
-        are offset by one index to accomodate that.
+        are offset by one index to accommodate that.
 
         Returns:
 
@@ -148,3 +152,9 @@ class GraphEnv(gym.Env):
         ), f"{self.state} exceeds the maximum number of children"
 
         return [state.observation for state in (self.state, *self.state.children)]
+
+    def render(self, mode="human") -> None:
+        """Delegates to Vertex.render()"""
+
+        if mode == "human":
+            self.state.render()
