@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Dict, Generic, List, Optional, Sequence, TypeVar
+from typing import Any, Dict, Generic, List, Optional, Sequence, TypeVar
 
 import gym
 
@@ -50,7 +50,7 @@ class Vertex(Generic[V]):
         """
         raise NotImplementedError
 
-    def render(self) -> None:
+    def render(self) -> Any:
         """Optional method for rendering the current state of the environment."""
         raise NotImplementedError
 

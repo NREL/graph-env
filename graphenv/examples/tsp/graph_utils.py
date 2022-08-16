@@ -40,7 +40,7 @@ def make_complete_planar_graph(N, seed: int = None) -> nx.Graph:
     return G
 
 
-def plot_network(G, path: list = None) -> Tuple[any, any]:
+def plot_network(G, path: list = None, draw_all_edges=True) -> Tuple[any, any]:
     """Plots the network and a path if specified.
 
     Args:
@@ -61,13 +61,25 @@ def plot_network(G, path: list = None) -> Tuple[any, any]:
     else:
         pos = [G.nodes[n]["pos"] for n in G.nodes]
 
-    _ = nx.draw_networkx_nodes(G, pos, node_size=200)
+    if not path:
+        _ = nx.draw_networkx_nodes(G, pos, node_size=200)
+
+    else:
+        _ = nx.draw_networkx_nodes(G, pos, node_size=200, node_color="#808080")
+        _ = nx.draw_networkx_nodes(
+            G.subgraph(list(set(path))),
+            pos,
+            node_size=200,
+        )
+
     _ = nx.draw_networkx_labels(G, pos, font_size=12, font_color="white")
 
-    if path is None:
+    if path is None and draw_all_edges:
         _ = nx.draw_networkx_edges(G, pos, edgelist=list(G.edges), width=1)
     else:
-        _ = nx.draw_networkx_edges(G, pos, edgelist=list(G.edges), width=0.1)
+        if draw_all_edges:
+            _ = nx.draw_networkx_edges(G, pos, edgelist=list(G.edges), width=0.1)
+
         edgelist = [(path[i + 1], path[i]) for i in range(len(path) - 1)]
         _ = nx.draw_networkx_edges(G, pos, edgelist=edgelist, width=1)
 
