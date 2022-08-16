@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class GraphEnv(gym.Env):
     """
     Defines an OpenAI Gym Env for traversing a graph using the current vertex
-    as the state, and the successor verticies as actions.
+    as the state, and the successor vertices as actions.
 
     GraphEnv uses composition to supply the per-vertex model of type Vertex, which
     defines the graph via it's `_get_children()` method.
@@ -63,7 +63,7 @@ class GraphEnv(gym.Env):
 
     def reset(self) -> Dict[str, np.ndarray]:
         """Reset this state to the root vertex. It is possible for state.root to
-        return different root verticies on each call.
+        return different root vertices on each call.
 
         Returns:
             Dict[str, np.ndarray]: Observation of the root vertex.
@@ -72,7 +72,7 @@ class GraphEnv(gym.Env):
         return self.make_observation()
 
     def step(self, action: int) -> Tuple[Dict[str, np.ndarray], float, bool, dict]:
-        """Steps the envirionment to a new state by taking an action. In the
+        """Steps the environment to a new state by taking an action. In the
         case of GraphEnv, the action specifies which next vertex to move to and
         this method advances the environment to that vertex.
 
@@ -85,7 +85,7 @@ class GraphEnv(gym.Env):
         Returns:
             Tuple[Dict[str, np.ndarray], float, bool, dict]: Tuple of:
                 a dictionary of the new state's observation,
-                the reward recieved by moving to the new state's vertex,
+                the reward received by moving to the new state's vertex,
                 a bool which is true iff the new stae is a terminal vertex,
                 a dictionary of debugging information related to this call
         """
@@ -153,8 +153,8 @@ class GraphEnv(gym.Env):
 
         return [state.observation for state in (self.state, *self.state.children)]
 
-    def render(self, mode="human") -> None:
+    def render(self, mode: str = "human") -> Any:
         """Delegates to Vertex.render()"""
 
         if mode == "human":
-            self.state.render()
+            return self.state.render()

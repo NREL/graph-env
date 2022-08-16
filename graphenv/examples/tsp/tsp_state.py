@@ -1,10 +1,10 @@
-from typing import Callable, Dict, List, Optional, Sequence
+from typing import Any, Callable, Dict, List, Optional, Sequence
 
 import gym
 import networkx as nx
 import numpy as np
 from graphenv import tf
-from graphenv.examples.tsp.graph_utils import calc_greedy_dist, plot_network
+from graphenv.examples.tsp.graph_utils import plot_network
 from graphenv.vertex import Vertex
 
 layers = tf.keras.layers
@@ -89,10 +89,6 @@ class TSPState(Vertex):
         else:
             raise RuntimeError(f"Invalid tour: {self.tour}")
 
-        if len(self.tour) == self.num_nodes + 1:
-            # If this is the final leg of the tour, offset by the greedy distance
-            rew += calc_greedy_dist(self.G)
-
         return rew
 
     def new(self, tour: List[int] = [0], new_graph=False, **kwargs):
@@ -108,8 +104,8 @@ class TSPState(Vertex):
         G = self.G if not new_graph else self.graph_generator()
         return self.__class__(self.graph_generator, G=G, tour=tour, **kwargs)
 
-    def render(self) -> None:
-        plot_network(self.G, self.tour)
+    def render(self) -> Any:
+        return plot_network(self.G, self.tour, draw_all_edges=False)
 
     @property
     def info(self) -> Dict:
