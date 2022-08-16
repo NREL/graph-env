@@ -56,6 +56,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -101,7 +103,7 @@
 
 <div class="viewcode-block" id="HallwayState"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_state.HallwayState.html#graphenv.examples.hallway.hallway_state.HallwayState">[docs]</a><span class="k">class</span> <span class="nc">HallwayState</span><span class="p">(</span><span class="n">Vertex</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Example Vertex implementation of a simple hallway process graph.</span>
-<span class="sd">    The hallway graph is a simple bidirectional chain of verticies. The root</span>
+<span class="sd">    The hallway graph is a simple bidirectional chain of vertices. The root</span>
 <span class="sd">    vertex is on one end of the chain and the terminal goal vertex is on the</span>
 <span class="sd">    opposite end. The length is configurable.</span>
 
@@ -166,7 +168,7 @@
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Debugging information compiled and returned by the environment step()</span>
-<span class="sd">        method about verticies passed through or considered.</span>
+<span class="sd">        method about vertices passed through or considered.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict: Debugging information including the index of this vertex.</span>
@@ -176,12 +178,12 @@
         <span class="k">return</span> <span class="n">info</span>
 
     <span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;HallwayState&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Gets child verticies of this vertex. Each vertex has both larger</span>
-<span class="sd">        and smaller adjacent index verticies as children, except for the initial</span>
-<span class="sd">        and goal verticies.</span>
+        <span class="sd">&quot;&quot;&quot;Gets child vertices of this vertex. Each vertex has both larger</span>
+<span class="sd">        and smaller adjacent index vertices as children, except for the initial</span>
+<span class="sd">        and goal vertices.</span>
 
 <span class="sd">        Yields:</span>
-<span class="sd">            HallwayState: Child verticies of this vertex.</span>
+<span class="sd">            HallwayState: Child vertices of this vertex.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Stop the hallway from going negative</span>

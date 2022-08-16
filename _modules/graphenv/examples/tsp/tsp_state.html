@@ -56,6 +56,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -88,13 +90,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for graphenv.examples.tsp.tsp_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">graphenv</span> <span class="kn">import</span> <span class="n">tf</span>
-<span class="kn">from</span> <span class="nn">graphenv.examples.tsp.graph_utils</span> <span class="kn">import</span> <span class="n">calc_greedy_dist</span>
+<span class="kn">from</span> <span class="nn">graphenv.examples.tsp.graph_utils</span> <span class="kn">import</span> <span class="n">plot_network</span>
 <span class="kn">from</span> <span class="nn">graphenv.vertex</span> <span class="kn">import</span> <span class="n">Vertex</span>
 
 <span class="n">layers</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span>
@@ -179,10 +181,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid tour: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># If this is the final leg of the tour, offset by the greedy distance</span>
-            <span class="n">rew</span> <span class="o">+=</span> <span class="n">calc_greedy_dist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">rew</span>
 
 <div class="viewcode-block" id="TSPState.new"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState.new">[docs]</a>    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tour</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -197,6 +195,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">new_graph</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_generator</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_generator</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">tour</span><span class="o">=</span><span class="n">tour</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSPState.render"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">plot_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">,</span> <span class="n">draw_all_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>

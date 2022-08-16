@@ -33,6 +33,7 @@ graphenv.graph\_env.GraphEnv
       ~GraphEnv.action_space
       ~GraphEnv.metadata
       ~GraphEnv.observation_space
+      ~GraphEnv.render_mode
       ~GraphEnv.reward_range
       ~GraphEnv.spec
       ~GraphEnv.unwrapped

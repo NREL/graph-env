@@ -23,6 +23,7 @@ Tutorials
    :caption: TSP Example
 
    examples/tsp_docs
+   examples/tsp_env
    cloud/tsp_on_aws
 
 .. toctree::

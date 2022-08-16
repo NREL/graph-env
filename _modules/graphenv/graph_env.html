@@ -56,6 +56,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -90,7 +92,7 @@
   <h1>Source code for graphenv.graph_env</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -105,7 +107,7 @@
 <div class="viewcode-block" id="GraphEnv"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv">[docs]</a><span class="k">class</span> <span class="nc">GraphEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Defines an OpenAI Gym Env for traversing a graph using the current vertex</span>
-<span class="sd">    as the state, and the successor verticies as actions.</span>
+<span class="sd">    as the state, and the successor vertices as actions.</span>
 
 <span class="sd">    GraphEnv uses composition to supply the per-vertex model of type Vertex, which</span>
 <span class="sd">    defines the graph via it&#39;s `_get_children()` method.</span>
@@ -132,6 +134,10 @@
     <span class="c1">#: the action space, a Discrete space over `max_num_children`</span>
     <span class="n">action_space</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Space</span>
 
+    <span class="c1"># For environment rendering</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;render_modes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]}</span>
+    <span class="n">render_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EnvContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -149,7 +155,7 @@
 
 <div class="viewcode-block" id="GraphEnv.reset"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Reset this state to the root vertex. It is possible for state.root to</span>
-<span class="sd">        return different root verticies on each call.</span>
+<span class="sd">        return different root vertices on each call.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict[str, np.ndarray]: Observation of the root vertex.</span>
@@ -158,7 +164,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_observation</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="GraphEnv.step"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Steps the envirionment to a new state by taking an action. In the</span>
+        <span class="sd">&quot;&quot;&quot;Steps the environment to a new state by taking an action. In the</span>
 <span class="sd">        case of GraphEnv, the action specifies which next vertex to move to and</span>
 <span class="sd">        this method advances the environment to that vertex.</span>
 
@@ -171,7 +177,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Tuple[Dict[str, np.ndarray], float, bool, dict]: Tuple of:</span>
 <span class="sd">                a dictionary of the new state&#39;s observation,</span>
-<span class="sd">                the reward recieved by moving to the new state&#39;s vertex,</span>
+<span class="sd">                the reward received by moving to the new state&#39;s vertex,</span>
 <span class="sd">                a bool which is true iff the new stae is a terminal vertex,</span>
 <span class="sd">                a dictionary of debugging information related to this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -225,7 +231,7 @@
 <span class="sd">        and every action&#39;s values for that key concatenated into numpy arrays.</span>
 
 <span class="sd">        The current state is the 0th entry in these arrays, and the children</span>
-<span class="sd">        are offset by one index to accomodate that.</span>
+<span class="sd">        are offset by one index to accommodate that.</span>
 
 <span class="sd">        Returns:</span>
 
@@ -237,7 +243,13 @@
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_num_children</span>
         <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2"> exceeds the maximum number of children&quot;</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">observation</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">children</span><span class="p">)]</span></div></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">observation</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">children</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="GraphEnv.render"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;human&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Delegates to Vertex.render()&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>

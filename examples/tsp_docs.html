@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Running TSP on AWS" href="../cloud/tsp_on_aws.html" />
+    <link rel="next" title="TSP Environment Rendering" href="tsp_env.html" />
     <link rel="prev" title="Running GraphEnv with ray.tune" href="tune.html" /> 
 </head>
 
@@ -76,6 +76,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -519,10 +521,6 @@ node. Presumably, given a list of such child states, an RL policy could learn a 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid tour: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tour</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="c1"># If this is the final leg of the tour, offset by the greedy distance</span>
-        <span class="n">rew</span> <span class="o">+=</span> <span class="n">calc_greedy_dist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">rew</span>
 </pre></div>
 </div>
@@ -666,7 +664,7 @@ node. Presumably, given a list of such child states, an RL policy could learn a 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Random reward = </span><span class="si">{</span><span class="n">rand_rew</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tour</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plot_network</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -675,7 +673,7 @@ node. Presumably, given a list of such child states, an RL policy could learn a 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Random reward = -20.021949858850093
+Random reward = -20.562185105071027
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -683,7 +681,7 @@ Random reward = -20.021949858850093
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/dbiagion/gitrepos/graph-env-public/graphenv/graph_env.py:107: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
+/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:110: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
   warnings.warn(
 </pre></div></div>
 </div>
@@ -716,7 +714,7 @@ Random reward = -20.021949858850093
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Greedy reward = </span><span class="si">{</span><span class="n">greedy_rew</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tour</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plot_network</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -725,7 +723,7 @@ Random reward = -20.021949858850093
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Greedy reward = 0.0
+Greedy reward = -5.3454995624259976
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -769,7 +767,7 @@ Greedy reward = 0.0
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="tune.html" class="btn btn-neutral float-left" title="Running GraphEnv with ray.tune" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../cloud/tsp_on_aws.html" class="btn btn-neutral float-right" title="Running TSP on AWS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tsp_env.html" class="btn btn-neutral float-right" title="TSP Environment Rendering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

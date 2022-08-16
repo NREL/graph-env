@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -147,6 +149,9 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.vertex.Vertex.render" title="graphenv.vertex.Vertex.render"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></a></p></td>
+<td><p>Optional method for rendering the current state of the environment.</p></td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
@@ -157,7 +162,7 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.vertex.Vertex.children" title="graphenv.vertex.Vertex.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a></p></td>
-<td><p>Gets the child verticies of this vertex.</p></td>
+<td><p>Gets the child vertices of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.vertex.Vertex.info" title="graphenv.vertex.Vertex.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
 <td><p>Returns: An optional dictionary with additional information about the state</p></td>
@@ -182,13 +187,13 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.children">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.vertex.Vertex.children" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the child verticies of this vertex.
+<dd><p>Gets the child vertices of this vertex.
 Acts as a wrapper that memoizes calls to _get_children() and
 ensures that it is a list. If you would like a different behavior,
-such as stochastic child verticies, override this property.</p>
+such as stochastic child vertices, override this property.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of child verticies</p>
+<dd class="field-odd"><p>List of child vertices</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>List[N]</p>
@@ -228,6 +233,17 @@ the data returned when observing a vertex.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>gym.spaces.Space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="graphenv.vertex.Vertex.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/vertex.html#Vertex.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.vertex.Vertex.render" title="Permalink to this definition"></a></dt>
+<dd><p>Optional method for rendering the current state of the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>Any</em></p>
 </dd>
 </dl>
 </dd></dl>

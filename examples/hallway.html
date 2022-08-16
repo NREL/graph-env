@@ -71,6 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#Reset">Reset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Step">Step</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Step-to-the-terminal-vertex">Step to the terminal vertex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Saving-and-loading-GraphEnvs">Saving and loading GraphEnvs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tune.html">Running <code class="docutils literal notranslate"><span class="pre">GraphEnv</span></code> with <code class="docutils literal notranslate"><span class="pre">ray.tune</span></code></a></li>
@@ -82,6 +83,8 @@
 <li class="toctree-l1"><a class="reference internal" href="tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -503,11 +506,11 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <h3><code class="docutils literal notranslate"><span class="pre">_get_children</span></code><a class="headerlink" href="#_get_children" title="Permalink to this headline"></a></h3>
 <p>To take an action from a given vertex in the graph search, we need to be able observe its children. The <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> class implements this first part through a <code class="docutils literal notranslate"><span class="pre">_get_children</span></code> generator which, for the hallway problem, looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;HallwayState&quot;</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Gets child verticies of this vertex. Each vertex has both larger</span>
-<span class="sd">    and smaller adjacent index verticies as children, except for the initial</span>
-<span class="sd">    and goal verticies.</span>
+    <span class="sd">&quot;&quot;&quot;Gets child vertices of this vertex. Each vertex has both larger</span>
+<span class="sd">    and smaller adjacent index vertices as children, except for the initial</span>
+<span class="sd">    and goal vertices.</span>
 <span class="sd">    Yields:</span>
-<span class="sd">        HallwayState: Child verticies of this vertex.</span>
+<span class="sd">        HallwayState: Child vertices of this vertex.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Stop the hallway from going negative</span>
@@ -589,7 +592,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <span class="kn">from</span> <span class="nn">graphenv.graph_env</span> <span class="kn">import</span> <span class="n">GraphEnv</span>
 
 <span class="n">state</span> <span class="o">=</span> <span class="n">HallwayState</span><span class="p">(</span><span class="n">corridor_length</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">GraphEnv</span><span class="p">({</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="n">state</span><span class="p">,</span> <span class="s1">&#39;max_num_children&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GraphEnv</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">,</span> <span class="s2">&quot;max_num_children&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -636,7 +639,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:106: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
+/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:110: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib&#39;s env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.
   warnings.warn(
 </pre></div></div>
 </div>
@@ -779,7 +782,70 @@ True
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-1.5406029933376866
+1.0843790548169845
+</pre></div></div>
+</div>
+</section>
+<section id="Saving-and-loading-GraphEnvs">
+<h2>Saving and loading GraphEnvs<a class="headerlink" href="#Saving-and-loading-GraphEnvs" title="Permalink to this headline"></a></h2>
+<p>The standard pickle library can be used to save / load graphenv objects. While this is used internally by ray, note that derived <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> classes may contain unpickleable objects. In these cases, users should <a class="reference external" href="https://docs.ray.io/en/latest/rllib/rllib-env.html#configuring-environments">defer environment creation</a> to a registered function that is called by each worker in ray</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">state</span> <span class="o">=</span> <span class="n">HallwayState</span><span class="p">(</span><span class="n">corridor_length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GraphEnv</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">,</span> <span class="s2">&quot;max_num_children&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">make_observation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[{&#39;cur_pos&#39;: array([6])}, {&#39;cur_pos&#39;: array([5])}, {&#39;cur_pos&#39;: array([7])}]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+
+<span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">env</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">make_observation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[{&#39;cur_pos&#39;: array([6])}, {&#39;cur_pos&#39;: array([5])}, {&#39;cur_pos&#39;: array([7])}]
 </pre></div></div>
 </div>
 </section>

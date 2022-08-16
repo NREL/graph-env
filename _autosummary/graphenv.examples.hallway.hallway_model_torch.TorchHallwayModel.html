@@ -59,6 +59,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -207,7 +209,7 @@ Graph. Uses a dense fully connected Torch network.</p>
 <td><p>Tensorflow/Keras style forward method.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel.forward_vertex" title="graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel.forward_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_vertex</span></code></a></p></td>
-<td><p>Forward function returning a value and weight tensor for the verticies observed via input_dict (a dict of tensors for each vertex property)</p></td>
+<td><p>Forward function returning a value and weight tensor for the vertices observed via input_dict (a dict of tensors for each vertex property)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_batch</span></code></p></td>
 <td><p></p></td>
@@ -354,7 +356,7 @@ Graph. Uses a dense fully connected Torch network.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel.forward_vertex">
 <span class="sig-name descname"><span class="pre">forward_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/hallway/hallway_model_torch.html#TorchHallwayModel.forward_vertex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel.forward_vertex" title="Permalink to this definition"></a></dt>
-<dd><p>Forward function returning a value and weight tensor for the verticies
+<dd><p>Forward function returning a value and weight tensor for the vertices
 observed via input_dict (a dict of tensors for each vertex property)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

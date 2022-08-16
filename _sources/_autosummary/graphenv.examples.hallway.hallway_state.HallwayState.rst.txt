@@ -16,6 +16,7 @@ graphenv.examples.hallway.hallway\_state.HallwayState
       :nosignatures:
    
       ~HallwayState.new
+      ~HallwayState.render
    
    
 

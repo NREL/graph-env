@@ -59,6 +59,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -152,6 +154,9 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.new" title="graphenv.examples.tsp.tsp_nfp_state.TSPNFPState.new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new</span></code></a></p></td>
 <td><p>Convenience function for duplicating the existing node.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></p></td>
+<td><p>Optional method for rendering the current state of the environment.</p></td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
@@ -162,7 +167,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></p></td>
-<td><p>Gets the child verticies of this vertex.</p></td>
+<td><p>Gets the child vertices of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></p></td>
 <td><p>Returns: An optional dictionary with additional information about the state</p></td>

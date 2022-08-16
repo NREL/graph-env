@@ -16,6 +16,7 @@ graphenv.examples.tsp.tsp\_nfp\_state.TSPNFPState
       :nosignatures:
    
       ~TSPNFPState.new
+      ~TSPNFPState.render
    
    
 

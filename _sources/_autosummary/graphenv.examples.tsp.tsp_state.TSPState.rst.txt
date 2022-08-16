@@ -16,6 +16,7 @@ graphenv.examples.tsp.tsp\_state.TSPState
       :nosignatures:
    
       ~TSPState.new
+      ~TSPState.render
    
    
 

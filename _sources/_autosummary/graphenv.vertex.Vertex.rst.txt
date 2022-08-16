@@ -15,6 +15,7 @@ graphenv.vertex.Vertex
    .. autosummary::
       :nosignatures:
    
+      ~Vertex.render
    
    
 

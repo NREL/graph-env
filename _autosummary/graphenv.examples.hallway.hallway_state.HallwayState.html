@@ -59,6 +59,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -140,7 +142,7 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HallwayState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corridor_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/hallway/hallway_state.html#HallwayState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="graphenv.vertex.Vertex.html#graphenv.vertex.Vertex" title="graphenv.vertex.Vertex"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.vertex.Vertex</span></code></a></p>
 <p>Example Vertex implementation of a simple hallway process graph.
-The hallway graph is a simple bidirectional chain of verticies. The root
+The hallway graph is a simple bidirectional chain of vertices. The root
 vertex is on one end of the chain and the terminal goal vertex is on the
 opposite end. The length is configurable.</p>
 <dl class="field-list simple">
@@ -164,6 +166,9 @@ opposite end. The length is configurable.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.new" title="graphenv.examples.hallway.hallway_state.HallwayState.new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new</span></code></a></p></td>
 <td><p>Convenience function for duplicating the existing node.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></p></td>
+<td><p>Optional method for rendering the current state of the environment.</p></td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
@@ -174,10 +179,10 @@ opposite end. The length is configurable.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></p></td>
-<td><p>Gets the child verticies of this vertex.</p></td>
+<td><p>Gets the child vertices of this vertex.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.examples.hallway.hallway_state.HallwayState.info" title="graphenv.examples.hallway.hallway_state.HallwayState.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
-<td><p>Debugging information compiled and returned by the environment step() method about verticies passed through or considered.</p></td>
+<td><p>Debugging information compiled and returned by the environment step() method about vertices passed through or considered.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation</span></code></p></td>
 <td><p>Gets the observation of this vertex.</p></td>
@@ -200,7 +205,7 @@ opposite end. The length is configurable.</p>
 <dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_state.HallwayState.info">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#graphenv.examples.hallway.hallway_state.HallwayState.info" title="Permalink to this definition"></a></dt>
 <dd><p>Debugging information compiled and returned by the environment step()
-method about verticies passed through or considered.</p>
+method about vertices passed through or considered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Debugging information including the index of this vertex.</p>

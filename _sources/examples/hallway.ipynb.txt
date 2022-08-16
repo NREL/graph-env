@@ -180,11 +180,11 @@
     "\n",
     "```python\n",
     "def _get_children(self) -> Sequence[\"HallwayState\"]:\n",
-    "    \"\"\"Gets child verticies of this vertex. Each vertex has both larger\n",
-    "    and smaller adjacent index verticies as children, except for the initial\n",
-    "    and goal verticies.\n",
+    "    \"\"\"Gets child vertices of this vertex. Each vertex has both larger\n",
+    "    and smaller adjacent index vertices as children, except for the initial\n",
+    "    and goal vertices.\n",
     "    Yields:\n",
-    "        HallwayState: Child verticies of this vertex.\n",
+    "        HallwayState: Child vertices of this vertex.\n",
     "    \"\"\"\n",
     "    if self.cur_pos < self.end_pos:\n",
     "        if self.cur_pos > 0:  # Stop the hallway from going negative\n",
@@ -306,7 +306,7 @@
     "from graphenv.graph_env import GraphEnv\n",
     "\n",
     "state = HallwayState(corridor_length=3)\n",
-    "env = GraphEnv({'state': state, 'max_num_children': 2})"
+    "env = GraphEnv({\"state\": state, \"max_num_children\": 2})"
    ]
   },
   {
@@ -372,7 +372,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:106: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib's env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.\n",
+      "/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:110: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib's env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.\n",
       "  warnings.warn(\n"
      ]
     }
@@ -562,13 +562,92 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "1.5406029933376866\n"
+      "1.0843790548169845\n"
      ]
     }
    ],
    "source": [
     "# Positive, random reward for terminal state.\n",
     "print(rew)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1e27bd4f-0cad-48a5-9a5d-4481718ec4c3",
+   "metadata": {},
+   "source": [
+    "## Saving and loading GraphEnvs\n",
+    "\n",
+    "The standard pickle library can be used to save / load graphenv objects. While this is used internally by ray, note that derived `Vertex` classes may contain unpickleable objects. In these cases, users should [defer environment creation](https://docs.ray.io/en/latest/rllib/rllib-env.html#configuring-environments) to a registered function that is called by each worker in ray"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "34d43bf8-71fd-4507-836b-ea1e183e8cca",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[{'cur_pos': array([6])}, {'cur_pos': array([5])}, {'cur_pos': array([7])}]"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "state = HallwayState(corridor_length=10)\n",
+    "env = GraphEnv({\"state\": state, \"max_num_children\": 2})\n",
+    "env.step(0)\n",
+    "\n",
+    "for _ in range(5):\n",
+    "    obs, rew, done, info = env.step(1)\n",
+    "\n",
+    "env.make_observation()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "0b83ace1-8984-4d2a-88e0-0babc34e687d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pickle\n",
+    "from tempfile import NamedTemporaryFile\n",
+    "\n",
+    "with NamedTemporaryFile() as file:\n",
+    "    with open(file.name, 'wb') as f:\n",
+    "        pickle.dump(env, f)\n",
+    "        \n",
+    "    del env\n",
+    "    \n",
+    "    with open(file.name, 'rb') as f:\n",
+    "        env = pickle.load(f)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "5cf4b8e9-86bf-430e-90c2-2d84d25d2b12",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[{'cur_pos': array([6])}, {'cur_pos': array([5])}, {'cur_pos': array([7])}]"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "env.make_observation()"
    ]
   }
  ],

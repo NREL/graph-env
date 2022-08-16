@@ -56,6 +56,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
@@ -192,7 +194,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">input_dict</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">,</span> <span class="n">TensorType</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Forward function returning a value and weight tensor for the verticies</span>
+        <span class="sd">&quot;&quot;&quot;Forward function returning a value and weight tensor for the vertices</span>
 <span class="sd">        observed via input_dict (a dict of tensors for each vertex property)</span>
 
 <span class="sd">        Args:</span>
@@ -204,13 +206,13 @@
         <span class="k">pass</span></div>
 
     <span class="k">def</span> <span class="nf">_forward_total_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Forward method computing the value assesment of the current state,</span>
+        <span class="sd">&quot;&quot;&quot;Forward method computing the value assessment of the current state,</span>
 <span class="sd">        as returned by the value_function() method.</span>
 
 <span class="sd">        The default implementation return the action value of the current state.</span>
 
 <span class="sd">        Breaking this into a separate method allows subclasses to override the</span>
-<span class="sd">        state value assesment, for example with a Bellman backup returning</span>
+<span class="sd">        state value assessment, for example with a Bellman backup returning</span>
 <span class="sd">        the max over all successor states&#39;s values.</span>
 
 <span class="sd">        Returns:</span>
@@ -306,7 +308,7 @@
     <span class="n">flat_values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
-<span class="sd">    and the masked values of the action verticies.</span>
+<span class="sd">    and the masked values of the action vertices.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        values: Tensor to apply the action mask to.</span>
 <span class="sd">    Returns:</span>
