@@ -38,7 +38,18 @@ Graphenv can be installed with pip:
     pip install graphenv
 
 Graphenv depends on `gym`, `networkx`, `ray[tune,rllib]`, as well as one of either
-`tensorflow` or `pytorch`.
+`tensorflow` or `pytorch`. You can install Graphenv together with the chosen ML
+framework using
+
+.. code-block::
+    
+    pip install graphenv[tensorflow]
+
+or 
+
+.. code-block::
+    
+    pip install graphenv[torch]
 
 
 Quick Start
