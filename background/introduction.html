@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; graphenv 0.0.9.dev5+g3e4f9ef documentation</title>
+  <title>Installation &mdash; graphenv 0.0.9.dev7+g24d61bd documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -128,12 +128,20 @@ _choices_ change for each state is challenging to implement in a computationally
 efficient fashion. The <cite>graphenv</cite> library provides utility classes that simplify the
 flattening and masking of action observations for choosing from a set of successor
 states at every node in a graph search.</p>
+<p>The intended audience for the <code class="docutils literal notranslate"><span class="pre">graphenv</span></code> library consist of researchers working on
+graph search problems that are amenable to a reinforcement learning formulation,
+broadly described as “learning to optimize”.  This includes those working on
+classical combinatorial optimization problems such as the Traveling Salesperson
+Problem, as well as problems that do not have a clear algebraic expression but where
+the environment dynamics can be simulated, for instance, molecular design.</p>
 <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
 <p>Graphenv can be installed with pip:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">graphenv</span>
 </pre></div>
 </div>
+<p>Graphenv depends on <cite>gym</cite>, <cite>networkx</cite>, <cite>ray[tune,rllib]</cite>, as well as one of either
+<cite>tensorflow</cite> or <cite>pytorch</cite>.</p>
 </section>
 <section id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline"></a></h1>

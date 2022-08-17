@@ -20,6 +20,13 @@ efficient fashion. The `graphenv` library provides utility classes that simplify
 flattening and masking of action observations for choosing from a set of successor
 states at every node in a graph search.
 
+The intended audience for the ``graphenv`` library consist of researchers working on 
+graph search problems that are amenable to a reinforcement learning formulation, 
+broadly described as "learning to optimize".  This includes those working on 
+classical combinatorial optimization problems such as the Traveling Salesperson 
+Problem, as well as problems that do not have a clear algebraic expression but where 
+the environment dynamics can be simulated, for instance, molecular design.
+
 
 Installation
 ============
@@ -29,6 +36,9 @@ Graphenv can be installed with pip:
 .. code-block::
     
     pip install graphenv
+
+Graphenv depends on `gym`, `networkx`, `ray[tune,rllib]`, as well as one of either
+`tensorflow` or `pytorch`.
 
 
 Quick Start
