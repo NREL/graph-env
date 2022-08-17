@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; graphenv 0.0.9.dev7+g24d61bd documentation</title>
+  <title>Installation &mdash; graphenv 0.0.9.dev8+g0579f32 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -141,7 +141,15 @@ the environment dynamics can be simulated, for instance, molecular design.</p>
 </pre></div>
 </div>
 <p>Graphenv depends on <cite>gym</cite>, <cite>networkx</cite>, <cite>ray[tune,rllib]</cite>, as well as one of either
-<cite>tensorflow</cite> or <cite>pytorch</cite>.</p>
+<cite>tensorflow</cite> or <cite>pytorch</cite>. You can install Graphenv together with the chosen ML
+framework using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">graphenv</span><span class="p">[</span><span class="n">tensorflow</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">graphenv</span><span class="p">[</span><span class="n">torch</span><span class="p">]</span>
+</pre></div>
+</div>
 </section>
 <section id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline"></a></h1>
