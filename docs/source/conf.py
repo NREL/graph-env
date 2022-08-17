@@ -12,6 +12,7 @@
 #
 import os
 import sys
+from importlib.metadata import version
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -25,8 +26,11 @@ copyright = "2022, Alliance for Sustainable Energy, LLC"
 author = "David Biagioni, Charles Edison Tripp, Jeffrey Law, Struan Clark, and Peter St. John"
 
 # The full version, including alpha/beta/rc tags
-version = graphenv.__version__
-release = version
+
+release = version("graphenv")
+version = ".".join(release.split(".")[:3])
+# version = graphenv.__version__
+# release = version
 
 # -- General configuration ---------------------------------------------------
 
