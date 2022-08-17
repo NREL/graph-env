@@ -56,14 +56,21 @@ bibliography: paper.bib
 Many important and challenging problems in combinatorial optimization (CO) can be
 expressed as graph search problems, in which graph vertices represent full or partial
 solutions and edges represent decisions that connect them. 
-Graph structure not only introduces strong _relational inductive biases_ for learning [@battaglia2018relational], but lends itself to problems both with and without clearly defined algebraic structure.
-For example, classic CO problems on graphs such as the traveling salesman problem (TSP)
-can be expressed as either pure graph search _or_ integer program with well defined
-linear objective function and linear constraints.  Other problems, however, such as
-molecular optimization, do no have concise algebraic formulations and yet are readily
-implemented as a graph search [@Zhou_2019;@sv2021multi].  In recent  years, reinforcement learning
-(RL) has emerged as an effective paradigm for optimizing searches over graphs and led to
-state-of-the-art heuristics for games like Go and chess, as well as for classical CO
+Graph structure not only introduces strong _relational inductive biases_  
+for learning [@battaglia2018relational] -- in this context, by providing a way to 
+explicitly model the value of transitioning (along edges) between one search state (vertex) 
+and the next -- but lends itself to problems both with and without clearly 
+defined algebraic structure.  For example, classic CO problems on graphs such as the Traveling Salesman Problem (TSP) can be expressed as either pure graph search _or_ integer programs.  Other problems, however, such as molecular optimization, do no have concise algebraic formulations and yet are readily
+implemented as a graph search [@Zhou_2019;@sv2021multi].  Such "model-free" problems constitute
+a large fraction of modern reinforcement learning (RL) research owing to the fact that it is often much easier to write a forward simulation that expresses all of the state transitions and rewards, than to write down the precise mathematical expression of the full optimization problem.  In the case of 
+molecular optimization, for example, one can use domain knowledge alongside existing software
+libraries to model the effect of adding a single bond or atom to an existing but incomplete
+molecule, and let the RL algorithm build a model of how good a given decision is by "experiencing"
+the simulated environment many times through.  In contrast, a model-based mathematical 
+formulation that fully expresses all of the chemical and physical constraints is intractable.
+
+In recent  years, RL has emerged as an effective paradigm for optimizing searches over graphs 
+and led to state-of-the-art heuristics for games like Go and chess, as well as for classical CO
 problems such as the Traveling Salesman Problem (TSP).  This combination of graph search
 and RL, while powerful, requires non-trivial software to execute, especially when
 combining advanced state representations such as Graph Neural Networks (GNN) with
@@ -73,11 +80,12 @@ scalable RL algorithms.
 
 The `graphenv` Python library is designed to 1) make graph search problems more readily
 expressible as RL problems via an extension of the OpenAI gym API [@brockman2016openai]
-while 2) enabling their solution via scalable learning algorithms in the popular RLLib
-library [@liang2018rllib].  
+while 2) enabling their solution via scalable learning algorithms in the popular RLlib
+library [@liang2018rllib].  The intended audience consist of researchers working on graph search problems that are amenable to a reinforcement learning formulation, broadly described as "learning to optimize". This includes those working on classical combinatorial optimization problems such as the Traveling Salesperson Problem, as well as problems that do not have a clear algebraic expression but where the environment dynamics can be simulated, for instance, molecular design.
 
-RLLib provides out-of-the-box support for both parametrically-defined actions and
-masking of invalid actions. However, native support for action spaces where the action
+RLlib provides convenient, out-of-the-box support for several features that enable the application
+of RL to complex search problems (e.g., parametrically-defined actions and invalid action masking).
+However, native support for action spaces where the action
 _choices_ change for each state is challenging to implement in a computationally
 efficient fashion. The `graphenv` library provides utility classes that simplify the
 flattening and masking of action observations for choosing from a set of successor
