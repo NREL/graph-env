@@ -1,6 +1,0 @@
-graphenv.examples.tsp.graph\_utils.calc\_greedy\_dist
-=====================================================
-
-.. currentmodule:: graphenv.examples.tsp.graph_utils
-
-.. autofunction:: calc_greedy_dist

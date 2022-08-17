@@ -1,6 +1,0 @@
-graphenv.examples.tsp.graph\_utils.plot\_network
-================================================
-
-.. currentmodule:: graphenv.examples.tsp.graph_utils
-
-.. autofunction:: plot_network

@@ -1,6 +1,0 @@
-graphenv.examples.tsp.graph\_utils.random\_tsp
-==============================================
-
-.. currentmodule:: graphenv.examples.tsp.graph_utils
-
-.. autofunction:: random_tsp
