@@ -1,0 +1,675 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "ddc3ca63",
+   "metadata": {},
+   "source": [
+    "# Hallway Environment Example"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a515e273",
+   "metadata": {},
+   "source": [
+    "The `graphenv` library implements graph search as a reinforcement learning (RL) problem with parameteric action spaces, and is ready to use with many off-the-shelf algorithms available in the RLLib framework.\n",
+    "\n",
+    "Before jumping into the implementation details, let's take a look a simple motivating example: the hallway problem.\n",
+    "\n",
+    "The hallway problem is effectively a 1d version of the gridworld problem in classic RL.  We are given a hallway with $N$ discrete positions and, starting at one end, want to learn to reach the opposite end in as few steps as possible.\n",
+    "\n",
+    "![hallway-flat](./img/hallway-flat.png)\n",
+    "\n",
+    "The figure above shows a hallway problem with $N=3$, and the optimal solution starting at state 0 and ending at state 2, with each \"current state\" highlighted in black.\n",
+    "\n",
+    "This trivial problem can be used to express the \"RL on a graph\" idea succinctly, and enable solving much more interesting, non-trivial problems."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7cc44a24",
+   "metadata": {},
+   "source": [
+    "## The hallway problem as graph problem\n",
+    "\n",
+    "Before we jump into the graph formulation of the hallway problem, let's talk first about _actions_, because this is one of the key differences between `graphenv` and traditional RL gym environments.  \n",
+    "\n",
+    "Typically, discrete actions spaces in gym environments have fixed dimension and fixed definitions.  In the hallway problem, for instance, there are always two actions: \"move left\" (action=0) and \"move right\" (action=1).  Cases where the action is infeasible, like trying to move left from the start position, are typically handled by implmenting a _null_ transition where the action doesn't change the current state.\n",
+    "\n",
+    "In general graph search problems, however, such fixed action spaces are not practical.  In the game of chess, for example, the total number of possible board states and, subsequently, moves, is astronomical, while the set of _feasible_ moves changes continually throughout the game.\n",
+    "\n",
+    "The key observation that makes graph search tractable as a gym environment is:  even for large and complex graph search problems, the number of states that are accessible from the current state is usually relatively small.  If, instead of fixing the action to a pre-defined set of choices, we think of each action as representing an accessible next state, this endeavor becomes tractable.\n",
+    "\n",
+    "And so, we abandon the idea of \"fixed\" action spaces in favor of \"parametric\" action spaces.  Here, **parametric** means that actions coincide with next states represented by feature vectors, rather than having a single, index-based interpretation.  In other words, rather than actions as \"move $[ left, right ]$\", parametric actions can be thought of as \"go to state $[i, j]$\" where the states $i,j$ each have a vector representation.  Also unliked fixed spaces, the order doesn't matter:  we could equivalently say \"go to state $[j, i]$\".\n",
+    "\n",
+    "A key ingredient in making this machinery work is to have policy models that can work on parameteric action spaces\n",
+    "\n",
+    "The figure below illustrates how to think of the simple hallway example as a graph problem.  \n",
+    "\n",
+    "![hallway-graph](./img/hallway-graph.png)\n",
+    "\n",
+    "Before jumping into the specifics of how all of this works in `graphenv`, let's define some terms.\n",
+    "\n",
+    "A **vertex** reprents a single state in the graph which, for this problem, can be described by an index $i\\in \\{ 0, 1, 2 \\}$.  (Sometimes we'll use the terms vertex, state, and node interchangeably).  In the figure, each vertex is shown alongside the corresponding state of the hallway problem.\n",
+    "\n",
+    "The **root** is the starting vertex of the graph search, here, $i=0$.\n",
+    "\n",
+    "At each state in the search, a certain number of child states (or **children**) are accessible.  In the figure above, we illustrate this using the color codes:\n",
+    "\n",
+    "* black = current vertex\n",
+    "* white = child vertex\n",
+    "* gray = inaccessible vertex\n",
+    "\n",
+    "If we think of an RL action as selecting one of these children, it's clear that the number of actions can change from one state to the next.  For example:\n",
+    "\n",
+    "* Starting at the root vertex $i=0$ (black), state $i=1$ (white) is accessible by moving right, while state $i=2$ (gray) can't be accessed in a single move.\n",
+    "* Starting at vertex $i=1$ (black), both $i=0$ and $i=2$ are accessible (white) -- there are no masked states in this case.\n",
+    "\n",
+    "The **terminal** vertex here coincides with $i=2$.  Notice that this vertex has no children because, when reached, the problem is solved."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "991cbf05",
+   "metadata": {},
+   "source": [
+    "# The hallway problem as graphenv problem\n",
+    "\n",
+    "The graphenv module makes it easy for a user to implement their graph search problem as a gym environment, and then to plug that environment into RLLib using both custom and off-the-shelf RL algorithm.  At a high level, the user implements a `Vertex` and `Model` class to represent the graph state and correspnding RL policy model and graphenv takes care of the rest.\n",
+    "\n",
+    "The figure highlights below illustrates how the `Vertex` and `Model` classes interact, with data labeled on the left and associated methods labeled on the right.\n",
+    "\n",
+    "![graphenv](./img/graphenv.png)\n",
+    "\n",
+    "Below, we step through the implementation of the `HallwayState` (inheriting from the graphenv `Vertex`) and `HallwayModel` (inheriting from the graphenv `Model`).  We then provide a working example of building and running a hallway environment."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5b82e2ef",
+   "metadata": {},
+   "source": [
+    "## HallwayState\n",
+    "\n",
+    "(See `graphenv.examples.hallway.hallway_state` for the full implementation).\n",
+    "\n",
+    "The `HallwayState` represents all of the problem logic at the level of a single vertex that enables graphenv to automate the overarching search and RL training.  This class inherits from `graphenv.vertex.Vertex` which has a number of required methods and attributes which we step through below.\n",
+    "\n",
+    "### `__init__`\n",
+    "\n",
+    "As you'd expect, problem configuration happens here.  The hallway state is completely specified by the current and end positions,\n",
+    "\n",
+    "```python\n",
+    "def __init__(\n",
+    "        self,\n",
+    "        corridor_length: int,\n",
+    "        cur_pos: int = 0,\n",
+    "    ) -> None:\n",
+    "        \"\"\"Initializes this HallwayState.\n",
+    "        Args:\n",
+    "            corridor_length (int): length of the vertex chain\n",
+    "            cur_pos (int, optional): initial vertex index. Defaults to 0.\n",
+    "        \"\"\"\n",
+    "        super().__init__()\n",
+    "        self.end_pos = corridor_length\n",
+    "        self.cur_pos = cur_pos\n",
+    "```\n",
+    "\n",
+    "### `observation_space`\n",
+    "\n",
+    "Returns a `gym.spaces.Space` object that describes the structure of the data used to represent a vertex.  In the hallway problem,\n",
+    "\n",
+    "```python\n",
+    "@property\n",
+    "def observation_space(self) -> gym.spaces.Dict:\n",
+    "    \"\"\"HallwayStates are observed with a dictionary containing a single\n",
+    "    key, 'cur_pos', with an integer value between 0 and self.end_pos,\n",
+    "    indicating the index of the vertex.\n",
+    "    Returns:\n",
+    "        gym.spaces.Dict: The observation space for HallwayStates.\n",
+    "    \"\"\"\n",
+    "    return gym.spaces.Dict(\n",
+    "        {\n",
+    "            \"cur_pos\": gym.spaces.Box(\n",
+    "                low=np.array([0]), high=np.array([self.end_pos]), dtype=int\n",
+    "            ),\n",
+    "        }\n",
+    "    )\n",
+    "```\n",
+    "\n",
+    "where `cur_pos` is the integer index of the current position.  The box space has a single element containing the index of the current position but, in general, can contain multiple, complex subspaces.\n",
+    "\n",
+    "### `_make_observation`\n",
+    "\n",
+    "To decide which child to transition to, the RL agent will need to call a policy model with that vertex's observation.  To this end, we implement `_make_observation` which, for the hallway example, returns:\n",
+    "\n",
+    "```python\n",
+    "def _make_observation(self) -> Dict[str, np.ndarray]:\n",
+    "    \"\"\"Makes an observation of this HallwayState vertex.\n",
+    "    Returns:\n",
+    "        Dict[str, np.ndarray]: dictionary containing the current position\n",
+    "        index under the key 'cur_pos'.\n",
+    "    \"\"\"\n",
+    "    return {\n",
+    "        \"cur_pos\": np.array([self.cur_pos], dtype=int),\n",
+    "    }\n",
+    "```\n",
+    "\n",
+    "Note that the returned observation must exactly match the specification in the vertex's `observation_space`.\n",
+    "\n",
+    "\n",
+    "### `reward`\n",
+    "\n",
+    "Returns the vertex reward.  For the hallway problem, we give a small negative reward for each non-terminal step, and a random, positive reward for reaching the goal.\n",
+    "\n",
+    "```python\n",
+    "@property\n",
+    "def reward(self) -> float:\n",
+    "    \"\"\"The reward function for the HallwayState graph.\n",
+    "    Returns:\n",
+    "        float: random reward between 0 and 2 on the goal vertex, -0.1\n",
+    "            otherwise.\n",
+    "    \"\"\"\n",
+    "    return random.random() * 2 if self.cur_pos >= self.end_pos else -0.1\n",
+    "```\n",
+    "\n",
+    "### `_get_children`\n",
+    "\n",
+    "To take an action from a given vertex in the graph search, we need to be able observe its children.  The `Vertex` class implements this first part through a `_get_children` generator which, for the hallway problem, looks like:\n",
+    "\n",
+    "```python\n",
+    "def _get_children(self) -> Sequence[\"HallwayState\"]:\n",
+    "    \"\"\"Gets child vertices of this vertex. Each vertex has both larger\n",
+    "    and smaller adjacent index vertices as children, except for the initial\n",
+    "    and goal vertices.\n",
+    "    Yields:\n",
+    "        HallwayState: Child vertices of this vertex.\n",
+    "    \"\"\"\n",
+    "    if self.cur_pos < self.end_pos:\n",
+    "        if self.cur_pos > 0:  # Stop the hallway from going negative\n",
+    "            yield self.new(self.cur_pos - 1)\n",
+    "        yield self.new(self.cur_pos + 1)\n",
+    "```\n",
+    "\n",
+    "where the `new` methods simply returns a new instance with updated state index.\n",
+    "\n",
+    "In our example above, this method will yield \n",
+    "\n",
+    "```\n",
+    "* [new(1)] if cur_pos == 0\n",
+    "* [new(0), new(2)] if cur_pos == 1\n",
+    "* [] if cur_pos == 2\n",
+    "```\n",
+    "\n",
+    "Note that the number of children (actions) is variable, and that the terminal state returns an empty list of next children."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7f921544",
+   "metadata": {},
+   "source": [
+    "## HallwayModel\n",
+    "\n",
+    "(See `graphenv.examples.hallway.hallway_model` for the full implementation).\n",
+    "\n",
+    "The `Model` class implements the policy model used by the RL algorithm and, as such, needs to be implemented to take vertex observation data as input, and to output an action value and action weight for each observation.  In practice, this amounts to implementing a keras model in the `__init__`, and storing it in the `base_model` attribute of the model class.\n",
+    "\n",
+    "```python\n",
+    "class HallwayModel(GraphModel):\n",
+    "    \"\"\"An example GraphModel implementation for the HallwayEnv and HallwayState\n",
+    "    Graph.\n",
+    "    Attributes:\n",
+    "        base_model : The Keras model used to evaluate vertex observations.\n",
+    "    \"\"\"\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        *args,\n",
+    "        hidden_dim: int = 1,\n",
+    "        **kwargs,\n",
+    "    ):\n",
+    "        \"\"\"Initializs this HallwayModel.\n",
+    "        Uses a dense fully connected Keras network.\n",
+    "        Args:\n",
+    "            hidden_dim (int, optional): The number of hidden layers to use. \n",
+    "                Defaults to 1.\n",
+    "        \"\"\"\n",
+    "        super().__init__(*args, **kwargs)\n",
+    "\n",
+    "        cur_pos = layers.Input(shape=(1,), name=\"cur_pos\", dtype=tf.float32)\n",
+    "\n",
+    "        hidden_layer = layers.Dense(hidden_dim, name=\"hidden_layer\")\n",
+    "        action_value_output = layers.Dense(\n",
+    "            1, name=\"action_value_output\", bias_initializer=\"ones\"\n",
+    "        )\n",
+    "        action_weight_output = layers.Dense(\n",
+    "            1, name=\"action_weight_output\", bias_initializer=\"ones\"\n",
+    "        )\n",
+    "\n",
+    "        out = hidden_layer(cur_pos)\n",
+    "        action_values = action_value_output(out)\n",
+    "        action_weights = action_weight_output(out)\n",
+    "\n",
+    "        self.base_model = tf.keras.Model(\n",
+    "            [cur_pos], [action_values, action_weights])\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7d89c0bf",
+   "metadata": {},
+   "source": [
+    "## GraphEnv\n",
+    "\n",
+    "The final step in implementing the hallway problem with graphenv is the creation of the environment itself.  This requires only an instance of the HallwayState as well as a `max_num_actions` argument that limits the maximum number of next states that we expect to confront during the search.  As we'll demonstrate below, the graphenv library takes care of masking invalid actions."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bce5c51f",
+   "metadata": {},
+   "source": [
+    "# HallwayEnv Demo"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2f9a2f8a",
+   "metadata": {},
+   "source": [
+    "Now that we have all of the requisite pieces, let's demo running the HallwayEnv as we would any gym environment.  We'll point out the salient differences from a standard gym env -- referring the reader to the full implementation here: `graphenv.graph_env`\n",
+    "\n",
+    "Unlike the above cells, the cells below should be runnable in the notebook.  "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ada1c3cd",
+   "metadata": {},
+   "source": [
+    "## Env creation\n",
+    "\n",
+    "First, we create the environment with any needed configuration -- here, just the corridor length."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "1600d604",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from graphenv.examples.hallway.hallway_state import HallwayState\n",
+    "from graphenv.graph_env import GraphEnv\n",
+    "\n",
+    "state = HallwayState(corridor_length=3)\n",
+    "env = GraphEnv({\"state\": state, \"max_num_children\": 2})"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fc29fdb0",
+   "metadata": {},
+   "source": [
+    "## Reset\n",
+    "\n",
+    "Next, let's call reset and examine the returned observation."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "87e8ed77",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[{'cur_pos': array([0])}, {'cur_pos': array([1])}]\n"
+     ]
+    }
+   ],
+   "source": [
+    "obs = env.reset()\n",
+    "print(obs)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4cddd753",
+   "metadata": {},
+   "source": [
+    "We use the `ray.rllib.utils.spaces.repeated.Repeated` action space for the variable-length observations that naturally arise from a graph-based environment. Ray automatically handles the batching and padding of input observations to a maximum length, and the `graphenv.graph_model.GraphModel` object handles the masking of invalid actions automatically.\n",
+    "\n",
+    "Notice that the current state, with `cur_pos=0`, is returned as the first item in the list of observations.  This is because the parent vertex data is needed by the policy model and thus is always returned at index 0, while the children appear at indices `[1:max_num_actions]`.\n",
+    "\n",
+    "For the child observations, notice that only `cur_pos=1` appears as an entry, as a backwards step from the starting location is not allowed."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cd3fad0c",
+   "metadata": {},
+   "source": [
+    "## Step\n",
+    "\n",
+    "Unlike the observation data which are 1-indexed w.r.t. the child vertices, the action space is 0-indexed.\n",
+    "\n",
+    "To step the environment, we need to select a valid action.  Because only the first child vertex is valid, the only valid action is 0.  If we pass 1, we see an error. Note that because rllib often passes invalid actions to initialize the environment, this only returns a warning."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "4a7f13bd",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/Users/pstjohn/Packages/graph-env/graphenv/graph_env.py:110: RuntimeWarning: Attempting to choose a masked child state. This is either due to rllib's env pre_check module, or due to a failure of the policy model to mask invalid actions. Returning the current state to satisfy the pre_check module.\n",
+      "  warnings.warn(\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Not a valid action\n",
+    "obs, rew, done, info = env.step(1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "e97bad03",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# A valid action\n",
+    "obs, rew, done, info = env.step(0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "97477ccb",
+   "metadata": {},
+   "source": [
+    "Let's take a look at the output from step."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "a3c05882",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[{'cur_pos': array([1])}, {'cur_pos': array([0])}, {'cur_pos': array([2])}]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(obs)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3475756b",
+   "metadata": {},
+   "source": [
+    "Recall that, from the middle hallway position ($i=1$), there are two valid actions.  Accordingly, the length of the observation space is 3 (the current state and both actions), and `cur_pos` have their index values, $i=0$ and $i=2$."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "c4e34bbd",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "-0.1\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Step reward for non-terminal state.\n",
+    "print(rew)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "b9852e3b",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "False\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Not a terminal state.\n",
+    "print(done)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "b4bc5bdd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'cur_pos': 1}"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Metadata here indicates the cur_pos of the current state.\n",
+    "info"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1ad8658f",
+   "metadata": {},
+   "source": [
+    "## Step to the terminal vertex\n",
+    "\n",
+    "We now have two valid actions -- let's choose the one that solves the problem."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "0054811a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "obs, rew, done, info = env.step(1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "eb808823",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[{'cur_pos': array([2])}]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(obs)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "198f51eb",
+   "metadata": {},
+   "source": [
+    "Notice that, now, the observation only includes the current state, as there are no valid actions to take"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "2c8b0dc8",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "True\n"
+     ]
+    }
+   ],
+   "source": [
+    "# It is a terminal state.\n",
+    "print(done)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "e9a27a68",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1.0843790548169845\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Positive, random reward for terminal state.\n",
+    "print(rew)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1e27bd4f-0cad-48a5-9a5d-4481718ec4c3",
+   "metadata": {},
+   "source": [
+    "## Saving and loading GraphEnvs\n",
+    "\n",
+    "The standard pickle library can be used to save / load graphenv objects. While this is used internally by ray, note that derived `Vertex` classes may contain unpickleable objects. In these cases, users should [defer environment creation](https://docs.ray.io/en/latest/rllib/rllib-env.html#configuring-environments) to a registered function that is called by each worker in ray"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "34d43bf8-71fd-4507-836b-ea1e183e8cca",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[{'cur_pos': array([6])}, {'cur_pos': array([5])}, {'cur_pos': array([7])}]"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "state = HallwayState(corridor_length=10)\n",
+    "env = GraphEnv({\"state\": state, \"max_num_children\": 2})\n",
+    "env.step(0)\n",
+    "\n",
+    "for _ in range(5):\n",
+    "    obs, rew, done, info = env.step(1)\n",
+    "\n",
+    "env.make_observation()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "0b83ace1-8984-4d2a-88e0-0babc34e687d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pickle\n",
+    "from tempfile import NamedTemporaryFile\n",
+    "\n",
+    "with NamedTemporaryFile() as file:\n",
+    "    with open(file.name, 'wb') as f:\n",
+    "        pickle.dump(env, f)\n",
+    "        \n",
+    "    del env\n",
+    "    \n",
+    "    with open(file.name, 'rb') as f:\n",
+    "        env = pickle.load(f)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "5cf4b8e9-86bf-430e-90c2-2d84d25d2b12",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[{'cur_pos': array([6])}, {'cur_pos': array([5])}, {'cur_pos': array([7])}]"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "env.make_observation()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

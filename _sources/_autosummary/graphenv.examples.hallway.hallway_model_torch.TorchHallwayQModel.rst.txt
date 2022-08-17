@@ -1,0 +1,88 @@
+graphenv.examples.hallway.hallway\_model\_torch.TorchHallwayQModel
+==================================================================
+
+.. currentmodule:: graphenv.examples.hallway.hallway_model_torch
+
+.. autoclass:: TorchHallwayQModel
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TorchHallwayQModel.add_module
+      ~TorchHallwayQModel.apply
+      ~TorchHallwayQModel.bfloat16
+      ~TorchHallwayQModel.buffers
+      ~TorchHallwayQModel.children
+      ~TorchHallwayQModel.context
+      ~TorchHallwayQModel.cpu
+      ~TorchHallwayQModel.cuda
+      ~TorchHallwayQModel.custom_loss
+      ~TorchHallwayQModel.double
+      ~TorchHallwayQModel.eval
+      ~TorchHallwayQModel.extra_repr
+      ~TorchHallwayQModel.float
+      ~TorchHallwayQModel.forward
+      ~TorchHallwayQModel.forward_vertex
+      ~TorchHallwayQModel.from_batch
+      ~TorchHallwayQModel.get_buffer
+      ~TorchHallwayQModel.get_extra_state
+      ~TorchHallwayQModel.get_initial_state
+      ~TorchHallwayQModel.get_parameter
+      ~TorchHallwayQModel.get_q_value_distributions
+      ~TorchHallwayQModel.get_state_value
+      ~TorchHallwayQModel.get_submodule
+      ~TorchHallwayQModel.half
+      ~TorchHallwayQModel.import_from_h5
+      ~TorchHallwayQModel.ipu
+      ~TorchHallwayQModel.is_time_major
+      ~TorchHallwayQModel.last_output
+      ~TorchHallwayQModel.load_state_dict
+      ~TorchHallwayQModel.metrics
+      ~TorchHallwayQModel.modules
+      ~TorchHallwayQModel.named_buffers
+      ~TorchHallwayQModel.named_children
+      ~TorchHallwayQModel.named_modules
+      ~TorchHallwayQModel.named_parameters
+      ~TorchHallwayQModel.parameters
+      ~TorchHallwayQModel.register_backward_hook
+      ~TorchHallwayQModel.register_buffer
+      ~TorchHallwayQModel.register_forward_hook
+      ~TorchHallwayQModel.register_forward_pre_hook
+      ~TorchHallwayQModel.register_full_backward_hook
+      ~TorchHallwayQModel.register_load_state_dict_post_hook
+      ~TorchHallwayQModel.register_module
+      ~TorchHallwayQModel.register_parameter
+      ~TorchHallwayQModel.requires_grad_
+      ~TorchHallwayQModel.set_extra_state
+      ~TorchHallwayQModel.share_memory
+      ~TorchHallwayQModel.state_dict
+      ~TorchHallwayQModel.to
+      ~TorchHallwayQModel.to_empty
+      ~TorchHallwayQModel.train
+      ~TorchHallwayQModel.trainable_variables
+      ~TorchHallwayQModel.type
+      ~TorchHallwayQModel.value_function
+      ~TorchHallwayQModel.variables
+      ~TorchHallwayQModel.xpu
+      ~TorchHallwayQModel.zero_grad
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TorchHallwayQModel.T_destination
+      ~TorchHallwayQModel.dump_patches
+      ~TorchHallwayQModel.training
+   
+   

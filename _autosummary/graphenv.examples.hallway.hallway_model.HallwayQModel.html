@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphenv.examples.hallway.hallway_model.HallwayQModel &mdash; graphenv 0.0.9.dev5+g3e4f9ef documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="graphenv.examples.hallway.hallway_model_torch" href="graphenv.examples.hallway.hallway_model_torch.html" />
+    <link rel="prev" title="graphenv.examples.hallway.hallway_model.HallwayModel" href="graphenv.examples.hallway.hallway_model.HallwayModel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> graphenv
+          </a>
+              <div class="version">
+                0.0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">graph-env</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Hallway Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/hallway.html">Hallway Environment Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/hallway.html#The-hallway-problem-as-graphenv-problem">The hallway problem as graphenv problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/hallway.html#HallwayEnv-Demo">HallwayEnv Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tune.html">Running <code class="docutils literal notranslate"><span class="pre">GraphEnv</span></code> with <code class="docutils literal notranslate"><span class="pre">ray.tune</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">TSP Example</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html">Traveling Salesperson Problem (TSP) Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPState">TSPState</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPModel">TSPModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#TSPEnv-Demo">TSPEnv Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_docs.html#Policy-Training">Policy Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html">TSP Environment Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tsp_env.html#Beam-Search">Beam Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud/tsp_on_aws.html">Running TSP on AWS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="graphenv.html">graphenv</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="graphenv.examples.html">graphenv.examples</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="graphenv.examples.hallway.html">graphenv.examples.hallway</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="graphenv.examples.hallway.hallway_model.html">graphenv.examples.hallway.hallway_model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.hallway.hallway_model_torch.html">graphenv.examples.hallway.hallway_model_torch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graphenv.examples.hallway.hallway_state.html">graphenv.examples.hallway.hallway_state</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="graphenv.examples.tsp.html">graphenv.examples.tsp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_env.html">graphenv.graph_env</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model.html">graphenv.graph_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.graph_model_bellman_mixin.html">graphenv.graph_model_bellman_mixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphenv.vertex.html">graphenv.vertex</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">graphenv</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="graphenv.html">graphenv</a> &raquo;</li>
+          <li><a href="graphenv.examples.html">graphenv.examples</a> &raquo;</li>
+          <li><a href="graphenv.examples.hallway.html">graphenv.examples.hallway</a> &raquo;</li>
+          <li><a href="graphenv.examples.hallway.hallway_model.html">graphenv.examples.hallway.hallway_model</a> &raquo;</li>
+      <li>graphenv.examples.hallway.hallway_model.HallwayQModel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="graphenv-examples-hallway-hallway-model-hallwayqmodel">
+<h1>graphenv.examples.hallway.hallway_model.HallwayQModel<a class="headerlink" href="#graphenv-examples-hallway-hallway-model-hallwayqmodel" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_model.HallwayQModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HallwayQModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/hallway/hallway_model.html#HallwayQModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.hallway.hallway_model.HallwayQModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="graphenv.examples.hallway.hallway_model.BaseHallwayModel.html#graphenv.examples.hallway.hallway_model.BaseHallwayModel" title="graphenv.examples.hallway.hallway_model.BaseHallwayModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_model.BaseHallwayModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ray.rllib.agents.dqn.distributional_q_tf_model.DistributionalQTFModel</span></code></p>
+<p>Initialize variables of this model.</p>
+<dl>
+<dt>Extra model kwargs:</dt><dd><dl class="simple">
+<dt>q_hiddens (List[int]): List of layer-sizes after(!) the</dt><dd><p>Advantages(A)/Value(V)-split. Hence, each of the A- and V-
+branches will have this structure of Dense layers. To define
+the NN before this A/V-split, use - as always -
+config[“model”][“fcnet_hiddens”].</p>
+</dd>
+<dt>dueling (bool): Whether to build the advantage(A)/value(V) heads</dt><dd><p>for DDQN. If True, Q-values are calculated as:
+Q = (A - mean[A]) + V. If False, raw NN output is interpreted
+as Q-values.</p>
+</dd>
+</dl>
+<p>num_atoms (int): If &gt;1, enables distributional DQN.
+use_noisy (bool): Use noisy nets.
+v_min (float): Min value support for distributional DQN.
+v_max (float): Max value support for distributional DQN.
+sigma0 (float): Initial value of noisy layers.
+add_layer_norm (bool): Enable layer norm (for param noise).</p>
+</dd>
+</dl>
+<p>Note that the core layers for forward() are not defined here, this
+only defines the layers for the Q head. Those layers for forward()
+should be defined in subclasses of DistributionalQModel.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">context</span></code></p></td>
+<td><p>Returns a contextmanager for the current TF graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_loss</span></code></p></td>
+<td><p>Override to customize the loss function used to optimize this model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></p></td>
+<td><p>Tensorflow/Keras style forward method.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_vertex</span></code></p></td>
+<td><p>Forward function computing the evaluation of vertex observations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_batch</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_state</span></code></p></td>
+<td><p>Get the initial recurrent state values for the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_q_value_distributions</span></code></p></td>
+<td><p>Returns distributional values for Q(s, a) given a state embedding.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state_value</span></code></p></td>
+<td><p>Returns the state value prediction for the given state embedding.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_from_h5</span></code></p></td>
+<td><p>Imports weights from an h5 file.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_time_major</span></code></p></td>
+<td><p>If True, data for calling this ModelV2 must be in time-major format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_output</span></code></p></td>
+<td><p>Returns the last output returned from calling the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></p></td>
+<td><p>Override to return custom metrics from your model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_variables</span></code></p></td>
+<td><p>Register the given list of variables with this model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></p></td>
+<td><p>Returns the list of trainable variables for this model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_ops</span></code></p></td>
+<td><p>Return the list of update ops for this model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_function</span></code></p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p>A tensor of current state values.</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></p></td>
+<td><p>Returns the list (or a dict) of variables for this model.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hidden_dim</strong> (<em>int</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="graphenv.examples.hallway.hallway_model.HallwayModel.html" class="btn btn-neutral float-left" title="graphenv.examples.hallway.hallway_model.HallwayModel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="graphenv.examples.hallway.hallway_model_torch.html" class="btn btn-neutral float-right" title="graphenv.examples.hallway.hallway_model_torch" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alliance for Sustainable Energy, LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

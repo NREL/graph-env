@@ -1,0 +1,40 @@
+graphenv.examples.hallway.hallway\_model.HallwayQModel
+======================================================
+
+.. currentmodule:: graphenv.examples.hallway.hallway_model
+
+.. autoclass:: HallwayQModel
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~HallwayQModel.context
+      ~HallwayQModel.custom_loss
+      ~HallwayQModel.forward
+      ~HallwayQModel.forward_vertex
+      ~HallwayQModel.from_batch
+      ~HallwayQModel.get_initial_state
+      ~HallwayQModel.get_q_value_distributions
+      ~HallwayQModel.get_state_value
+      ~HallwayQModel.import_from_h5
+      ~HallwayQModel.is_time_major
+      ~HallwayQModel.last_output
+      ~HallwayQModel.metrics
+      ~HallwayQModel.register_variables
+      ~HallwayQModel.trainable_variables
+      ~HallwayQModel.update_ops
+      ~HallwayQModel.value_function
+      ~HallwayQModel.variables
+   
+   
+
+   
+   
+   
