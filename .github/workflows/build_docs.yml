@@ -34,6 +34,7 @@ jobs:
       - name: Install package
         shell: bash -l {0}
         run: |
+          sudo apt install pandoc
           python -m pip install --upgrade pip setuptools_scm build
           python -m pip install .[dev]
       - name: Build docs with Sphinx
@@ -43,7 +44,6 @@ jobs:
           #sphinx-apidoc -f -o source/ ../graphenv/
           make html
           touch build/html/.nojekyll
-
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
