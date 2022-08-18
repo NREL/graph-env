@@ -28,7 +28,7 @@ authors:
   - name: Jeffrey Law
     affiliation: 1
     orcid: 0000-0003-2828-1273    
-  - name: Peter St. John #^[Corresponding author]
+  - name: Peter C. St. John #^[Corresponding author]
     orcid: 0000-0002-7928-3722
     corresponding: true # (This is how to denote the corresponding author)    
     affiliation: 1    
