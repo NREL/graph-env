@@ -75,7 +75,6 @@ def test_graphenv_step(hallway_env: GraphEnv):
 
 
 def test_rllib(ray_init, agent, caplog):
-
     trainer_fn, config, needs_q_model = agent
     model = HallwayQModel if needs_q_model else HallwayModel
 
@@ -103,7 +102,6 @@ def test_rllib(ray_init, agent, caplog):
 
 
 def test_rllib_torch(ray_init, agent, caplog):
-
     trainer_fn, config, needs_q_model = agent
     if needs_q_model:
         pytest.skip("DQN in torch not currently working")

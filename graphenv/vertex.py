@@ -78,7 +78,7 @@ class Vertex(Generic[V]):
     def children(self) -> List[V]:
         """
         Gets the child vertices of this vertex.
-        Acts as a wrapper that memoizes calls to _get_children() and
+        Acts as a wrapper that memorizes calls to _get_children() and
         ensures that it is a list. If you would like a different behavior,
         such as stochastic child vertices, override this property.
 
@@ -93,7 +93,7 @@ class Vertex(Generic[V]):
     def observation(self) -> any:
         """
         Gets the observation of this vertex.
-        Acts as a wrapper that memoizes calls to _make_observation().
+        Acts as a wrapper that memorizes calls to _make_observation().
         If you would like a different behavior,
         such as stochastic observations, override this property.
 

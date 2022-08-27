@@ -18,7 +18,6 @@ def G(N):
 
 
 def test_graphenv():
-
     env = GraphEnv(
         {
             "state": TSPState(
@@ -33,7 +32,6 @@ def test_graphenv():
 
 
 def test_rllib_base(ray_init, agent, N, G):
-
     trainer_fn, config, needs_q_model = agent
     model = TSPQModel if needs_q_model else TSPModel
 

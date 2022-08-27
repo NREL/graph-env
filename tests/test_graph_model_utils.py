@@ -78,4 +78,4 @@ def test_mask_and_split_values(obs, vals, tensorlib, request):
         dtype_min = torch.finfo(action_vals.dtype).min
 
     for length, val_row in zip([1, 4, 8, 2, 4], action_vals.numpy()):
-        assert np.allclose(val_row[length - 1 :], dtype_min)
+        assert np.allclose(val_row[length - 1:], dtype_min)

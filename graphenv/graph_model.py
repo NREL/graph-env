@@ -214,7 +214,7 @@ def _stack_batch_dim(
 
 def _mask_and_split_values(
     flat_values: TensorType, obs: RepeatedValues, tensorlib: str = "tf"
-) -> Tuple[TensorType]:
+) -> Tuple[TensorType, TensorType]:
     """Returns the value for the current vertex (index 0 of values),
     and the masked values of the action vertices.
     Args:
