@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.vertex.Vertex &mdash; graphenv 0.0.9 documentation</title>
+  <title>graphenv.vertex.Vertex &mdash; graphenv 0.0.10.dev1+g5a4ce42 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.0.9
+                0.0.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -185,7 +185,7 @@ this class, subclass Vertex and implement the abstract methods below.</p>
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.children">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">graphenv.vertex.V</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#graphenv.vertex.Vertex.children" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the child vertices of this vertex.
-Acts as a wrapper that memoizes calls to _get_children() and
+Acts as a wrapper that memorizes calls to _get_children() and
 ensures that it is a list. If you would like a different behavior,
 such as stochastic child vertices, override this property.</p>
 <dl class="field-list simple">
@@ -209,7 +209,7 @@ An optional dictionary with additional information about the state</p>
 <dt class="sig sig-object py" id="graphenv.vertex.Vertex.observation">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></em><a class="headerlink" href="#graphenv.vertex.Vertex.observation" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the observation of this vertex.
-Acts as a wrapper that memoizes calls to _make_observation().
+Acts as a wrapper that memorizes calls to _make_observation().
 If you would like a different behavior,
 such as stochastic observations, override this property.</p>
 <dl class="field-list simple">
