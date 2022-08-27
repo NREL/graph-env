@@ -67,7 +67,7 @@ molecular optimization, for example, one can use domain knowledge alongside exis
 libraries to model the effect of adding a single bond or atom to an existing but incomplete
 molecule, and let the RL algorithm build a model of how good a given decision is by "experiencing"
 the simulated environment many times through.  In contrast, a model-based mathematical 
-formulation that fully expresses all of the chemical and physical constraints is intractable.
+formulation that fully expresses all the chemical and physical constraints is intractable.
 
 In recent  years, RL has emerged as an effective paradigm for optimizing searches over graphs 
 and led to state-of-the-art heuristics for games like Go and chess, as well as for classical CO
