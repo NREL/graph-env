@@ -29,15 +29,15 @@
       "email": "Jeffrey.Law@nrel.gov",
       "name": "Jeffrey Law",
       "affiliation": "Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
-    }
+    },
     {
       "orcid": "0000-0002-7928-3722",
       "email": "peter.stjohn@nrel.gov",
       "name": "Peter St. John",
       "affiliation": "Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
-    },
+    }
   ],
   "keywords": "Python, reinforcement learning, graph search, combinatorial optimization",
   "license": "BSD 3-Clause License",
-  "title": "graphenv: a Python library for reinforcement learning on graph search spaces",
+  "title": "graphenv: a Python library for reinforcement learning on graph search spaces"
 }
