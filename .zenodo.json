@@ -1,0 +1,43 @@
+{
+  "creators": [
+    {
+      "orcid": "0000-0001-6140-1957",
+      "email": "Dave.Biagioni@nrel.gov",
+      "name": "Dave Biagioni",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "orcid": "0000-0002-5867-3561",
+      "email": "Charles.Tripp@nrel.gov",
+      "name": "Charles Tripp",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "orcid": "0000-0003-0078-6560",
+      "email": "Struan.Clark@nrel.gov",
+      "name": "Struan Clark",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "orcid": "0000-0001-5132-0168",
+      "email": "Dmitry.Duplyakin@nrel.gov",
+      "name": "Dmitry Duplyakin",
+      "affiliation": "Computational Sciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+    {
+      "orcid": "0000-0003-2828-1273",
+      "email": "Jeffrey.Law@nrel.gov",
+      "name": "Jeffrey Law",
+      "affiliation": "Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    }
+    {
+      "orcid": "0000-0002-7928-3722",
+      "email": "peter.stjohn@nrel.gov",
+      "name": "Peter St. John",
+      "affiliation": "Biosciences Center, National Renewable Energy Laboratory, Golden CO 80401, USA"
+    },
+  ],
+  "keywords": "Python, reinforcement learning, graph search, combinatorial optimization",
+  "license": "BSD 3-Clause License",
+  "title": "graphenv: a Python library for reinforcement learning on graph search spaces",
+}
