@@ -32,6 +32,6 @@
     }
   ],
   "keywords": ["Python", "reinforcement learning", "graph search", "combinatorial optimization"],
-  "license": "BSD 3-Clause License",
+  "license": "BSD-3-Clause",
   "title": "graphenv: a Python library for reinforcement learning on graph search spaces"
 }
