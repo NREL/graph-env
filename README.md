@@ -2,6 +2,8 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/NREL/graph-env.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/NREL/graph-env/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/NREL/graph-env.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/NREL/graph-env/context:python)
 [![DOI](https://zenodo.org/badge/470330187.svg)](https://zenodo.org/badge/latestdoi/470330187)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04621/status.svg)](https://doi.org/10.21105/joss.04621)
+
 
 # graph-env
 
