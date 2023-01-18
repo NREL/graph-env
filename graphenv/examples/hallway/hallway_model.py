@@ -2,7 +2,7 @@ from typing import Tuple
 
 from graphenv import tf
 from graphenv.graph_model import GraphModel
-from ray.rllib.agents.dqn.distributional_q_tf_model import DistributionalQTFModel
+from ray.rllib.algorithms.dqn.distributional_q_tf_model import DistributionalQTFModel
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.utils.typing import TensorStructType, TensorType
 

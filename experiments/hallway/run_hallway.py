@@ -6,7 +6,8 @@ from graphenv.examples.hallway.hallway_model import HallwayModel
 from graphenv.examples.hallway.hallway_state import HallwayState
 from graphenv.graph_env import GraphEnv
 from ray import tune
-from ray.rllib.agents import ppo
+from ray.rllib.algorithms.ppo import PPOConfig
+from ray.rllib.algorithms.algorithm_config import AlgorithmConfig
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.utils.test_utils import check_learning_achieved
@@ -57,41 +58,42 @@ if __name__ == "__main__":
     ModelCatalog.register_custom_model("HallwayModel", HallwayModel)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config = {
-        "env": "graphenv",
-        "env_config": {
-            "state": HallwayState(5),
-            "max_num_children": 2,
-        },
+    run_config = (
+        AlgorithmConfig()
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
-        "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
-        "model": {
-            "custom_model": "HallwayModel",
-            "custom_model_config": {"hidden_dim": 32},
-        },
-        "num_workers": 1,  # parallelism
-        "framework": "tf2",
-    }
+        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
+        .framework("tf2")
+        .rollouts(num_rollout_workers=1, rollout_fragment_length="auto")
+        .environment(env='graphenv',
+                     env_config={"state": HallwayState(5), 
+                                 "max_num_children": 2}
+                  )
+        .training(model={"custom_model": "HallwayModel", 
+                         "custom_model_config": {"hidden_dim": 256}}
+                  )
+    )
 
     stop = {
         "training_iteration": args.stop_iters,
         "timesteps_total": args.stop_timesteps,
         "episode_reward_mean": args.stop_reward,
     }
+    
+    if args.run == "PPO":
+        run_config = PPOConfig().from_dict(run_config.to_dict())
+        run_config.training(sgd_minibatch_size=2)
 
     if args.no_tune:
         # manual training with train loop using PPO and fixed learning rate
         if args.run != "PPO":
             raise ValueError("Only support --run PPO with --no-tune.")
         print("Running manual train loop without Ray Tune.")
-        ppo_config = ppo.DEFAULT_CONFIG.copy()
-        ppo_config.update(config)
         # use fixed learning rate instead of grid search (needs tune)
-        ppo_config["lr"] = 1e-3
-        trainer = ppo.PPOTrainer(config=ppo_config, env=GraphEnv)
+        run_config.training(lr=1e-3)
+        algo = run_config.build()
         # run manual training loop and print results after each iteration
         for _ in range(args.stop_iters):
-            result = trainer.train()
+            result = algo.train()
             print(pretty_print(result))
             # stop training of the target train steps or reward are reached
             if (
@@ -102,7 +104,7 @@ if __name__ == "__main__":
     else:
         # automated run with Tune and grid search and TensorBoard
         print("Training automatically with Ray Tune")
-        results = tune.run(args.run, config=config, stop=stop)
+        results = tune.run(args.run, config=run_config.to_dict(), stop=stop)
 
         if args.as_test:
             print("Checking if learning goals were achieved")

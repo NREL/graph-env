@@ -75,57 +75,43 @@ def test_graphenv_step(hallway_env: GraphEnv):
 
 
 def test_rllib(ray_init, agent, caplog):
-    trainer_fn, config, needs_q_model = agent
-    model = HallwayQModel if needs_q_model else HallwayModel
+    config, needs_q_model = agent
 
+    model = HallwayQModel if needs_q_model else HallwayModel
     caplog.set_level(logging.DEBUG)
     ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config.update(
-        {
-            "env": "graphenv",
-            "env_config": {
-                "state": HallwayState(5),
-                "max_num_children": 2,
-            },
-            "log_level": "DEBUG",
-            "model": {
-                "custom_model": "this_model",
-                "custom_model_config": {"hidden_dim": 32},
-            },
-        }
-    )
+    config.environment(env='graphenv',
+                       env_config={"state": HallwayState(5), 
+                                   "max_num_children": 2}
+                    )
+    config.training(model={"custom_model": "this_model", 
+                           "custom_model_config": {"hidden_dim": 32}}
+                    )
 
-    trainer = trainer_fn(config=config)
-    trainer.train()
+    algo = config.build()
+    algo.train()
 
 
 def test_rllib_torch(ray_init, agent, caplog):
-    trainer_fn, config, needs_q_model = agent
+    config, needs_q_model = agent
     if needs_q_model:
         pytest.skip("DQN in torch not currently working")
 
     model = TorchHallwayQModel if needs_q_model else TorchHallwayModel
-
     caplog.set_level(logging.DEBUG)
+    ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config.update(
-        {
-            "env": "graphenv",
-            "env_config": {
-                "state": HallwayState(5),
-                "max_num_children": 2,
-            },
-            "framework": "torch",
-            "log_level": "DEBUG",
-            "model": {
-                "custom_model": model,
-                "custom_model_config": {"hidden_dim": 32},
-            },
-        }
-    )
+    config.environment(env='graphenv',
+                       env_config={"state": HallwayState(5), 
+                                   "max_num_children": 2}
+                    )
+    config.framework("torch")
+    config.training(model={"custom_model": "this_model", 
+                           "custom_model_config": {"hidden_dim": 32}}
+                    )
 
-    trainer = trainer_fn(config=config)
-    trainer.train()
+    algo = config.build()
+    algo.train()

@@ -32,29 +32,22 @@ def test_graphenv():
 
 
 def test_rllib_base(ray_init, agent, N, G):
-    trainer_fn, config, needs_q_model = agent
-    model = TSPQModel if needs_q_model else TSPModel
+    config, needs_q_model = agent
 
+    model = TSPQModel if needs_q_model else TSPModel
     ModelCatalog.register_custom_model("this_model", model)
     register_env("graphenv", lambda config: GraphEnv(config))
 
-    config.update(
-        {
-            "env": "graphenv",
-            "env_config": {
-                "state": TSPState(G),
-                "max_num_children": N,
-            },
-            "model": {
-                "custom_model": "this_model",
-                "custom_model_config": {
-                    "num_nodes": N,
-                    "hidden_dim": 256,
-                    "embed_dim": 256,
-                },
-            },
-        }
-    )
+    config.environment(env='graphenv',
+                       env_config={"state": TSPState(G), 
+                                   "max_num_children": N}
+                    )
+    config.training(model={"custom_model": "this_model", 
+                           "custom_model_config": {
+                                                   "num_nodes": N,
+                                                    "hidden_dim": 256,
+                                                    "embed_dim": 256}}
+                    )
 
-    trainer = trainer_fn(config=config)
-    trainer.train()
+    algo = config.build()
+    algo.train()
