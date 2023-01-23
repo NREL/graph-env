@@ -30,14 +30,15 @@ graphenv.graph\_env.GraphEnv
 
    .. autosummary::
    
-      ~GraphEnv.action_space
       ~GraphEnv.metadata
-      ~GraphEnv.observation_space
+      ~GraphEnv.np_random
       ~GraphEnv.render_mode
       ~GraphEnv.reward_range
       ~GraphEnv.spec
       ~GraphEnv.unwrapped
       ~GraphEnv.state
       ~GraphEnv.max_num_children
+      ~GraphEnv.observation_space
+      ~GraphEnv.action_space
    
    

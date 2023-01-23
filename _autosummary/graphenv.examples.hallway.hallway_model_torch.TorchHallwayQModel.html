@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.hallway.hallway_model_torch.TorchHallwayQModel &mdash; graphenv 0.1.4.dev3+g509be92 documentation</title>
+  <title>graphenv.examples.hallway.hallway_model_torch.TorchHallwayQModel &mdash; graphenv 0.1.4.dev7+gbe62c74 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -140,7 +140,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.examples.hallway.hallway_model_torch.TorchHallwayQModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TorchHallwayQModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/examples/hallway/hallway_model_torch.html#TorchHallwayQModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.examples.hallway.hallway_model_torch.TorchHallwayQModel" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel.html#graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel" title="graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ray.rllib.agents.dqn.dqn_torch_model.DQNTorchModel</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel.html#graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel" title="graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ray.rllib.algorithms.dqn.dqn_torch_model.DQNTorchModel</span></code></p>
 <p>Initialize variables of this model.</p>
 <dl>
 <dt>Extra model kwargs:</dt><dd><dl class="simple">
@@ -149,19 +149,19 @@ branches will have this structure of Dense layers. To define
 the NN before this A/V-split, use - as always -
 config[“model”][“fcnet_hiddens”].</p>
 </dd>
-<dt>dueling (bool): Whether to build the advantage(A)/value(V) heads</dt><dd><p>for DDQN. If True, Q-values are calculated as:
+<dt>dueling: Whether to build the advantage(A)/value(V) heads</dt><dd><p>for DDQN. If True, Q-values are calculated as:
 Q = (A - mean[A]) + V. If False, raw NN output is interpreted
 as Q-values.</p>
 </dd>
-<dt>dueling_activation (str): The activation to use for all dueling</dt><dd><p>layers (A- and V-branch). One of “relu”, “tanh”, “linear”.</p>
+<dt>dueling_activation: The activation to use for all dueling</dt><dd><p>layers (A- and V-branch). One of “relu”, “tanh”, “linear”.</p>
 </dd>
 </dl>
-<p>num_atoms (int): If &gt;1, enables distributional DQN.
-use_noisy (bool): Use noisy layers.
-v_min (float): Min value support for distributional DQN.
-v_max (float): Max value support for distributional DQN.
+<p>num_atoms: If &gt;1, enables distributional DQN.
+use_noisy: Use noisy layers.
+v_min: Min value support for distributional DQN.
+v_max: Max value support for distributional DQN.
 sigma0 (float): Initial value of noisy layers.
-add_layer_norm (bool): Enable layer norm (for param noise).</p>
+add_layer_norm: Enable layer norm (for param noise).</p>
 </dd>
 </dl>
 <p class="rubric">Methods</p>
@@ -313,7 +313,7 @@ add_layer_norm (bool): Enable layer norm (for param noise).</p>
 <td><p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.share_memory_()</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code></p></td>
-<td><p>Returns a dictionary containing a whole state of the module.</p></td>
+<td><p>Returns a dictionary containing references to the whole state of the module.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></p></td>
 <td><p>Moves and/or casts the parameters and buffers.</p></td>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env.GraphEnv &mdash; graphenv 0.1.4.dev3+g509be92 documentation</title>
+  <title>graphenv.graph_env.GraphEnv &mdash; graphenv 0.1.4.dev7+gbe62c74 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -185,35 +185,44 @@ rllib’s environment initialization.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">action_space</span></code></p></td>
-<td><p>the action space, a Discrete space over <cite>max_num_children</cite></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation_space</span></code></p></td>
-<td><p>the observation space of the graph environment</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">np_random</span></code></p></td>
+<td><p>Initializes the np_random field if not done already.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_mode</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_mode</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reward_range</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reward_range</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spec</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spec</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unwrapped</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unwrapped</span></code></p></td>
 <td><p>Completely unwrap this env.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.state" title="graphenv.graph_env.GraphEnv.state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.state" title="graphenv.graph_env.GraphEnv.state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code></a></p></td>
 <td><p>current vertex</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.max_num_children" title="graphenv.graph_env.GraphEnv.max_num_children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_num_children</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.max_num_children" title="graphenv.graph_env.GraphEnv.max_num_children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_num_children</span></code></a></p></td>
 <td><p>maximum number of actions considered at a time</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.observation_space" title="graphenv.graph_env.GraphEnv.observation_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observation_space</span></code></a></p></td>
+<td><p>the observation space of the graph environment</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.action_space" title="graphenv.graph_env.GraphEnv.action_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">action_space</span></code></a></p></td>
+<td><p>the action space, a Discrete space over <cite>max_num_children</cite></p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.graph_env.GraphEnv.action_space" title="Permalink to this definition"></a></dt>
+<dd><p>the action space, a Discrete space over <cite>max_num_children</cite></p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.make_observation">
 <span class="sig-name descname"><span class="pre">make_observation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_env.html#GraphEnv.make_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_env.GraphEnv.make_observation" title="Permalink to this definition"></a></dt>
@@ -244,6 +253,12 @@ are offset by one index to accommodate that.</p>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.graph_env.GraphEnv.observation_space" title="Permalink to this definition"></a></dt>
+<dd><p>the observation space of the graph environment</p>
 </dd></dl>
 
 <dl class="py method">

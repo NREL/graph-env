@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_state.TSPState &mdash; graphenv 0.1.4.dev3+g509be92 documentation</title>
+  <title>graphenv.examples.tsp.tsp_state.TSPState &mdash; graphenv 0.1.4.dev7+gbe62c74 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -146,10 +146,14 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>generator</strong> – a function that creates a networkx graph</p></li>
-<li><p><strong>G</strong> – A fully connected networkx graph.</p></li>
-<li><p><strong>tour</strong> – A list of nodes in visitation order that led to this
+<li><p><strong>G</strong> (<em>Optional</em><em>[</em><em>networkx.classes.graph.Graph</em><em>]</em>) – A fully connected networkx graph.</p></li>
+<li><p><strong>tour</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – A list of nodes in visitation order that led to this
 state. Defaults to [0] which begins the tour at node 0.</p></li>
+<li><p><strong>graph_generator</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>networkx.classes.graph.Graph</em><em>]</em>) – </p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Methods</p>

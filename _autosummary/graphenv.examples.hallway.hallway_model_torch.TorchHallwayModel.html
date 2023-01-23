@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel &mdash; graphenv 0.1.4.dev3+g509be92 documentation</title>
+  <title>graphenv.examples.hallway.hallway_model_torch.TorchHallwayModel &mdash; graphenv 0.1.4.dev7+gbe62c74 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -302,7 +302,7 @@ Graph. Uses a dense fully connected Torch network.</p>
 <td><p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.share_memory_()</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code></p></td>
-<td><p>Returns a dictionary containing a whole state of the module.</p></td>
+<td><p>Returns a dictionary containing references to the whole state of the module.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></p></td>
 <td><p>Moves and/or casts the parameters and buffers.</p></td>
@@ -360,13 +360,13 @@ Graph. Uses a dense fully connected Torch network.</p>
 observed via input_dict (a dict of tensors for each vertex property)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_dict</strong> (<em>Union</em><em>[</em><em>Any</em><em>, </em><em>dict</em><em>, </em><em>tuple</em><em>]</em>) – per-vertex observations</p>
+<dd class="field-odd"><p><strong>input_dict</strong> (<em>Union</em><em>[</em><em>numpy.array</em><em>, </em><em>tf.Tensor</em><em>, </em><em>torch.Tensor</em><em>, </em><em>dict</em><em>, </em><em>tuple</em><em>]</em>) – per-vertex observations</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(value tensor, weight tensor) for the given observations</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[<em>Any</em>, <em>Any</em>]</p>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Union</em>[numpy.array, tf.Tensor, torch.Tensor], <em>Union</em>[numpy.array, tf.Tensor, torch.Tensor]]</p>
 </dd>
 </dl>
 </dd></dl>

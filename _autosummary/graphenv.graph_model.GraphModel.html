@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0.1.4.dev3+g509be92 documentation</title>
+  <title>graphenv.graph_model.GraphModel &mdash; graphenv 0.1.4.dev7+gbe62c74 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -177,17 +177,17 @@ this model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Observation input to the model. Consists of a dictionary
+<li><p><strong>input_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>numpy.array</em><em>, </em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>torch.Tensor</em><em>]</em><em>]</em>) – Observation input to the model. Consists of a dictionary
 including key ‘obs’ which stores the raw observation from the process.</p></li>
-<li><p><strong>state</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – Tensor of current states. Passes through this function untouched.</p></li>
-<li><p><strong>seq_lens</strong> (<em>Any</em>) – Unused. Required by API.</p></li>
+<li><p><strong>state</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>numpy.array</em><em>, </em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>torch.Tensor</em><em>]</em><em>]</em>) – Tensor of current states. Passes through this function untouched.</p></li>
+<li><p><strong>seq_lens</strong> (<em>Union</em><em>[</em><em>numpy.array</em><em>, </em><em>tensorflow.python.framework.ops.Tensor</em><em>, </em><em>torch.Tensor</em><em>]</em>) – Unused. Required by API.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(action weights tensor, state)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[<em>Any</em>, <em>List</em>[<em>Any</em>]]</p>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Union</em>[numpy.array, tensorflow.python.framework.ops.Tensor, torch.Tensor], <em>List</em>[<em>Union</em>[numpy.array, tensorflow.python.framework.ops.Tensor, torch.Tensor]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,7 +205,7 @@ observed via input_dict (a dict of tensors for each vertex property)</p>
 <dd class="field-even"><p>(value tensor, weight tensor) for the given observations</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>Tuple</em>[<em>Any</em>, <em>Any</em>]</p>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Union</em>[numpy.array, tensorflow.python.framework.ops.Tensor, torch.Tensor], <em>Union</em>[numpy.array, tensorflow.python.framework.ops.Tensor, torch.Tensor]]</p>
 </dd>
 </dl>
 </dd></dl>
