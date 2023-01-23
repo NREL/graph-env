@@ -21,7 +21,8 @@ import gym
 import ray
 from gym.spaces import Box, Discrete
 from ray import tune
-from ray.rllib.agents import ppo
+from ray.rllib.algorithms.ppo import PPOConfig
+from ray.rllib.algorithms.algorithm_config import AlgorithmConfig
 from ray.rllib.env.env_context import EnvContext
 from ray.rllib.models import ModelCatalog
 from ray.rllib.models.tf.fcnet import FullyConnectedNetwork
@@ -156,20 +157,19 @@ if __name__ == "__main__":
         "my_model", TorchCustomModel if args.framework == "torch" else CustomModel
     )
 
-    config = {
-        "env": SimpleCorridor,  # or "corridor" if registered above
-        "env_config": {
-            "corridor_length": 5,
-        },
+    run_config = (
+        AlgorithmConfig()
+        .environment(env=SimpleCorridor,  # or "corridor" if registered above
+                     env_config={"corridor_length": 5}, 
+                  )
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
-        "num_gpus": int(os.environ.get("RLLIB_NUM_GPUS", "0")),
-        "model": {
-            "custom_model": "my_model",
-            "vf_share_layers": True,
-        },
-        "num_workers": 1,  # parallelism
-        "framework": args.framework,
-    }
+        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
+        .training(model={"custom_model": "my_model", 
+                         "vf_share_layers": True}
+                  )
+        .rollouts(num_rollout_workers=1, rollout_fragment_length="auto")
+        .framework(args.framework)
+    )
 
     stop = {
         "training_iteration": args.stop_iters,
@@ -177,16 +177,18 @@ if __name__ == "__main__":
         "episode_reward_mean": args.stop_reward,
     }
 
+    if args.run == "PPO":
+        run_config = PPOConfig().from_dict(run_config.to_dict())
+        run_config.training(sgd_minibatch_size=2)
+
     if args.no_tune:
         # manual training with train loop using PPO and fixed learning rate
         if args.run != "PPO":
             raise ValueError("Only support --run PPO with --no-tune.")
         print("Running manual train loop without Ray Tune.")
-        ppo_config = ppo.DEFAULT_CONFIG.copy()
-        ppo_config.update(config)
         # use fixed learning rate instead of grid search (needs tune)
-        ppo_config["lr"] = 1e-3
-        trainer = ppo.PPOTrainer(config=ppo_config, env=SimpleCorridor)
+        run_config.training(lr=1e-3)
+        trainer = run_config.build()
         # run manual training loop and print results after each iteration
         for _ in range(args.stop_iters):
             result = trainer.train()
@@ -200,7 +202,7 @@ if __name__ == "__main__":
     else:
         # automated run with Tune and grid search and TensorBoard
         print("Training automatically with Ray Tune")
-        results = tune.run(args.run, config=config, stop=stop)
+        results = tune.run(args.run, config=run_config.to_dict(), stop=stop)
 
         if args.as_test:
             print("Checking if learning goals were achieved")

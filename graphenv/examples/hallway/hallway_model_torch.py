@@ -2,7 +2,7 @@ from typing import Tuple
 
 from graphenv import nn
 from graphenv.graph_model import TorchGraphModel
-from ray.rllib.agents.dqn.dqn_torch_model import DQNTorchModel
+from ray.rllib.algorithms.dqn.dqn_torch_model import DQNTorchModel
 from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from ray.rllib.utils.typing import TensorStructType, TensorType
 

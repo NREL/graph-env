@@ -10,7 +10,10 @@ from graphenv.examples.tsp.tsp_state import TSPState
 from graphenv.graph_env import GraphEnv
 from networkx.algorithms.approximation.traveling_salesman import greedy_tsp
 from ray import tune
-from ray.rllib.agents import a3c, dqn, marwil, ppo
+from ray.rllib.algorithms.a3c import A3CConfig
+from ray.rllib.algorithms.dqn import DQNConfig
+from ray.rllib.algorithms.marwil import MARWILConfig
+from ray.rllib.algorithms.ppo import PPOConfig
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.framework import try_import_tf
 from ray.tune.registry import register_env
@@ -95,35 +98,29 @@ if __name__ == "__main__":
 
     # Algorithm-specific config, common ones are in the main config dict below
     if args.run == "PPO":
-        run_config = ppo.DEFAULT_CONFIG.copy()
-        run_config.update(
-            {
-                "entropy_coeff": args.entropy_coeff,
-                "sgd_minibatch_size": 16,
-                "num_sgd_iter": 5,
-            }
+        run_config = PPOConfig()
+        run_config.training(entropy_coeff=args.entropy_coeff,
+                            sgd_minibatch_size=16,
+                            num_sgd_iter=5,
         )
     elif args.run in ["DQN"]:
-        run_config = dqn.DEFAULT_CONFIG.copy()
+        run_config = DQNConfig()
         # Update here with custom config
-        run_config.update(
-            {
-                "hiddens": False,
-                "dueling": False,
-                "exploration_config": {"epsilon_timesteps": 250000},
-            }
+        run_config.training(hiddens=False,
+                        dueling=False
         )
+        run_config.exploration(exploration_config={"epsilon_timesteps": 250000})
     elif args.run == "A3C":
-        run_config = a3c.DEFAULT_CONFIG.copy()
+        run_config = A3CConfig()
     elif args.run == "MARWIL":
-        run_config = marwil.DEFAULT_CONFIG.copy()
+        run_config = MARWILConfig()
     else:
         raise ValueError(f"Import agent {args.run} and try again")
 
     # Define custom_model, config, and state based on GNN yes/no
     if args.use_gnn:
         custom_model = "TSPGNNModel"
-        custom_model_config = {"num_messages": 1, "embed_dim": 32}
+        custom_model_config = {"num_messages": 3, "embed_dim": 32}
         ModelCatalog.register_custom_model(custom_model, TSPGNNModel)
         _tag = "gnn"
         state = TSPNFPState(G, max_num_neighbors=args.max_num_neighbors)
@@ -140,29 +137,29 @@ if __name__ == "__main__":
     env_name = f"graphenv_{N}_{_tag}_lr={args.lr}"
     register_env(env_name, lambda config: GraphEnv(config))
 
-    config = {
-        "env": env_name,
-        "env_config": {
-            "state": state,
-            "max_num_children": G.number_of_nodes(),
-        },
-        "model": {
-            "custom_model": custom_model,
-            "custom_model_config": custom_model_config,
-        },
-        "num_workers": args.num_workers,  # parallelism
-        "num_gpus": args.num_gpus,
-        "framework": "tf2",
-        "eager_tracing": False,
-        "rollout_fragment_length": N,  # a multiple of N (collect whole episodes)
-        "train_batch_size": args.rollouts_per_worker * N * args.num_workers,
-        "lr": args.lr,
-        "log_level": args.log_level,
-        "evaluation_config": {"explore": False},
-        "evaluation_interval": 1,
-        "evaluation_duration": 1,
-    }
-    run_config.update(config)
+    run_config = (
+        run_config
+        .resources(num_gpus=args.num_gpus)
+        .framework("tf2")
+        .rollouts(num_rollout_workers=args.num_workers, 
+                  # a multiple of N (collect whole episodes)
+                  rollout_fragment_length=N)
+        .environment(env=env_name,
+                     env_config={"state": state, 
+                                 "max_num_children": G.number_of_nodes()}
+                  )
+        .training(lr=args.lr,
+                  train_batch_size=args.rollouts_per_worker * N * args.num_workers,
+                  model={"custom_model": custom_model, 
+                         "custom_model_config": custom_model_config}
+                  )
+        .evaluation(evaluation_config={"explore": False},
+                    evaluation_interval=1, 
+                    evaluation_duration=100,
+                  )
+        .debugging(log_level=args.log_level)
+        .framework(eager_tracing=False)
+    )
 
     stop = {
         "training_iteration": args.stop_iters,
@@ -172,7 +169,7 @@ if __name__ == "__main__":
 
     tune.run(
         args.run,
-        config=run_config,
+        config=run_config.to_dict(),
         stop=stop,
         local_dir="/home/ray/ray_results",
     )
