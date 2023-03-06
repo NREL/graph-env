@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env &mdash; graphenv 0.2.0 documentation</title>
+  <title>graphenv.graph_env &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -105,7 +105,7 @@
 
 
 <div class="viewcode-block" id="GraphEnv"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv">[docs]</a><span class="k">class</span> <span class="nc">GraphEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Defines an OpenAI Gym Env for traversing a graph using the current vertex</span>
 <span class="sd">    as the state, and the successor vertices as actions.</span>
 
@@ -154,7 +154,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;leaving graphenv construction&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GraphEnv.reset"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Reset this state to the root vertex. It is possible for state.root to</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset this state to the root vertex. It is possible for state.root to</span>
 <span class="sd">        return different root vertices on each call.</span>
 
 <span class="sd">        Returns:</span>
@@ -164,7 +164,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_observation</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="GraphEnv.step"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Steps the environment to a new state by taking an action. In the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Steps the environment to a new state by taking an action. In the</span>
 <span class="sd">        case of GraphEnv, the action specifies which next vertex to move to and</span>
 <span class="sd">        this method advances the environment to that vertex.</span>
 
@@ -220,7 +220,7 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="GraphEnv.make_observation"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.make_observation">[docs]</a>    <span class="k">def</span> <span class="nf">make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Makes an observation for this state which includes observations of</span>
 <span class="sd">        each possible action, and the current state.</span>
 
@@ -246,7 +246,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">observation</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">children</span><span class="p">)]</span></div>
 
 <div class="viewcode-block" id="GraphEnv.render"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;human&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Delegates to Vertex.render()&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delegates to Vertex.render()&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div></div>

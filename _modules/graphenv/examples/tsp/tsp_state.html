@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.tsp.tsp_state &mdash; graphenv 0.2.0 documentation</title>
+  <title>graphenv.examples.tsp.tsp_state &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -103,7 +103,7 @@
 
 
 <div class="viewcode-block" id="TSPState"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState">[docs]</a><span class="k">class</span> <span class="nc">TSPState</span><span class="p">(</span><span class="n">Vertex</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        generator: a function that creates a networkx graph</span>
@@ -128,7 +128,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the graph env&#39;s observation space.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the graph env&#39;s observation space.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict observation space.</span>
@@ -152,7 +152,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TSPState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the root node of the graph env.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the root node of the graph env.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Node with node 0 as the starting point of the tour, and generates a new</span>
@@ -163,7 +163,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the graph env reward.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the graph env reward.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Negative distance between last two nodes in the tour.</span>
@@ -184,7 +184,7 @@
         <span class="k">return</span> <span class="n">rew</span>
 
 <div class="viewcode-block" id="TSPState.new"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.tsp.tsp_state.TSPState.html#graphenv.examples.tsp.tsp_state.TSPState.new">[docs]</a>    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tour</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convenience function for duplicating the existing node.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience function for duplicating the existing node.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            G:  Networkx graph.</span>
@@ -204,7 +204,7 @@
         <span class="k">return</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;TSPState&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Yields a sequence of TSPState instances associated with the next</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yields a sequence of TSPState instances associated with the next</span>
 <span class="sd">        accessible nodes.</span>
 
 <span class="sd">        Yields:</span>
@@ -235,7 +235,7 @@
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">tour</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return an observation.  The dict returned here needs to match</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an observation.  The dict returned here needs to match</span>
 <span class="sd">        both the self.observation_space in this class, as well as the input</span>
 <span class="sd">        layer in tsp_model.TSPModel</span>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hallway Environment Example &mdash; graphenv 0.2.0 documentation</title>
+  <title>Hallway Environment Example &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -439,7 +439,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
         <span class="n">corridor_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">cur_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Initializes this HallwayState.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes this HallwayState.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            corridor_length (int): length of the vertex chain</span>
 <span class="sd">            cur_pos (int, optional): initial vertex index. Defaults to 0.</span>
@@ -455,7 +455,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <p>Returns a <code class="docutils literal notranslate"><span class="pre">gym.spaces.Space</span></code> object that describes the structure of the data used to represent a vertex. In the hallway problem,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;HallwayStates are observed with a dictionary containing a single</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;HallwayStates are observed with a dictionary containing a single</span>
 <span class="sd">    key, &#39;cur_pos&#39;, with an integer value between 0 and self.end_pos,</span>
 <span class="sd">    indicating the index of the vertex.</span>
 <span class="sd">    Returns:</span>
@@ -476,7 +476,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <h3><code class="docutils literal notranslate"><span class="pre">_make_observation</span></code><a class="headerlink" href="#_make_observation" title="Permalink to this headline"></a></h3>
 <p>To decide which child to transition to, the RL agent will need to call a policy model with that vertex’s observation. To this end, we implement <code class="docutils literal notranslate"><span class="pre">_make_observation</span></code> which, for the hallway example, returns:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Makes an observation of this HallwayState vertex.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes an observation of this HallwayState vertex.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        Dict[str, np.ndarray]: dictionary containing the current position</span>
 <span class="sd">        index under the key &#39;cur_pos&#39;.</span>
@@ -493,7 +493,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <p>Returns the vertex reward. For the hallway problem, we give a small negative reward for each non-terminal step, and a random, positive reward for reaching the goal.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;The reward function for the HallwayState graph.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The reward function for the HallwayState graph.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        float: random reward between 0 and 2 on the goal vertex, -0.1</span>
 <span class="sd">            otherwise.</span>
@@ -506,7 +506,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <h3><code class="docutils literal notranslate"><span class="pre">_get_children</span></code><a class="headerlink" href="#_get_children" title="Permalink to this headline"></a></h3>
 <p>To take an action from a given vertex in the graph search, we need to be able observe its children. The <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> class implements this first part through a <code class="docutils literal notranslate"><span class="pre">_get_children</span></code> generator which, for the hallway problem, looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;HallwayState&quot;</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Gets child vertices of this vertex. Each vertex has both larger</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets child vertices of this vertex. Each vertex has both larger</span>
 <span class="sd">    and smaller adjacent index vertices as children, except for the initial</span>
 <span class="sd">    and goal vertices.</span>
 <span class="sd">    Yields:</span>
@@ -533,7 +533,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
 <p>(See <code class="docutils literal notranslate"><span class="pre">graphenv.examples.hallway.hallway_model</span></code> for the full implementation).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Model</span></code> class implements the policy model used by the RL algorithm and, as such, needs to be implemented to take vertex observation data as input, and to output an action value and action weight for each observation. In practice, this amounts to implementing a keras model in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, and storing it in the <code class="docutils literal notranslate"><span class="pre">base_model</span></code> attribute of the model class.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HallwayModel</span><span class="p">(</span><span class="n">GraphModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An example GraphModel implementation for the HallwayEnv and HallwayState</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An example GraphModel implementation for the HallwayEnv and HallwayState</span>
 <span class="sd">    Graph.</span>
 <span class="sd">    Attributes:</span>
 <span class="sd">        base_model : The Keras model used to evaluate vertex observations.</span>
@@ -545,7 +545,7 @@ matter: we could equivalently say “go to state <span class="math notranslate n
         <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializs this HallwayModel.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializs this HallwayModel.</span>
 <span class="sd">        Uses a dense fully connected Keras network.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            hidden_dim (int, optional): The number of hidden layers to use.</span>

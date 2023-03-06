@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.vertex &mdash; graphenv 0.2.0 documentation</title>
+  <title>graphenv.vertex &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -99,7 +99,7 @@
 
 
 <div class="viewcode-block" id="Vertex"><a class="viewcode-back" href="../../_autosummary/graphenv.vertex.Vertex.html#graphenv.vertex.Vertex">[docs]</a><span class="k">class</span> <span class="nc">Vertex</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">V</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class defining a vertex in a graph. To implement a graph using</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class defining a vertex in a graph. To implement a graph using</span>
 <span class="sd">    this class, subclass Vertex and implement the abstract methods below.</span>
 
 <span class="sd">    Args:</span>
@@ -113,7 +113,7 @@
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Gets the vertex observation space, used to define the structure of</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the vertex observation space, used to define the structure of</span>
 <span class="sd">        the data returned when observing a vertex.</span>
 
 <span class="sd">        Returns:</span>
@@ -124,7 +124,7 @@
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">V</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Gets the root vertex of the graph. Not required to always return the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the root vertex of the graph. Not required to always return the</span>
 <span class="sd">        same vertex.</span>
 
 <span class="sd">        Returns:</span>
@@ -135,7 +135,7 @@
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Gets the reward for this vertex.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the reward for this vertex.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: reward for this vertex</span>
@@ -143,12 +143,12 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 <div class="viewcode-block" id="Vertex.render"><a class="viewcode-back" href="../../_autosummary/graphenv.vertex.Vertex.html#graphenv.vertex.Vertex.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Optional method for rendering the current state of the environment.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optional method for rendering the current state of the environment.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Gets the child vertices of this vertex.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the child vertices of this vertex.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Sequence[N]: Sequence of child vertices.</span>
@@ -157,7 +157,7 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Gets an observation of this vertex. This observation should have</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets an observation of this vertex. This observation should have</span>
 <span class="sd">        the same shape as described by the vertex observation space.</span>
 
 <span class="sd">        Returns:</span>
@@ -168,7 +168,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the child vertices of this vertex.</span>
 <span class="sd">        Acts as a wrapper that memorizes calls to _get_children() and</span>
 <span class="sd">        ensures that it is a list. If you would like a different behavior,</span>
@@ -183,7 +183,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the observation of this vertex.</span>
 <span class="sd">        Acts as a wrapper that memorizes calls to _make_observation().</span>
 <span class="sd">        If you would like a different behavior,</span>
@@ -198,7 +198,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            True if this is a terminal vertex in the graph.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -206,7 +206,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            An optional dictionary with additional information about the state</span>
 <span class="sd">        &quot;&quot;&quot;</span>

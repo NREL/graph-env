@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model &mdash; graphenv 0.2.0 documentation</title>
+  <title>graphenv.graph_model &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -104,7 +104,7 @@
 
 
 <div class="viewcode-block" id="GraphModel"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel">[docs]</a><span class="k">class</span> <span class="nc">GraphModel</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Defines a RLLib compatible model for using RL algorithms on a GraphEnv.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines a RLLib compatible model for using RL algorithms on a GraphEnv.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        obs_space: The observation space to use.</span>
@@ -150,7 +150,7 @@
         <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TensorType</span><span class="p">],</span>
         <span class="n">seq_lens</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TensorType</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tensorflow/Keras style forward method. Sets up the computation graph used by</span>
 <span class="sd">        this model.</span>
 
@@ -182,7 +182,7 @@
         <span class="k">return</span> <span class="n">action_weights</span><span class="p">,</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="GraphModel.value_function"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model.GraphModel.html#graphenv.graph_model.GraphModel.value_function">[docs]</a>    <span class="k">def</span> <span class="nf">value_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A tensor of current state values.</span>
@@ -194,7 +194,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">input_dict</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">,</span> <span class="n">TensorType</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Forward function returning a value and weight tensor for the vertices</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward function returning a value and weight tensor for the vertices</span>
 <span class="sd">        observed via input_dict (a dict of tensors for each vertex property)</span>
 
 <span class="sd">        Args:</span>
@@ -206,7 +206,7 @@
         <span class="k">pass</span></div>
 
     <span class="k">def</span> <span class="nf">_forward_total_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Forward method computing the value assessment of the current state,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward method computing the value assessment of the current state,</span>
 <span class="sd">        as returned by the value_function() method.</span>
 
 <span class="sd">        The default implementation return the action value of the current state.</span>
@@ -226,7 +226,7 @@
 
 
 <span class="k">def</span> <span class="nf">_create_action_mask</span><span class="p">(</span><span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create an action mask array of valid actions from a given RepeatedValues tensor.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an action mask array of valid actions from a given RepeatedValues tensor.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        obs (RepeatedValues): The input observations</span>
@@ -307,7 +307,7 @@
 <span class="k">def</span> <span class="nf">_mask_and_split_values</span><span class="p">(</span>
     <span class="n">flat_values</span><span class="p">:</span> <span class="n">TensorType</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="n">RepeatedValues</span><span class="p">,</span> <span class="n">tensorlib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tf&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TensorType</span><span class="p">,</span> <span class="n">TensorType</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the value for the current vertex (index 0 of values),</span>
 <span class="sd">    and the masked values of the action vertices.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        values: Tensor to apply the action mask to.</span>

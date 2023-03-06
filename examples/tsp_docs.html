@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Traveling Salesperson Problem (TSP) Environment &mdash; graphenv 0.2.0 documentation</title>
+  <title>Traveling Salesperson Problem (TSP) Environment &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -435,7 +435,7 @@ state representation to somehow encode this intuition so that the RL policy can 
 <p>Because the TSP problem has natural graph structure, our implementation utilizes a networkx graph to encode the problem instance. This is simply an implementation choice – any suitable data structure could be used here. The only required argument here is a graph generator, i.e., a callable function that returns a networkx graph. This is helpful when you want to solve the problem over a distribution of problem instances, e.g., with nodes distributed uniformly at random on the unit square. The
 init method also takes an optional graph instance, <code class="docutils literal notranslate"><span class="pre">G</span></code> (needed when creating child nodes), and list of previous visited nodes for when the TSPState represents an intermediate search state.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TSPState</span><span class="p">(</span><span class="n">Vertex</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TSP vertex that defines the graph search problem.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        generator: a function that creates a networkx graph</span>
@@ -465,7 +465,7 @@ init method also takes an optional graph instance, <code class="docutils literal
 <p>Next, we implement a simple observation space (not shown) and associated <code class="docutils literal notranslate"><span class="pre">_make_observation</span></code> method that defines the input features for the RL policy model. We emphasize that such a simple observation space is not likely to be competitive with SOTA methods for solving the TSP and serves only as illustration. The state dictionary consists of 4 features: the <code class="docutils literal notranslate"><span class="pre">xy</span></code>-position of the current node, its index, its distance to the previous node (if any), and the minimum distance to any available next
 node. Presumably, given a list of such child states, an RL policy could learn a greedy strategy that picks the child with, e.g., the shortest distance to its parent.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return an observation.  The dict returned here needs to match</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an observation.  The dict returned here needs to match</span>
 <span class="sd">    both the self.observation_space in this class, as well as the input</span>
 <span class="sd">    layer in tsp_model.TSPModel</span>
 
@@ -504,7 +504,7 @@ node. Presumably, given a list of such child states, an RL policy could learn a 
 <p>We implement a reward for the TSP as the negative distance between the current and next nodes, offset by the greedy reward, i.e., the total reward found using greedy search. As a result, tours that perform worse than greedy have negative total rewards, and those that perform better have positive total rewards.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Returns the graph env reward.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the graph env reward.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        Negative distance between last two nodes in the tour.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -533,7 +533,7 @@ node. Presumably, given a list of such child states, an RL policy could learn a 
 <li><p>Whether we are at the next-to-last state, in which case our only option is to return to the starting state.</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;TSPState&quot;</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Yields a sequence of TSPState instances associated with the next</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yields a sequence of TSPState instances associated with the next</span>
 <span class="sd">    accessible nodes.</span>
 <span class="sd">    Yields:</span>
 <span class="sd">        New instance of the TSPState with the next node added to</span>

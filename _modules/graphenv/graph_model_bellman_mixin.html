@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_model_bellman_mixin &mdash; graphenv 0.2.0 documentation</title>
+  <title>graphenv.graph_model_bellman_mixin &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -94,13 +94,13 @@
 
 
 <div class="viewcode-block" id="GraphModelBellmanMixin"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin.html#graphenv.graph_model_bellman_mixin.GraphModelBellmanMixin">[docs]</a><span class="k">class</span> <span class="nc">GraphModelBellmanMixin</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mixin for use with GraphModel that evaluates the current state as the</span>
 <span class="sd">    max of the successor state value assessments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_forward_total_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides state evaluation, replacing it with a Bellman backup returning</span>
 <span class="sd">        the max over all successor states&#39;s values.</span>
 

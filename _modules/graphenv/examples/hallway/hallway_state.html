@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.examples.hallway.hallway_state &mdash; graphenv 0.2.0 documentation</title>
+  <title>graphenv.examples.hallway.hallway_state &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -102,7 +102,7 @@
 
 
 <div class="viewcode-block" id="HallwayState"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_state.HallwayState.html#graphenv.examples.hallway.hallway_state.HallwayState">[docs]</a><span class="k">class</span> <span class="nc">HallwayState</span><span class="p">(</span><span class="n">Vertex</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Example Vertex implementation of a simple hallway process graph.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Example Vertex implementation of a simple hallway process graph.</span>
 <span class="sd">    The hallway graph is a simple bidirectional chain of vertices. The root</span>
 <span class="sd">    vertex is on one end of the chain and the terminal goal vertex is on the</span>
 <span class="sd">    opposite end. The length is configurable.</span>
@@ -123,7 +123,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;HallwayStates are observed with a dictionary containing a single</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;HallwayStates are observed with a dictionary containing a single</span>
 <span class="sd">        key, &#39;cur_pos&#39;, with an integer value between 0 and self.end_pos,</span>
 <span class="sd">        indicating the index of the vertex.</span>
 
@@ -140,7 +140,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;HallwayState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            HallwayState: initial state (vertex at index 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -148,7 +148,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The reward function for the HallwayState graph.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The reward function for the HallwayState graph.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: random reward between 0 and 2 on the goal vertex, -0.1</span>
@@ -157,7 +157,7 @@
         <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_pos</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.1</span>
 
 <div class="viewcode-block" id="HallwayState.new"><a class="viewcode-back" href="../../../../_autosummary/graphenv.examples.hallway.hallway_state.HallwayState.html#graphenv.examples.hallway.hallway_state.HallwayState.new">[docs]</a>    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cur_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convenience function for duplicating the existing node.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience function for duplicating the existing node.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            HallwayState : a copy of this HallwayState.</span>
@@ -166,7 +166,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Debugging information compiled and returned by the environment step()</span>
 <span class="sd">        method about vertices passed through or considered.</span>
 
@@ -178,7 +178,7 @@
         <span class="k">return</span> <span class="n">info</span>
 
     <span class="k">def</span> <span class="nf">_get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;HallwayState&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Gets child vertices of this vertex. Each vertex has both larger</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets child vertices of this vertex. Each vertex has both larger</span>
 <span class="sd">        and smaller adjacent index vertices as children, except for the initial</span>
 <span class="sd">        and goal vertices.</span>
 
@@ -191,7 +191,7 @@
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cur_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Makes an observation of this HallwayState vertex.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes an observation of this HallwayState vertex.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict[str, np.ndarray]: dictionary containing the current position</span>

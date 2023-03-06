@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TSP Environment Rendering &mdash; graphenv 0.2.0 documentation</title>
+  <title>TSP Environment Rendering &mdash; graphenv 0.2.1.dev1+g99f4a73 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -478,7 +478,7 @@ Total greedy reward: -7.2034767022636865
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">previous_reward</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Given an environment (and it&#39;s cumulative reward), return possible next actions</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given an environment (and it&#39;s cumulative reward), return possible next actions</span>
 <span class="sd">    and their associated rewards.</span>
 
 <span class="sd">    Note, here we avoid calling env.step(), as openai&#39;s API would require enumerating</span>
@@ -495,7 +495,7 @@ Total greedy reward: -7.2034767022636865
 
 
 <span class="k">def</span> <span class="nf">beam_search</span><span class="p">(</span><span class="n">env_list</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Expand the given (env, reward) pairs, and subsample only the top K from the next</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the given (env, reward) pairs, and subsample only the top K from the next</span>
 <span class="sd">    iteration of results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
