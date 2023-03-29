@@ -27,7 +27,7 @@ def test_graphenv():
         }
     )
 
-    obs = env.reset()
+    obs, info = env.reset()
     assert env.observation_space.contains(obs)
 
 

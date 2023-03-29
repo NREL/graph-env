@@ -1,7 +1,7 @@
 from math import sqrt
 from typing import Dict, Optional
 
-import gym
+import gymnasium as gym
 import numpy as np
 from graphenv.examples.tsp.tsp_preprocessor import TSPPreprocessor
 from graphenv.examples.tsp.tsp_state import TSPState

@@ -1,7 +1,7 @@
 import random
 from typing import Dict, Sequence
 
-import gym
+import gymnasium as gym
 import numpy as np
 from graphenv import tf
 from graphenv.vertex import Vertex
