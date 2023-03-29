@@ -2,7 +2,7 @@ import logging
 import warnings
 from typing import Any, Dict, List, Optional, Tuple
 
-import gym
+import gymnasium as gym
 import numpy as np
 from ray.rllib.env.env_context import EnvContext
 from ray.rllib.utils.spaces.repeated import Repeated
@@ -61,7 +61,7 @@ class GraphEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(self.max_num_children)
         logger.debug("leaving graphenv construction")
 
-    def reset(self) -> Dict[str, np.ndarray]:
+    def reset(self, *, seed=None, options=None) -> Tuple[Dict[str, np.ndarray], Dict]:
         """Reset this state to the root vertex. It is possible for state.root to
         return different root vertices on each call.
 
@@ -69,9 +69,9 @@ class GraphEnv(gym.Env):
             Dict[str, np.ndarray]: Observation of the root vertex.
         """
         self.state = self.state.root
-        return self.make_observation()
+        return self.make_observation(), self.state.info
 
-    def step(self, action: int) -> Tuple[Dict[str, np.ndarray], float, bool, dict]:
+    def step(self, action: int) -> Tuple[Dict[str, np.ndarray], float, bool, bool, dict]:
         """Steps the environment to a new state by taking an action. In the
         case of GraphEnv, the action specifies which next vertex to move to and
         this method advances the environment to that vertex.
@@ -86,7 +86,8 @@ class GraphEnv(gym.Env):
             Tuple[Dict[str, np.ndarray], float, bool, dict]: Tuple of:
                 a dictionary of the new state's observation,
                 the reward received by moving to the new state's vertex,
-                a bool which is true iff the new stae is a terminal vertex,
+                a bool which is true iff the new state is a terminal vertex,
+                a bool which is true if the search is truncated
                 a dictionary of debugging information related to this call
         """
 
@@ -115,10 +116,17 @@ class GraphEnv(gym.Env):
                 RuntimeWarning,
             )
 
+        # In RLlib 2.3, the config options "no_done_at_end", "horizon", and "soft_horizon" are no longer supported
+        # according to the migration guide https://docs.google.com/document/d/1lxYK1dI5s0Wo_jmB6V6XiP-_aEBsXDykXkD1AXRase4/edit#
+        # Instead, wrap your gymnasium environment with a TimeLimit wrapper, 
+        # which will set truncated according to the number of timesteps 
+        # see https://gymnasium.farama.org/api/wrappers/misc_wrappers/#gymnasium.wrappers.TimeLimit
+        truncated = False
         result = (
             self.make_observation(),
             self.state.reward,
             self.state.terminal,
+            truncated,
             self.state.info,
         )
         logger.debug(

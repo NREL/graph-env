@@ -61,14 +61,14 @@ def test_graphenv_reset(hallway_env: GraphEnv):
 
 
 def test_graphenv_step(hallway_env: GraphEnv):
-    obs, reward, terminal, info = hallway_env.step(0)
+    obs, reward, terminal, truncated, info = hallway_env.step(0)
 
     for _ in range(3):
         assert terminal is False
         assert reward == -0.1
         assert hallway_env.observation_space.contains(obs)
         assert hallway_env.action_space.contains(1)
-        obs, reward, terminal, info = hallway_env.step(1)
+        obs, reward, terminal, truncated, info = hallway_env.step(1)
 
     assert terminal is True
     assert reward > 0

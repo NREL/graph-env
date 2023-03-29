@@ -17,7 +17,7 @@ import argparse
 import os
 import random
 
-import gym
+import gymnasium as gym
 import ray
 from gym.spaces import Box, Discrete
 from ray import tune
@@ -87,9 +87,10 @@ class SimpleCorridor(gym.Env):
         # Set the seed. This is only used for the final (reach goal) reward.
         self.seed(config.worker_index * config.num_workers)
 
-    def reset(self):
+    def reset(self, *, seed=None, options=None):
         self.cur_pos = 0
-        return [self.cur_pos]
+        info_dict = {}
+        return [self.cur_pos], info_dict
 
     def step(self, action):
         assert action in [0, 1], action
@@ -97,9 +98,16 @@ class SimpleCorridor(gym.Env):
             self.cur_pos -= 1
         elif action == 1:
             self.cur_pos += 1
-        done = self.cur_pos >= self.end_pos
+        terminated = self.cur_pos >= self.end_pos
+        truncated = False
         # Produce a random reward when we reach the goal.
-        return [self.cur_pos], random.random() * 2 if done else -0.1, done, {}
+        return (
+            [self.cur_pos], 
+            random.random() * 2 if terminated else -0.1, 
+            terminated, 
+            truncated, 
+            {}
+        )
 
     def seed(self, seed=None):
         random.seed(seed)

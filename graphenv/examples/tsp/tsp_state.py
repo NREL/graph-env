@@ -1,6 +1,6 @@
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
-import gym
+import gymnasium as gym
 import networkx as nx
 import numpy as np
 from graphenv import tf

@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Any, Dict, Generic, List, Optional, Sequence, TypeVar
 
-import gym
+import gymnasium as gym
 
 V = TypeVar("V")
 
