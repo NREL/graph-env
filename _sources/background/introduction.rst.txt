@@ -75,5 +75,6 @@ random walk down a 1D corridor:
 
    while not done:
       action = random.choice(range(len(env.state.children)))
-      obs, reward, done, info = env.step(action)
+      obs, reward, terminated, truncated, info = env.step(action)
+      done = terminated or truncated
       total_reward += reward

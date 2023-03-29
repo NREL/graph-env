@@ -54,9 +54,11 @@ graphenv.examples.hallway.hallway\_model\_torch.TorchHallwayModel
       ~TorchHallwayModel.register_forward_hook
       ~TorchHallwayModel.register_forward_pre_hook
       ~TorchHallwayModel.register_full_backward_hook
+      ~TorchHallwayModel.register_full_backward_pre_hook
       ~TorchHallwayModel.register_load_state_dict_post_hook
       ~TorchHallwayModel.register_module
       ~TorchHallwayModel.register_parameter
+      ~TorchHallwayModel.register_state_dict_pre_hook
       ~TorchHallwayModel.requires_grad_
       ~TorchHallwayModel.set_extra_state
       ~TorchHallwayModel.share_memory
@@ -80,6 +82,7 @@ graphenv.examples.hallway.hallway\_model\_torch.TorchHallwayModel
    .. autosummary::
    
       ~TorchHallwayModel.T_destination
+      ~TorchHallwayModel.call_super_init
       ~TorchHallwayModel.dump_patches
       ~TorchHallwayModel.training
    

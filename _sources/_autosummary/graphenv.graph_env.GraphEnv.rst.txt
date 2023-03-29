@@ -19,7 +19,6 @@ graphenv.graph\_env.GraphEnv
       ~GraphEnv.make_observation
       ~GraphEnv.render
       ~GraphEnv.reset
-      ~GraphEnv.seed
       ~GraphEnv.step
    
    

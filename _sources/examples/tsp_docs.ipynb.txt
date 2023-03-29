@@ -381,7 +381,8 @@
     "rand_rew = 0.\n",
     "while not done:\n",
     "    action = env.action_space.sample()\n",
-    "    _, rew, done, _ = env.step(action)\n",
+    "    _, rew, terminated, truncated, _ = env.step(action)\n",
+    "    done = terminated or truncated\n",
     "    rand_rew += rew\n",
     "    \n",
     "print(f\"Random reward = {rand_rew}\")\n",
@@ -425,7 +426,7 @@
     }
    ],
    "source": [
-    "obs = env.reset()\n",
+    "obs, info = env.reset()\n",
     "\n",
     "done = False\n",
     "greedy_rew = 0.\n",
@@ -433,7 +434,8 @@
     "while not done:\n",
     "    # Get the node with shortest distance to the parent (current) node\n",
     "    idx = np.argmin([x[\"parent_dist\"] for x in obs[1:]])    \n",
-    "    obs, rew, done, _ = env.step(idx)\n",
+    "    obs, rew, terminated, truncated, _ = env.step(idx)\n",
+    "    done = terminated or truncated\n",
     "    greedy_rew += rew\n",
     "    \n",
     "print(f\"Greedy reward = {greedy_rew}\")\n",

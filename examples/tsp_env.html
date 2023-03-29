@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TSP Environment Rendering &mdash; graphenv 0.2.2 documentation</title>
+  <title>TSP Environment Rendering &mdash; graphenv 0.2.3.dev3+gb0e9067 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -409,7 +409,7 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
 
 <span class="c1"># Reset the environment and initialize the observation, reward, and done fields</span>
-<span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">greedy_reward</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -421,7 +421,8 @@ div.rendered_html tbody tr:hover {
 
         <span class="c1"># Get the observation for the next set of candidate nodes,</span>
         <span class="c1"># incremental reward, and done flags</span>
-        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
 
         <span class="c1"># Append the step&#39;s reward to the running total</span>
         <span class="n">greedy_reward</span> <span class="o">+=</span> <span class="n">reward</span>
@@ -506,7 +507,7 @@ Total greedy reward: -7.2034767022636865
     <span class="p">)[:</span><span class="n">k</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">top_actions</span><span class="p">:</span>
-        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;action_index&quot;</span><span class="p">])</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;action_index&quot;</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="p">[(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;reward&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">top_actions</span><span class="p">],</span> <span class="n">done</span>
 </pre></div>
@@ -516,7 +517,7 @@ Total greedy reward: -7.2034767022636865
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">env_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">env</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
 <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -532,7 +533,7 @@ Total greedy reward: -7.2034767022636865
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">env_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">env</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
 <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
 

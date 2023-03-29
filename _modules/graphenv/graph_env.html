@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env &mdash; graphenv 0.2.2 documentation</title>
+  <title>graphenv.graph_env &mdash; graphenv 0.2.3.dev3+gb0e9067 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="../../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -94,7 +94,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ray.rllib.env.env_context</span> <span class="kn">import</span> <span class="n">EnvContext</span>
 <span class="kn">from</span> <span class="nn">ray.rllib.utils.spaces.repeated</span> <span class="kn">import</span> <span class="n">Repeated</span>
@@ -153,7 +153,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_children</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;leaving graphenv construction&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GraphEnv.reset"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="GraphEnv.reset"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset this state to the root vertex. It is possible for state.root to</span>
 <span class="sd">        return different root vertices on each call.</span>
 
@@ -161,9 +161,9 @@
 <span class="sd">            Dict[str, np.ndarray]: Observation of the root vertex.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">root</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_observation</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_observation</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">info</span></div>
 
-<div class="viewcode-block" id="GraphEnv.step"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<div class="viewcode-block" id="GraphEnv.step"><a class="viewcode-back" href="../../_autosummary/graphenv.graph_env.GraphEnv.html#graphenv.graph_env.GraphEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Steps the environment to a new state by taking an action. In the</span>
 <span class="sd">        case of GraphEnv, the action specifies which next vertex to move to and</span>
 <span class="sd">        this method advances the environment to that vertex.</span>
@@ -178,7 +178,8 @@
 <span class="sd">            Tuple[Dict[str, np.ndarray], float, bool, dict]: Tuple of:</span>
 <span class="sd">                a dictionary of the new state&#39;s observation,</span>
 <span class="sd">                the reward received by moving to the new state&#39;s vertex,</span>
-<span class="sd">                a bool which is true iff the new stae is a terminal vertex,</span>
+<span class="sd">                a bool which is true iff the new state is a terminal vertex,</span>
+<span class="sd">                a bool which is true if the search is truncated</span>
 <span class="sd">                a dictionary of debugging information related to this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -207,10 +208,17 @@
                 <span class="ne">RuntimeWarning</span><span class="p">,</span>
             <span class="p">)</span>
 
+        <span class="c1"># In RLlib 2.3, the config options &quot;no_done_at_end&quot;, &quot;horizon&quot;, and &quot;soft_horizon&quot; are no longer supported</span>
+        <span class="c1"># according to the migration guide https://docs.google.com/document/d/1lxYK1dI5s0Wo_jmB6V6XiP-_aEBsXDykXkD1AXRase4/edit#</span>
+        <span class="c1"># Instead, wrap your gymnasium environment with a TimeLimit wrapper, </span>
+        <span class="c1"># which will set truncated according to the number of timesteps </span>
+        <span class="c1"># see https://gymnasium.farama.org/api/wrappers/misc_wrappers/#gymnasium.wrappers.TimeLimit</span>
+        <span class="n">truncated</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">make_observation</span><span class="p">(),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">reward</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">terminal</span><span class="p">,</span>
+            <span class="n">truncated</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>

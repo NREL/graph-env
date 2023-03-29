@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env.GraphEnv &mdash; graphenv 0.2.2 documentation</title>
+  <title>graphenv.graph_env.GraphEnv &mdash; graphenv 0.2.3.dev3+gb0e9067 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <a href="../index.html" class="icon icon-home"> graphenv
           </a>
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -132,7 +132,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_env.html#GraphEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_env.GraphEnv" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gym.core.Env</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gymnasium.core.Env</span></code></p>
 <p>Defines an OpenAI Gym Env for traversing a graph using the current vertex
 as the state, and the successor vertices as actions.</p>
 <p>GraphEnv uses composition to supply the per-vertex model of type Vertex, which
@@ -159,7 +159,7 @@ rllib’s environment initialization.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></p></td>
-<td><p>Override close in your subclass to perform any necessary cleanup.</p></td>
+<td><p>After the user has finished using the environment, close contains the code necessary to &quot;clean up&quot; the environment.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.make_observation" title="graphenv.graph_env.GraphEnv.make_observation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_observation</span></code></a></p></td>
 <td><p>Makes an observation for this state which includes observations of each possible action, and the current state.</p></td>
@@ -170,10 +170,7 @@ rllib’s environment initialization.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.reset" title="graphenv.graph_env.GraphEnv.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a></p></td>
 <td><p>Reset this state to the root vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">seed</span></code></p></td>
-<td><p>Sets the seed for this env's random number generator(s).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.step" title="graphenv.graph_env.GraphEnv.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.step" title="graphenv.graph_env.GraphEnv.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a></p></td>
 <td><p>Steps the environment to a new state by taking an action.</p></td>
 </tr>
 </tbody>
@@ -189,7 +186,7 @@ rllib’s environment initialization.</p>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">np_random</span></code></p></td>
-<td><p>Initializes the np_random field if not done already.</p></td>
+<td><p>Returns the environment's internal <code class="xref py py-attr docutils literal notranslate"><span class="pre">_np_random</span></code> that if not set will initialise with a random seed.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_mode</span></code></p></td>
 <td><p></p></td>
@@ -201,7 +198,7 @@ rllib’s environment initialization.</p>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unwrapped</span></code></p></td>
-<td><p>Completely unwrap this env.</p></td>
+<td><p>Returns the base non-wrapped environment (i.e., removes all wrappers).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphenv.graph_env.GraphEnv.state" title="graphenv.graph_env.GraphEnv.state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code></a></p></td>
 <td><p>current vertex</p></td>
@@ -219,7 +216,7 @@ rllib’s environment initialization.</p>
 </table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.action_space">
-<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.graph_env.GraphEnv.action_space" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gymnasium.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.graph_env.GraphEnv.action_space" title="Permalink to this definition"></a></dt>
 <dd><p>the action space, a Discrete space over <cite>max_num_children</cite></p>
 </dd></dl>
 
@@ -257,7 +254,7 @@ are offset by one index to accommodate that.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.observation_space">
-<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gym.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.graph_env.GraphEnv.observation_space" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">gymnasium.spaces.space.Space</span></em><a class="headerlink" href="#graphenv.graph_env.GraphEnv.observation_space" title="Permalink to this definition"></a></dt>
 <dd><p>the observation space of the graph environment</p>
 </dd></dl>
 
@@ -277,7 +274,7 @@ are offset by one index to accommodate that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphenv.graph_env.GraphEnv.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_env.html#GraphEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_env.GraphEnv.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphenv/graph_env.html#GraphEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphenv.graph_env.GraphEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset this state to the root vertex. It is possible for state.root to
 return different root vertices on each call.</p>
 <dl class="field-list simple">
@@ -318,7 +315,8 @@ this method advances the environment to that vertex.</p>
 <dd class="field-odd"><p><dl class="simple">
 <dt>Tuple of:</dt><dd><p>a dictionary of the new state’s observation,
 the reward received by moving to the new state’s vertex,
-a bool which is true iff the new stae is a terminal vertex,
+a bool which is true iff the new state is a terminal vertex,
+a bool which is true if the search is truncated
 a dictionary of debugging information related to this call</p>
 </dd>
 </dl>
