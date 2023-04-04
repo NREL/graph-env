@@ -1,6 +1,7 @@
 import logging
 import warnings
 from typing import Any, Dict, List, Optional, Tuple
+import inspect
 
 import gymnasium as gym
 import numpy as np
@@ -108,13 +109,20 @@ class GraphEnv(gym.Env):
             self.state = self.state.children[action]
 
         except IndexError:
-            warnings.warn(
-                "Attempting to choose a masked child state. This is either due to "
-                "rllib's env pre_check module, or due to a failure of the policy model "
-                "to mask invalid actions. Returning the current state to satisfy the "
-                "pre_check module.",
-                RuntimeWarning,
-            )
+            # Skip this warning message if the call
+            # came from rllib's precheck function
+            # https://github.com/ray-project/ray/blob/e6dad0b961b5e962f6dc4986947ccac2d2e032cd/rllib/utils/pre_checks/env.py#L220
+            caller_name = inspect.stack()[2][3]
+            if caller_name == "check_gym_environments":
+                pass
+            else:
+                warnings.warn(
+                    "Attempting to choose a masked child state. This is either due to "
+                    "rllib's env pre_check module, or due to a failure of the policy model "
+                    "to mask invalid actions. Returning the current state to satisfy the "
+                    "pre_check module.",
+                    RuntimeWarning,
+                )
 
         # In RLlib 2.3, the config options "no_done_at_end", "horizon", and "soft_horizon" are no longer supported
         # according to the migration guide https://docs.google.com/document/d/1lxYK1dI5s0Wo_jmB6V6XiP-_aEBsXDykXkD1AXRase4/edit#
