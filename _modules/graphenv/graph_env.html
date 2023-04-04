@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphenv.graph_env &mdash; graphenv 0.2.4.dev2+g6baed40 documentation</title>
+  <title>graphenv.graph_env &mdash; graphenv 0.2.4.dev3+gcd40208 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -93,6 +93,7 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -200,13 +201,20 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
 
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Attempting to choose a masked child state. This is either due to &quot;</span>
-                <span class="s2">&quot;rllib&#39;s env pre_check module, or due to a failure of the policy model &quot;</span>
-                <span class="s2">&quot;to mask invalid actions. Returning the current state to satisfy the &quot;</span>
-                <span class="s2">&quot;pre_check module.&quot;</span><span class="p">,</span>
-                <span class="ne">RuntimeWarning</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="c1"># Skip this warning message if the call</span>
+            <span class="c1"># came from rllib&#39;s precheck function</span>
+            <span class="c1"># https://github.com/ray-project/ray/blob/e6dad0b961b5e962f6dc4986947ccac2d2e032cd/rllib/utils/pre_checks/env.py#L220</span>
+            <span class="n">caller_name</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">caller_name</span> <span class="o">==</span> <span class="s2">&quot;check_gym_environments&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Attempting to choose a masked child state. This is either due to &quot;</span>
+                    <span class="s2">&quot;rllib&#39;s env pre_check module, or due to a failure of the policy model &quot;</span>
+                    <span class="s2">&quot;to mask invalid actions. Returning the current state to satisfy the &quot;</span>
+                    <span class="s2">&quot;pre_check module.&quot;</span><span class="p">,</span>
+                    <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="c1"># In RLlib 2.3, the config options &quot;no_done_at_end&quot;, &quot;horizon&quot;, and &quot;soft_horizon&quot; are no longer supported</span>
         <span class="c1"># according to the migration guide https://docs.google.com/document/d/1lxYK1dI5s0Wo_jmB6V6XiP-_aEBsXDykXkD1AXRase4/edit#</span>
