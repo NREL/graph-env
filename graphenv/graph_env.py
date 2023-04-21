@@ -62,7 +62,10 @@ class GraphEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(self.max_num_children)
         logger.debug("leaving graphenv construction")
 
-    def reset(self, *, seed=None, options=None) -> Tuple[Dict[str, np.ndarray], Dict]:
+    # RLlib 2.3.1 does not yet support setting the 'seed' here. Using kwargs quiets the warning.
+    # "Seeding will take place using 'env.seed()' and the info dict will not be returned from reset."
+    #def reset(self, *, seed=None, options=None) -> Tuple[Dict[str, np.ndarray], Dict]:
+    def reset(self, **kwargs) -> Tuple[Dict[str, np.ndarray], Dict]:
         """Reset this state to the root vertex. It is possible for state.root to
         return different root vertices on each call.
 
@@ -112,10 +115,12 @@ class GraphEnv(gym.Env):
             # Skip this warning message if the call
             # came from rllib's precheck function
             # https://github.com/ray-project/ray/blob/e6dad0b961b5e962f6dc4986947ccac2d2e032cd/rllib/utils/pre_checks/env.py#L220
-            caller_name = inspect.stack()[2][3]
-            if caller_name == "check_gym_environments":
-                pass
-            else:
+            skip_warning = False
+            for stack_func_info in inspect.stack():
+                caller_name = stack_func_info[3]
+                if caller_name == "check_gym_environments":
+                    skip_warning = True
+            if not skip_warning:
                 warnings.warn(
                     "Attempting to choose a masked child state. This is either due to "
                     "rllib's env pre_check module, or due to a failure of the policy model "
